@@ -6,7 +6,7 @@ import { Title } from '../components'
 
 const IndexPage: NextPage = () => (
   <ColumnLayout>
-    <HorizontalCenterLayout>
+    <HorizontalCenterLayout classNames="pt-4 md:pt-8 pb-8 md:pb-12">
       <Image src="/images/food.jpg" alt="Some food" width={500} height={350} />
       <Title>Liesbury's recepentlijst</Title>
     </HorizontalCenterLayout>
