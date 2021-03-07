@@ -1,1 +1,3 @@
-export { default as Title } from './Title'
+export { default as PageTitle } from './PageTitle'
+export { default as Card } from './Card'
+export { default as RecipeCard } from './RecipeCard'
