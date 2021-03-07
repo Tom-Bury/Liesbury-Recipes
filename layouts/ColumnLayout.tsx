@@ -1,7 +1,18 @@
 import * as React from 'react'
 
-const ColumnLayout: React.FC = ({ children }) => {
-  return <div className="md:container mx-auto px-4">{children}</div>
+interface TProps {
+  classNames?: string
 }
+
+const defaultProps: TProps = {
+  classNames: ''
+}
+
+const ColumnLayout: React.FC<TProps> = ({ children, classNames }) => {
+  const baseClasses = 'md:container mx-auto px-4'
+  return <div className={`${baseClasses} ${classNames}`}>{children}</div>
+}
+
+ColumnLayout.defaultProps = defaultProps
 
 export default ColumnLayout
