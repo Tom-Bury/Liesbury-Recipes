@@ -1,10 +1,15 @@
 import * as React from 'react'
 import { NextPage } from 'next'
-import ColumnLayout from 'layouts/ColumnLayout'
+import Image from 'next/image'
+import { ColumnLayout, HorizontalCenterLayout } from 'layouts'
+import { Title } from '../components'
 
 const IndexPage: NextPage = () => (
   <ColumnLayout>
-    <h1>This is the title</h1>
+    <HorizontalCenterLayout>
+      <Image src="/images/food.jpg" alt="Some food" width={500} height={350} />
+      <Title>Liesbury's recepentlijst</Title>
+    </HorizontalCenterLayout>
     <h2>This is the subtitle</h2>
     <p>Some text</p>
   </ColumnLayout>
