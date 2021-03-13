@@ -7,11 +7,23 @@ import { TRecipe } from 'types/recipe.type'
 import LiesburyRecipesService from 'services/LiesburyRecipesService'
 import { RecipeCard, PageTitle } from '../components'
 
+const FRONT_IMAGE_DIMENSIONS = {
+  width: 250,
+  height: 160
+}
+
+const FRONT_IMAGE_SCALE = 1.75
+
 const IndexPage: NextPage = ({ recipes }) => (
   <ColumnLayout>
-    <HorizontalCenterLayout classNames="pt-4 md:pt-8 pb-8 md:pb-12">
-      <Image src="/images/liesbury-recipes-colored.svg" alt="Some food" width={700} height={400} />
-      <PageTitle>Liesbury's receptenlijst</PageTitle>
+    <HorizontalCenterLayout classNames="mt-4 md:mt-8 mb-8 md:mb-12">
+      <Image
+        src="/images/liesbury-recipes-colored.svg"
+        alt="Liesbury's receptenlijst"
+        width={FRONT_IMAGE_SCALE * FRONT_IMAGE_DIMENSIONS.width}
+        height={FRONT_IMAGE_SCALE * FRONT_IMAGE_DIMENSIONS.height}
+      />
+      <PageTitle className="mt-4 sm:mt-8">Liesbury's receptenlijst</PageTitle>
     </HorizontalCenterLayout>
     <HorizontalCenterLayout>
       <GridLayout>

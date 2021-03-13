@@ -1,5 +1,6 @@
 import fetch from 'node-fetch'
 import neatCsv from 'neat-csv'
+import { TRecipe } from 'types/recipe.type'
 
 class CSVFetchService {
   private url: string
@@ -8,7 +9,7 @@ class CSVFetchService {
     this.url = url
   }
 
-  public async getData() {
+  public async getData(): Promise<TRecipe[]> {
     const res = await fetch(this.url)
     const text = await res.buffer()
     return neatCsv(text)
