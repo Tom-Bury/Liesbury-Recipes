@@ -26,23 +26,27 @@ const stringHash = (str: string): number => {
   return hash
 }
 
-const fetchAndSaveImage = async (fileName: number, url: string) => {
+const downloadImage = async (fileName: number, url: string) => {
+  const res = await fetch(url)
+  const buffer = await res.buffer()
+  writeFile(`${IMAGES_DIR}/${fileName}.jpg`, buffer, err => {
+    if (err) {
+      LoggingService.writeLog(`ERROR - Download image failed for ${url} to ${fileName}.jpg`)
+    } else {
+      LoggingService.writeLog(`Downloaded image ${url} to ${fileName}.jpg`)
+    }
+  })
+}
+
+const fetchAndSaveOpenGraphImage = async (fileName: number, url: string) => {
   const { error, result } = await OGS({ url })
   if (!error && result.success) {
     const ogData = result as any
     if (ogData.ogImage && ogData.ogImage.url) {
       try {
-        const res = await fetch(ogData.ogImage.url)
-        const buffer = await res.buffer()
-        writeFile(`${IMAGES_DIR}/${fileName}.jpg`, buffer, err => {
-          if (err) {
-            LoggingService.writeLog(`ERROR - Download image failed for ${url} to ${fileName}.jpg`)
-          } else {
-            LoggingService.writeLog(`Downloaded image ${url} to ${fileName}.jpg`)
-          }
-        })
-      } catch (error) {
-        LoggingService.writeLog(`ERROR ${error} while fetching image ${ogData.ogImage.url} for ${url}`)
+        downloadImage(fileName, ogData.ogImage.url)
+      } catch (err) {
+        LoggingService.writeLog(`ERROR ${err} while fetching image ${ogData.ogImage.url} for ${url}`)
       }
     }
   } else {
@@ -55,13 +59,23 @@ const savePreviewImages = (recipes: TRecipe[]) => {
     const fileName = stringHash(r.title)
     stat(`${IMAGES_DIR}/${fileName}.jpg`, (err, _) => {
       if (err) {
-        LoggingService.writeLog(`Fetching image for ${r.url}`)
-        fetchAndSaveImage(fileName, r.url)
+        if (r.imgUrl) {
+          LoggingService.writeLog(`Fetching custom image for ${r.url}: ${r.imgUrl}`)
+          downloadImage(fileName, r.imgUrl)
+        } else {
+          LoggingService.writeLog(`Fetching OG image for ${r.url}`)
+          fetchAndSaveOpenGraphImage(fileName, r.url)
+        }
       } else {
         LoggingService.writeLog(`Image for ${r.url} already present`)
       }
     })
   })
+}
+
+const getRecipeImagePath = (recipe: TRecipe): string => {
+  const fileName = `${stringHash(recipe.title)}.jpg`
+  return `/images/previews/${fileName}`
 }
 
 export const getAllRecipes = async (): Promise<TRecipe[]> => {
@@ -71,7 +85,12 @@ export const getAllRecipes = async (): Promise<TRecipe[]> => {
     const recipes = await neatCsv<TRecipe>(text)
     LoggingService.writeLog(`Successfully fetched ${recipes.length} recipes`)
     savePreviewImages(recipes)
-    return recipes
+    return recipes.map(r => {
+      return {
+        ...r,
+        imgPath: getRecipeImagePath(r)
+      }
+    })
   } catch (error) {
     LoggingService.writeLog(error)
     // TODO: save recipes in file & retrieve ?
@@ -79,7 +98,4 @@ export const getAllRecipes = async (): Promise<TRecipe[]> => {
   }
 }
 
-export const getRecipeImagePath = (recipe: TRecipe): string => {
-  const fileName = `${stringHash(recipe.title)}.jpg`
-  return `/images/previews/${fileName}`
-}
+export const test = () => null
