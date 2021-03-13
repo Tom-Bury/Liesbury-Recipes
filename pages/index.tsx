@@ -11,6 +11,7 @@ const IndexPage: NextPage = () => (
       <Image src="/images/food.jpg" alt="Some food" width={500} height={350} />
       <PageTitle>Liesbury's recepentlijst</PageTitle>
     </HorizontalCenterLayout>
+
     {recipesMock.map(recipe => (
       <RecipeCard key={recipe.title} recipe={recipe} />
     ))}

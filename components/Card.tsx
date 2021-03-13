@@ -1,5 +1,13 @@
+import classNames from 'classnames'
 import * as React from 'react'
 
-const Card: React.FC = ({ children }) => <div className="m-4 rounded-xl shadow-md">{children}</div>
+type TProps = {
+  className: string
+}
+
+const Card: React.FC<TProps> = ({ children, className }) => {
+  const classes = classNames('m-4 rounded-xl shadow bg-light', className)
+  return <div className={classes}>{children}</div>
+}
 
 export default Card
