@@ -2,16 +2,75 @@ import fetch from 'node-fetch'
 import neatCsv from 'neat-csv'
 import { TRecipe } from 'types/recipe.type'
 import LoggingService from 'services/LoggingService'
+import OGS from 'open-graph-scraper'
+import { stat, writeFile } from 'fs'
+import path from 'path'
 
 const SHEETS_DATA_URL =
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vQSX6_vVklWYgnay7sSHwIDzN7h76paDCNPXqUSK7JaKGXE8gH17uymHre3L7pX3dE9jTx4bdSiejf5/pub?output=csv'
+
+const IMAGES_DIR = path.join(process.cwd(), 'public', 'images', 'previews')
+
+const stringHash = (str: string): number => {
+  let hash = 0
+  let i
+  let chr
+  if (str.length === 0) return hash
+  for (i = 0; i < str.length; i += 1) {
+    chr = str.charCodeAt(i)
+    // eslint-disable-next-line no-bitwise
+    hash = (hash << 5) - hash + chr
+    // eslint-disable-next-line no-bitwise
+    hash |= 0 // Convert to 32bit integer
+  }
+  return hash
+}
+
+const fetchAndSaveImage = async (fileName: number, url: string) => {
+  const { error, result } = await OGS({ url })
+  if (!error && result.success) {
+    const ogData = result as any
+    if (ogData.ogImage && ogData.ogImage.url) {
+      try {
+        const res = await fetch(ogData.ogImage.url)
+        const buffer = await res.buffer()
+        writeFile(`${IMAGES_DIR}/${fileName}.jpg`, buffer, err => {
+          if (err) {
+            LoggingService.writeLog(`ERROR - Download image failed for ${url} to ${fileName}.jpg`)
+          } else {
+            LoggingService.writeLog(`Downloaded image ${url} to ${fileName}.jpg`)
+          }
+        })
+      } catch (error) {
+        LoggingService.writeLog(`ERROR ${error} while fetching image ${ogData.ogImage.url} for ${url}`)
+      }
+    }
+  } else {
+    LoggingService.writeLog(`ERROR while fetching OG data for ${url}`)
+  }
+}
+
+const savePreviewImages = (recipes: TRecipe[]) => {
+  recipes.forEach(r => {
+    const fileName = stringHash(r.title)
+    stat(`${IMAGES_DIR}/${fileName}.jpg`, (err, _) => {
+      if (err) {
+        LoggingService.writeLog(`Fetching image for ${r.url}`)
+        fetchAndSaveImage(fileName, r.url)
+      } else {
+        LoggingService.writeLog(`Image for ${r.url} already present`)
+      }
+    })
+  })
+}
 
 export const getAllRecipes = async (): Promise<TRecipe[]> => {
   try {
     const res = await fetch(SHEETS_DATA_URL)
     const text = await res.buffer()
     const recipes = await neatCsv<TRecipe>(text)
-    LoggingService.writeLog('Recipes get success')
+    LoggingService.writeLog(`Successfully fetched ${recipes.length} recipes`)
+    savePreviewImages(recipes)
     return recipes
   } catch (error) {
     LoggingService.writeLog(error)
@@ -20,6 +79,7 @@ export const getAllRecipes = async (): Promise<TRecipe[]> => {
   }
 }
 
-export const getRecipe = async (id: string): Promise<TRecipe | null> => {
-  return null
+export const getRecipeImagePath = (recipe: TRecipe): string => {
+  const fileName = `${stringHash(recipe.title)}.jpg`
+  return `/images/previews/${fileName}`
 }

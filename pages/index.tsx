@@ -3,8 +3,8 @@ import { GetStaticProps, NextPage } from 'next'
 import Image from 'next/image'
 import { ColumnLayout, GridLayout, HorizontalCenterLayout } from 'layouts'
 import { TRecipe } from 'types/recipe.type'
+import { getAllRecipes, getRecipeImagePath } from 'utils/recipesData.utils'
 import { RecipeCard, PageTitle } from '../components'
-import { getAllRecipes } from '~/utils/recipesData.utils'
 
 const FRONT_IMAGE_DIMENSIONS = {
   width: 250,
@@ -13,7 +13,7 @@ const FRONT_IMAGE_DIMENSIONS = {
 
 const FRONT_IMAGE_SCALE = 1.75
 
-const IndexPage: NextPage = ({ recipes }) => (
+const IndexPage: NextPage = ({ recipes, recipeImgs }) => (
   <ColumnLayout>
     <HorizontalCenterLayout classNames="mt-4 md:mt-8 mb-8 md:mb-12">
       <Image
@@ -26,8 +26,8 @@ const IndexPage: NextPage = ({ recipes }) => (
     </HorizontalCenterLayout>
     <HorizontalCenterLayout>
       <GridLayout>
-        {recipes.map((recipe: TRecipe) => (
-          <RecipeCard key={recipe.title} recipe={recipe} />
+        {recipes.map((recipe: TRecipe, i: number) => (
+          <RecipeCard key={recipe.title} title={recipe.title} imgPath={recipeImgs[i]} />
         ))}
       </GridLayout>
     </HorizontalCenterLayout>
@@ -38,7 +38,8 @@ export const getStaticProps: GetStaticProps = async () => {
   const recipes: TRecipe[] = await getAllRecipes()
   return {
     props: {
-      recipes
+      recipes,
+      recipeImgs: recipes.map(getRecipeImagePath)
     },
     revalidate: 60 // in seconds
   }

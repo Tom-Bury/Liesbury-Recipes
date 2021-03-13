@@ -18,10 +18,12 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@types/open-graph-scraper": "^4.7.0",
     "classnames": "^2.2.6",
     "neat-csv": "^6.0.1",
     "next": "^10.0.4",
     "node-fetch": "^2.6.1",
+    "open-graph-scraper": "^4.8.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },

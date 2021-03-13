@@ -1,6 +1,7 @@
 import { stat, writeFile, appendFile } from 'fs'
+import path from 'path'
 
-const LOGFILE_PREFIX = './public/logs/logfile'
+const LOGFILE_PREFIX = path.join(process.cwd(), 'public', 'logs', 'logfile')
 const LOGFILE_EXT = '.log'
 
 const getCurrLogFileName = () => {
