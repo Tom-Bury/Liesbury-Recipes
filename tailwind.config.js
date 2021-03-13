@@ -15,6 +15,9 @@ module.exports = {
       error: '#E29578',
       'error-light': '#E8C6B9'
     },
+    fontFamily: {
+      title: ['Pacifico']
+    },
     extend: {}
   },
   variants: {
