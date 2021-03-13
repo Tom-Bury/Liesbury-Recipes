@@ -2,10 +2,9 @@ import * as React from 'react'
 import { GetStaticProps, NextPage } from 'next'
 import Image from 'next/image'
 import { ColumnLayout, GridLayout, HorizontalCenterLayout } from 'layouts'
-import recipesMock from '__mocks__/recipes'
 import { TRecipe } from 'types/recipe.type'
-import LiesburyRecipesService from 'services/LiesburyRecipesService'
 import { RecipeCard, PageTitle } from '../components'
+import { getAllRecipes } from '~/utils/recipesData.utils'
 
 const FRONT_IMAGE_DIMENSIONS = {
   width: 250,
@@ -35,16 +34,13 @@ const IndexPage: NextPage = ({ recipes }) => (
   </ColumnLayout>
 )
 
-// This function gets called at build time on server-side.
-// It may be called again, on a serverless function, if
-// revalidation is enabled and a new request comes in
 export const getStaticProps: GetStaticProps = async () => {
-  const recipes: TRecipe[] = await LiesburyRecipesService.getData()
+  const recipes: TRecipe[] = await getAllRecipes()
   return {
     props: {
       recipes
     },
-    revalidate: 60
+    revalidate: 60 // in seconds
   }
 }
 
