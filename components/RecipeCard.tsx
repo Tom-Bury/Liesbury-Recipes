@@ -10,7 +10,7 @@ type TProps = {
 
 const RecipeCard: React.FC<TProps> = ({ title, imgPath }) => {
   return (
-    <Card className="max-w-sm w-full" hoverable>
+    <Card className="recipeCard" hoverable>
       <div className="flex flex-col h-80 p-4">
         <div className="w-full h-60 relative">
           <Image className="rounded-xl" src={imgPath} alt={title} layout="fill" objectFit="cover" />

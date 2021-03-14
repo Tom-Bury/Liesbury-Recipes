@@ -6,13 +6,14 @@ import RecipeCard from './RecipeCard'
 
 type TProps = {
   recipes: TRecipe[]
+  className?: string
 }
 
-const RecipeList: React.FC<TProps> = ({ recipes }) => (
+const RecipeList: React.FC<TProps> = ({ recipes, className }) => (
   <HorizontalCenterLayout>
-    <GridLayout>
+    <GridLayout className={className}>
       {recipes.map((recipe: TRecipe) => (
-        <LinkWrap key={recipe.id} href={`/recipe/${recipe.id}`}>
+        <LinkWrap key={recipe.id} href={`/recipe/${recipe.id}`} className="recipeCard">
           <RecipeCard title={recipe.title} imgPath={recipe.imgPath} />
         </LinkWrap>
       ))}
