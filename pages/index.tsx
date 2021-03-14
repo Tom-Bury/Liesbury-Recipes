@@ -7,7 +7,7 @@ import { getAllRecipes } from 'utils/recipesData.utils'
 import LinkWrap from '~/components/LinkWrap'
 import PageTitle from '~/components/PageTitle'
 import RecipeCard from '~/components/RecipeCard'
-import SearchBar from '~/components/SearchBar'
+import SearchBar from '~/components/SearchBar/SearchBar'
 
 const FRONT_IMAGE_DIMENSIONS = {
   width: 250,
@@ -22,17 +22,17 @@ type TProps = {
 
 const IndexPage: NextPage<TProps> = ({ recipes }) => (
   <ColumnLayout>
-    <HorizontalCenterLayout className="mt-4 md:mt-8 mb-8 md:mb-12">
+    <HorizontalCenterLayout className="mt-2">
       <Image
         src="/images/liesbury-recipes-colored.svg"
         alt="Liesbury's receptenlijst"
         width={FRONT_IMAGE_SCALE * FRONT_IMAGE_DIMENSIONS.width}
         height={FRONT_IMAGE_SCALE * FRONT_IMAGE_DIMENSIONS.height}
       />
-      <PageTitle className="mt-4 sm:mt-8">{PAGE_TITLE}</PageTitle>
+      <PageTitle className="mt-4">{PAGE_TITLE}</PageTitle>
     </HorizontalCenterLayout>
-    <HorizontalCenterLayout>
-      <SearchBar />
+    <HorizontalCenterLayout className="my-8">
+      <SearchBar className="max-w-xl" />
     </HorizontalCenterLayout>
     <HorizontalCenterLayout className="p-4">
       <GridLayout>
