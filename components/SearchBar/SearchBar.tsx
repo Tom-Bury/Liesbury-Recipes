@@ -8,8 +8,7 @@ type TProps = {
 }
 
 const SearchBar: React.FC<TProps> = ({ onSearch }) => {
-
-  const search = async (event: React.FormEvent<HTMLFormElement>) => {
+  const search = async (event: any) => {
     event.preventDefault()
     const query = event.target.search.value
     if (query) {
