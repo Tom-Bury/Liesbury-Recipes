@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
-
-import 'tailwindcss/tailwind.css'
+import '../styles/globals.css'
 
 export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
@@ -15,3 +14,5 @@ export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     </>
   )
 }
+
+// https://coolors.co/264653-2a9d8f-e9c46a-f4a261-e76f51

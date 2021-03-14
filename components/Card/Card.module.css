@@ -1,0 +1,31 @@
+.card-base {
+  @apply cursor-pointer m-4 rounded-xl shadow bg-light;
+}
+
+.card-hoverable {
+  @apply transition duration-200 ease-out transform;
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply transition duration-200 ease-out;
+  }
+}
+
+.card-hoverable:hover {
+  @apply bg-dark -translate-y-1 scale-110;
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-lightest;
+  }
+}
