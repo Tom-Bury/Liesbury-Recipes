@@ -5,15 +5,26 @@ import styles from './SearchBar.module.css'
 
 type TProps = {
   className?: string
+  onSearch: (query: string) => void
 }
 
-const SearchBar: React.FC<TProps> = ({ className }) => {
+const SearchBar: React.FC<TProps> = ({ className, onSearch }) => {
   const classes = classNames('relative w-full', className)
+
+  const search = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const query = event.target.search.value
+    if (query) {
+      onSearch(query)
+    }
+  }
+
   return (
-    <form className={classes}>
+    <form className={classes} onSubmit={search}>
       <input
         type="search"
         name="search"
+        id="search"
         placeholder="Search"
         className={classNames(
           'bg-primary h-12 w-full text-white px-5 pr-10 rounded-full text-md focus:outline-none focus:ring-4 focus:ring-dark focus:ring-opacity-50 transition duration-150',

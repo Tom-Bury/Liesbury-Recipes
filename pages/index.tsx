@@ -12,16 +12,35 @@ type TProps = {
   recipes: TRecipe[]
 }
 
-const IndexPage: NextPage<TProps> = ({ recipes }) => (
-  <ColumnLayout>
-    <Banner />
-    <HorizontalCenterLayout className="my-8">
-      <SearchBar className="max-w-xl" />
-    </HorizontalCenterLayout>
-    <hr className="mb-8 border-2 border-primary lg:mx-8" />
-    <RecipeList recipes={recipes} />
-  </ColumnLayout>
-)
+const IndexPage: NextPage<TProps> = ({ recipes }) => {
+  const [currRecipes, setCurrRecipes] = React.useState(recipes)
+
+  const searchRecipes = async (query: string) => {
+    const res = await fetch(
+      `/api/SearchRecipe?${new URLSearchParams({
+        q: query
+      })}`
+    )
+    if (res.status === 200) {
+      const newRecipes = await res.json()
+      setCurrRecipes(newRecipes.results)
+    } else {
+      // TODO: no recipes found
+      setCurrRecipes([])
+    }
+  }
+
+  return (
+    <ColumnLayout>
+      <Banner />
+      <HorizontalCenterLayout className="my-8">
+        <SearchBar className="max-w-xl" onSearch={searchRecipes} />
+      </HorizontalCenterLayout>
+      <hr className="mb-8 border-2 border-primary lg:mx-8" />
+      <RecipeList recipes={currRecipes} />
+    </ColumnLayout>
+  )
+}
 
 export const getStaticProps: GetStaticProps = async () => {
   const recipes: TRecipe[] = await getAllRecipes()
