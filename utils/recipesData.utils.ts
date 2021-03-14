@@ -12,18 +12,8 @@ const SHEETS_DATA_URL =
 const IMAGES_DIR = path.join(process.cwd(), 'public', 'images', 'previews')
 
 const stringHash = (str: string): number => {
-  let hash = 0
-  let i
-  let chr
-  if (str.length === 0) return hash
-  for (i = 0; i < str.length; i += 1) {
-    chr = str.charCodeAt(i)
-    // eslint-disable-next-line no-bitwise
-    hash = (hash << 5) - hash + chr
-    // eslint-disable-next-line no-bitwise
-    hash |= 0 // Convert to 32bit integer
-  }
-  return hash
+  // eslint-disable-next-line no-bitwise
+  return str.split('').reduce((prevHash, currVal) => ((prevHash << 5) - prevHash + currVal.charCodeAt(0)) | 0, 0)
 }
 
 const downloadImage = async (fileName: number, url: string) => {
@@ -90,7 +80,8 @@ export const getAllRecipes = async (): Promise<TRecipe[]> => {
     return recipes.map(r => {
       return {
         ...r,
-        imgPath: getRecipeImagePath(r)
+        imgPath: getRecipeImagePath(r),
+        id: `${stringHash(r.title)}`
       }
     })
   } catch (error) {

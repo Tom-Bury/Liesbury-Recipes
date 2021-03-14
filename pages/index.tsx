@@ -4,16 +4,22 @@ import Image from 'next/image'
 import { ColumnLayout, GridLayout, HorizontalCenterLayout } from 'layouts'
 import { TRecipe } from 'types/recipe.type'
 import { getAllRecipes } from 'utils/recipesData.utils'
+import Link from 'next/link'
 import { RecipeCard, PageTitle } from '../components'
+import LinkWrap from '~/components/LinkWrap'
 
 const FRONT_IMAGE_DIMENSIONS = {
   width: 250,
   height: 160
 }
-
 const FRONT_IMAGE_SCALE = 1.75
+const PAGE_TITLE = `Liesbury's receptenlijst`
 
-const IndexPage: NextPage = ({ recipes }) => (
+type TProps = {
+  recipes: TRecipe[]
+}
+
+const IndexPage: NextPage<TProps> = ({ recipes }) => (
   <ColumnLayout>
     <HorizontalCenterLayout classNames="mt-4 md:mt-8 mb-8 md:mb-12">
       <Image
@@ -22,12 +28,16 @@ const IndexPage: NextPage = ({ recipes }) => (
         width={FRONT_IMAGE_SCALE * FRONT_IMAGE_DIMENSIONS.width}
         height={FRONT_IMAGE_SCALE * FRONT_IMAGE_DIMENSIONS.height}
       />
-      <PageTitle className="mt-4 sm:mt-8">Liesbury's receptenlijst</PageTitle>
+      <PageTitle className="mt-4 sm:mt-8">{PAGE_TITLE}</PageTitle>
     </HorizontalCenterLayout>
     <HorizontalCenterLayout>
       <GridLayout>
         {recipes.map((recipe: TRecipe) => (
-          <RecipeCard key={recipe.title} title={recipe.title} imgPath={recipe.imgPath} />
+          <Link key={recipe.id} href={`/recipe/${recipe.id}`} passHref>
+            <LinkWrap>
+              <RecipeCard title={recipe.title} imgPath={recipe.imgPath} />
+            </LinkWrap>
+          </Link>
         ))}
       </GridLayout>
     </HorizontalCenterLayout>

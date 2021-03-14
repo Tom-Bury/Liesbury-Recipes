@@ -2,9 +2,12 @@ import * as React from 'react'
 import Image from 'next/image'
 import { Card, ElementTitle } from '.'
 
+type TProps = {
+  title: string
+  imgPath: string
+}
 
-
-const RecipeCard: React.FC = ({ title, imgPath }) => {
+const RecipeCard: React.FC<TProps> = ({ title, imgPath }) => {
   return (
     <Card className="max-w-sm w-full" hoverable>
       <div className="flex flex-col h-80 p-4">
