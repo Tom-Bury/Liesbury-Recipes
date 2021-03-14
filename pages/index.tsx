@@ -1,45 +1,52 @@
 import * as React from 'react'
 import { GetStaticProps, NextPage } from 'next'
-import Image from 'next/image'
-import { ColumnLayout, GridLayout, HorizontalCenterLayout } from 'layouts'
+
+import { ColumnLayout, HorizontalCenterLayout } from 'layouts'
 import { TRecipe } from 'types/recipe.type'
 import { getAllRecipes } from 'utils/recipesData.utils'
-import { RecipeCard, PageTitle } from '../components'
-import LinkWrap from '~/components/LinkWrap'
-
-const FRONT_IMAGE_DIMENSIONS = {
-  width: 250,
-  height: 160
-}
-const FRONT_IMAGE_SCALE = 1.75
-const PAGE_TITLE = `Liesbury's receptenlijst`
+import SearchBar from '~/components/SearchBar/SearchBar'
+import RecipeList from '~/components/RecipeList'
+import Banner from '~/components/Banner'
 
 type TProps = {
   recipes: TRecipe[]
 }
 
-const IndexPage: NextPage<TProps> = ({ recipes }) => (
-  <ColumnLayout>
-    <HorizontalCenterLayout classNames="mt-4 md:mt-8 mb-8 md:mb-12">
-      <Image
-        src="/images/liesbury-recipes-colored.svg"
-        alt="Liesbury's receptenlijst"
-        width={FRONT_IMAGE_SCALE * FRONT_IMAGE_DIMENSIONS.width}
-        height={FRONT_IMAGE_SCALE * FRONT_IMAGE_DIMENSIONS.height}
-      />
-      <PageTitle className="mt-4 sm:mt-8">{PAGE_TITLE}</PageTitle>
-    </HorizontalCenterLayout>
-    <HorizontalCenterLayout>
-      <GridLayout>
-        {recipes.map((recipe: TRecipe) => (
-          <LinkWrap key={recipe.id} href={`/recipe/${recipe.id}`}>
-            <RecipeCard title={recipe.title} imgPath={recipe.imgPath} />
-          </LinkWrap>
-        ))}
-      </GridLayout>
-    </HorizontalCenterLayout>
-  </ColumnLayout>
-)
+const IndexPage: NextPage<TProps> = ({ recipes }) => {
+  const [currRecipes, setCurrRecipes] = React.useState(recipes)
+
+  const searchRecipes = async (query: string) => {
+    const res = await fetch(
+      `/api/SearchRecipe?${new URLSearchParams({
+        q: query
+      })}`
+    )
+    if (res.status === 200) {
+      const responseBody = await res.json()
+      const newRecipes: TRecipe[] = responseBody.results
+      if (newRecipes.length === 0) {
+        // TODO: display no recipes found string
+      }
+      setCurrRecipes(newRecipes)
+    } else {
+      // TODO: no recipes found
+      setCurrRecipes([])
+    }
+  }
+
+  return (
+    <ColumnLayout>
+      <Banner />
+      <HorizontalCenterLayout className="my-8 mx-4">
+        <div className="max-w-xl w-full">
+          <SearchBar onSearch={searchRecipes} />
+        </div>
+      </HorizontalCenterLayout>
+      <hr className="mb-8 border-2 border-primary lg:mx-8" />
+      <RecipeList recipes={currRecipes} />
+    </ColumnLayout>
+  )
+}
 
 export const getStaticProps: GetStaticProps = async () => {
   const recipes: TRecipe[] = await getAllRecipes()

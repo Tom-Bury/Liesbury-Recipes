@@ -6,3 +6,7 @@
 body {
   background-color: #EDF6F9;
 }
+
+.recipeCard {
+  @apply max-w-sm w-full;
+}

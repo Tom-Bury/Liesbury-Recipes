@@ -1,5 +1,5 @@
 .card-base {
-  @apply cursor-pointer m-4 rounded-xl shadow bg-light;
+  @apply cursor-pointer rounded-xl shadow bg-light;
 }
 
 .card-hoverable {
@@ -17,7 +17,7 @@
 }
 
 .card-hoverable:hover {
-  @apply bg-dark -translate-y-1 scale-110;
+  @apply bg-dark -translate-y-1 scale-105;
 
   p,
   h1,
