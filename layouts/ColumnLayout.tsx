@@ -9,7 +9,7 @@ const defaultProps: TProps = {
 }
 
 const ColumnLayout: React.FC<TProps> = ({ children, classNames }) => {
-  const baseClasses = 'md:container mx-auto px-4'
+  const baseClasses = 'mx-auto px-4'
   return <div className={`${baseClasses} ${classNames}`}>{children}</div>
 }
 
