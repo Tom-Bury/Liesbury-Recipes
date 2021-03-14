@@ -4,12 +4,10 @@ import classNames from 'classnames'
 import styles from './SearchBar.module.css'
 
 type TProps = {
-  className?: string
   onSearch: (query: string) => void
 }
 
-const SearchBar: React.FC<TProps> = ({ className, onSearch }) => {
-  const classes = classNames('relative w-full', className)
+const SearchBar: React.FC<TProps> = ({ onSearch }) => {
 
   const search = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -20,7 +18,7 @@ const SearchBar: React.FC<TProps> = ({ className, onSearch }) => {
   }
 
   return (
-    <form className={classes} onSubmit={search}>
+    <form className="relative w-full" onSubmit={search}>
       <input
         type="search"
         name="search"

@@ -37,8 +37,10 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
   return (
     <ColumnLayout>
       <Banner />
-      <HorizontalCenterLayout className="my-8">
-        <SearchBar className="max-w-xl" onSearch={searchRecipes} />
+      <HorizontalCenterLayout className="my-8 mx-4">
+        <div className="max-w-xl w-full">
+          <SearchBar onSearch={searchRecipes} />
+        </div>
       </HorizontalCenterLayout>
       <hr className="mb-8 border-2 border-primary lg:mx-8" />
       <RecipeList recipes={currRecipes} />
