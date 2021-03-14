@@ -48,6 +48,8 @@ const fetchAndSaveOpenGraphImage = async (fileName: number, url: string) => {
       } catch (err) {
         LoggingService.writeLog(`ERROR ${err} while fetching image ${ogData.ogImage.url} for ${url}`)
       }
+    } else {
+      LoggingService.writeLog(`ERROR while fetching OG image for ${url}`)
     }
   } else {
     LoggingService.writeLog(`ERROR while fetching OG data for ${url}`)
