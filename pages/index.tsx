@@ -35,7 +35,7 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
   }
 
   return (
-    <ColumnLayout>
+    <ColumnLayout className="pb-8">
       <Banner />
       <HorizontalCenterLayout className="my-8 mx-4">
         <div className="max-w-xl w-full">
