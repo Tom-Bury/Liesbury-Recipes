@@ -7,12 +7,13 @@ import { getAllRecipes } from 'utils/recipesData.utils'
 import LinkWrap from '~/components/LinkWrap'
 import PageTitle from '~/components/PageTitle'
 import RecipeCard from '~/components/RecipeCard'
+import SearchBar from '~/components/SearchBar'
 
 const FRONT_IMAGE_DIMENSIONS = {
   width: 250,
   height: 160
 }
-const FRONT_IMAGE_SCALE = 1.75
+const FRONT_IMAGE_SCALE = 1.25
 const PAGE_TITLE = `Liesbury's receptenlijst`
 
 type TProps = {
@@ -21,7 +22,7 @@ type TProps = {
 
 const IndexPage: NextPage<TProps> = ({ recipes }) => (
   <ColumnLayout>
-    <HorizontalCenterLayout classNames="mt-4 md:mt-8 mb-8 md:mb-12">
+    <HorizontalCenterLayout className="mt-4 md:mt-8 mb-8 md:mb-12">
       <Image
         src="/images/liesbury-recipes-colored.svg"
         alt="Liesbury's receptenlijst"
@@ -31,6 +32,9 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => (
       <PageTitle className="mt-4 sm:mt-8">{PAGE_TITLE}</PageTitle>
     </HorizontalCenterLayout>
     <HorizontalCenterLayout>
+      <SearchBar />
+    </HorizontalCenterLayout>
+    <HorizontalCenterLayout className="p-4">
       <GridLayout>
         {recipes.map((recipe: TRecipe) => (
           <LinkWrap key={recipe.id} href={`/recipe/${recipe.id}`}>
