@@ -22,8 +22,12 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
       })}`
     )
     if (res.status === 200) {
-      const newRecipes = await res.json()
-      setCurrRecipes(newRecipes.results)
+      const responseBody = await res.json()
+      const newRecipes: TRecipe[] = responseBody.results
+      if (newRecipes.length === 0) {
+        // TODO: display no recipes found string
+      }
+      setCurrRecipes(newRecipes)
     } else {
       // TODO: no recipes found
       setCurrRecipes([])
@@ -37,7 +41,7 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
         <SearchBar className="max-w-xl" onSearch={searchRecipes} />
       </HorizontalCenterLayout>
       <hr className="mb-8 border-2 border-primary lg:mx-8" />
-      <RecipeList recipes={currRecipes} />
+      <RecipeList recipes={currRecipes} className="" />
     </ColumnLayout>
   )
 }
