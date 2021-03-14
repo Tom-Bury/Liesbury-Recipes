@@ -1,10 +1,18 @@
 import * as React from 'react'
+import Link from 'next/link'
 
-const LinkWrap: React.ForwardRefExoticComponent<any> = React.forwardRef(({ href, onClick, children }, ref) => {
+type TProps = React.PropsWithChildren<{
+  href: string
+  id?: string
+}>
+
+const LinkWrap: React.ForwardRefExoticComponent<TProps> = React.forwardRef(({ id, href, children }, ref) => {
   return (
-    <a className="w-full" href={href} onClick={onClick} ref={ref}>
-      {children}
-    </a>
+    <Link key={id} href={href} passHref>
+      <a className="w-full" href={href} ref={ref}>
+        {children}
+      </a>
+    </Link>
   )
 })
 

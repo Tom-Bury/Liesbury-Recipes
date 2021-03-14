@@ -4,7 +4,6 @@ import Image from 'next/image'
 import { ColumnLayout, GridLayout, HorizontalCenterLayout } from 'layouts'
 import { TRecipe } from 'types/recipe.type'
 import { getAllRecipes } from 'utils/recipesData.utils'
-import Link from 'next/link'
 import { RecipeCard, PageTitle } from '../components'
 import LinkWrap from '~/components/LinkWrap'
 
@@ -33,11 +32,9 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => (
     <HorizontalCenterLayout>
       <GridLayout>
         {recipes.map((recipe: TRecipe) => (
-          <Link key={recipe.id} href={`/recipe/${recipe.id}`} passHref>
-            <LinkWrap>
-              <RecipeCard title={recipe.title} imgPath={recipe.imgPath} />
-            </LinkWrap>
-          </Link>
+          <LinkWrap key={recipe.id} href={`/recipe/${recipe.id}`}>
+            <RecipeCard title={recipe.title} imgPath={recipe.imgPath} />
+          </LinkWrap>
         ))}
       </GridLayout>
     </HorizontalCenterLayout>

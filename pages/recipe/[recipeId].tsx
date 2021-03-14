@@ -1,5 +1,7 @@
+import { ColumnLayout } from 'layouts'
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import { useRouter } from 'next/dist/client/router'
+import Link from 'next/link'
 import * as React from 'react'
 import { TRecipe } from 'types/recipe.type'
 import { getAllRecipes } from '~/utils/recipesData.utils'
@@ -18,7 +20,14 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
     // TODO
     return <p>Recipe not found</p>
   }
-  return <p>{recipe.title}</p>
+  return (
+    <ColumnLayout>
+      <Link href="/">
+        <a>Back</a>
+      </Link>
+      <p>{recipe.title}</p>
+    </ColumnLayout>
+  )
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
