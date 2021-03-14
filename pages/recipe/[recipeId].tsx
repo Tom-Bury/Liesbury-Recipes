@@ -25,7 +25,9 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
       <Link href="/">
         <a>Back</a>
       </Link>
-      <p>{recipe.title}</p>
+      <a href={recipe.url} target="_blank" rel="noopener noreferrer">
+        {recipe.title}
+      </a>
     </ColumnLayout>
   )
 }
