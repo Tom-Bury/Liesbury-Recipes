@@ -8,6 +8,7 @@ import LinkWrap from '~/components/LinkWrap'
 import PageTitle from '~/components/PageTitle'
 import RecipeCard from '~/components/RecipeCard'
 import SearchBar from '~/components/SearchBar/SearchBar'
+import RecipeList from '~/components/RecipeList'
 
 const FRONT_IMAGE_DIMENSIONS = {
   width: 250,
@@ -34,15 +35,7 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => (
     <HorizontalCenterLayout className="my-8">
       <SearchBar className="max-w-xl" />
     </HorizontalCenterLayout>
-    <HorizontalCenterLayout className="p-4">
-      <GridLayout>
-        {recipes.map((recipe: TRecipe) => (
-          <LinkWrap key={recipe.id} href={`/recipe/${recipe.id}`}>
-            <RecipeCard title={recipe.title} imgPath={recipe.imgPath} />
-          </LinkWrap>
-        ))}
-      </GridLayout>
-    </HorizontalCenterLayout>
+    <RecipeList recipes={recipes} />
   </ColumnLayout>
 )
 
