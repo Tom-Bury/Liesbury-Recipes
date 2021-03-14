@@ -4,8 +4,9 @@ import Image from 'next/image'
 import { ColumnLayout, GridLayout, HorizontalCenterLayout } from 'layouts'
 import { TRecipe } from 'types/recipe.type'
 import { getAllRecipes } from 'utils/recipesData.utils'
-import { RecipeCard, PageTitle } from '../components'
 import LinkWrap from '~/components/LinkWrap'
+import PageTitle from '~/components/PageTitle'
+import RecipeCard from '~/components/RecipeCard'
 
 const FRONT_IMAGE_DIMENSIONS = {
   width: 250,

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import Image from 'next/image'
-import { Card, ElementTitle } from '.'
+import Card from './Card/Card'
+import ElementTitle from './ElementTitle'
 
 type TProps = {
   title: string
