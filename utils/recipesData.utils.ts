@@ -17,7 +17,7 @@ const stringHash = (str: string): number => {
 }
 
 const downloadImage = async (fileName: number, url: string) => {
-  const res = await fetch(url)
+  const res = await fetch(url.trim())
   const buffer = await res.buffer()
   writeFile(`${IMAGES_DIR}/${fileName}.jpg`, buffer, err => {
     if (err) {
@@ -46,7 +46,6 @@ const fetchAndSaveOpenGraphImage = async (fileName: number, url: string) => {
       LoggingService.writeLog(`ERROR while fetching OG data for ${url}`)
     }
   } catch (error) {
-    console.log(error)
     LoggingService.writeLog(`ERROR ${error.toString()} while fetching OG data for ${url}`)
   }
 }
@@ -86,6 +85,7 @@ export const getAllRecipes = async (): Promise<TRecipe[]> => {
       return {
         ...r,
         url: r.url.trim(),
+        imgUrl: r.imgUrl.trim(),
         imgPath: getRecipeImagePath(r),
         id: `${stringHash(r.title)}`
       }
