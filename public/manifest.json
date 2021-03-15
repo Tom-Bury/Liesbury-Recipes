@@ -1,0 +1,25 @@
+{
+  "short_name": "LB Recepten",
+  "name": "Liesbury's receptenlijst",
+  "icons": [
+    {
+      "src": "/icons/liesbury-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icons/liesbury-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#005259",
+  "display": "fullscreen",
+  "scope": "/",
+  "theme_color": "#005259",
+  "shortcuts": [],
+  "description": "Lijst met recepten gevonden op het internet",
+  "screenshots": [
+  ]
+}
