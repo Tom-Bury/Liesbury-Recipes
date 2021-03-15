@@ -15,8 +15,10 @@ const Banner: React.FC = () => (
     <Image
       src="/images/liesbury-recipes-colored.svg"
       alt="Liesbury's receptenlijst"
+      className="cursor-pointer"
       width={FRONT_IMAGE_SCALE * FRONT_IMAGE_DIMENSIONS.width}
       height={FRONT_IMAGE_SCALE * FRONT_IMAGE_DIMENSIONS.height}
+      onClick={() => window.location.reload()}
     />
     <PageTitle className="mt-4">{PAGE_TITLE}</PageTitle>
   </HorizontalCenterLayout>
