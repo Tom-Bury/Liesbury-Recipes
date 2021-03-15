@@ -10,6 +10,7 @@ type TProps = {
 const SearchBar: React.FC<TProps> = ({ onSearch }) => {
   const search = async (event: any) => {
     event.preventDefault()
+    document.getElementById('search')?.blur()
     const query = event.target.search.value
     if (query) {
       onSearch(query)
@@ -23,6 +24,7 @@ const SearchBar: React.FC<TProps> = ({ onSearch }) => {
         name="search"
         id="search"
         placeholder="Search"
+        autoComplete="off"
         className={classNames(
           'bg-primary h-12 w-full text-white px-5 pr-10 rounded-full text-md focus:outline-none focus:ring-4 focus:ring-dark focus:ring-opacity-50 transition duration-150',
           styles.input
