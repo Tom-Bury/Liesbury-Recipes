@@ -29,20 +29,25 @@ const downloadImage = async (fileName: number, url: string) => {
 }
 
 const fetchAndSaveOpenGraphImage = async (fileName: number, url: string) => {
-  const { error, result } = await OGS({ url })
-  if (!error && result.success) {
-    const ogData = result as any
-    if (ogData.ogImage && ogData.ogImage.url) {
-      try {
-        downloadImage(fileName, ogData.ogImage.url)
-      } catch (err) {
-        LoggingService.writeLog(`ERROR ${err} while fetching image ${ogData.ogImage.url} for ${url}`)
+  try {
+    const { error, result } = await OGS({ url: url.trim() })
+    if (!error && result.success) {
+      const ogData = result as any
+      if (ogData.ogImage && ogData.ogImage.url) {
+        try {
+          downloadImage(fileName, ogData.ogImage.url)
+        } catch (err) {
+          LoggingService.writeLog(`ERROR ${err.toString()} while downloading OG image ${ogData.ogImage.url} for ${url}`)
+        }
+      } else {
+        LoggingService.writeLog(`ERROR while fetching OG image for ${url}`)
       }
     } else {
-      LoggingService.writeLog(`ERROR while fetching OG image for ${url}`)
+      LoggingService.writeLog(`ERROR while fetching OG data for ${url}`)
     }
-  } else {
-    LoggingService.writeLog(`ERROR while fetching OG data for ${url}`)
+  } catch (error) {
+    console.log(error)
+    LoggingService.writeLog(`ERROR ${error.toString()} while fetching OG data for ${url}`)
   }
 }
 
@@ -80,6 +85,7 @@ export const getAllRecipes = async (): Promise<TRecipe[]> => {
     return recipes.map(r => {
       return {
         ...r,
+        url: r.url.trim(),
         imgPath: getRecipeImagePath(r),
         id: `${stringHash(r.title)}`
       }
