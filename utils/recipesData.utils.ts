@@ -35,7 +35,7 @@ const getOpenGraphImgUrl = async (url: string): Promise<string | null> => {
 const savePreviewImages = (recipes: TRecipe[]) => {
   recipes.forEach(async r => {
     const fileName = `${stringHash(r.title)}.jpg`
-    const exists = StorageService.fileExists(fileName);
+    const exists = await StorageService.fileExists(fileName)
     if (!exists) {
       if (r.imgUrl) {
         LoggingService.writeLog(`Fetching custom image for ${r.url}: ${r.imgUrl}`)
