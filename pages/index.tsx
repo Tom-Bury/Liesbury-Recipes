@@ -7,6 +7,7 @@ import { getAllRecipes } from 'utils/recipesData.utils'
 import SearchBar from '~/components/SearchBar/SearchBar'
 import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
+import Loading from '~/components/Loading'
 
 type TProps = {
   recipes: TRecipe[]
@@ -14,8 +15,10 @@ type TProps = {
 
 const IndexPage: NextPage<TProps> = ({ recipes }) => {
   const [currRecipes, setCurrRecipes] = React.useState(recipes)
+  const [isLoading, setIsLoading] = React.useState(false)
 
   const searchRecipes = async (query: string) => {
+    setIsLoading(true)
     const res = await fetch(
       `/api/SearchRecipe?${new URLSearchParams({
         q: query
@@ -28,9 +31,11 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
         // TODO: display no recipes found string
       }
       setCurrRecipes(newRecipes)
+      setIsLoading(false)
     } else {
       // TODO: no recipes found
       setCurrRecipes([])
+      setIsLoading(false)
     }
   }
 
@@ -43,7 +48,13 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
         </div>
       </HorizontalCenterLayout>
       <hr className="mb-8 border-2 border-primary lg:mx-8" />
-      <RecipeList recipes={currRecipes} />
+      {isLoading ? (
+        <HorizontalCenterLayout>
+          <Loading />
+        </HorizontalCenterLayout>
+      ) : (
+        <RecipeList recipes={currRecipes} />
+      )}
     </ColumnLayout>
   )
 }

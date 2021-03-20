@@ -9,6 +9,7 @@ export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Liesbury Recipes</title>
+        <link rel="manifest" href="/manifest.json" />
       </Head>
       <Component {...pageProps} />
     </>

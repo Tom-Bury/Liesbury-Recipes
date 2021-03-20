@@ -1,4 +1,4 @@
-import { stat, writeFile, appendFile } from 'fs'
+import { stat, writeFile, appendFile, readdir } from 'fs'
 import path from 'path'
 
 const LOGFILE_PREFIX = path.join(process.cwd(), 'public', 'logs', 'logfile')
@@ -7,6 +7,21 @@ const LOGFILE_EXT = '.log'
 const getCurrLogFileName = () => {
   const now = new Date()
   return `${LOGFILE_PREFIX}-${now.getUTCDate()}-${now.getUTCMonth()}-${now.getUTCFullYear()}${LOGFILE_EXT}`
+}
+
+export const getLogFilePath = (dateStr: string): string => {
+  return `${LOGFILE_PREFIX}-${dateStr}${LOGFILE_EXT}`
+}
+
+export const getAvailableLogFileDates = (callback: (dates: string[]) => void) => {
+  const logsDir = path.join(process.cwd(), 'public', 'logs')
+  readdir(logsDir, (err, files) => {
+    if (err) {
+      callback([])
+    } else {
+      callback(files.filter(f => f.endsWith('.log')).map(f => f.substring(f.indexOf('-') + 1, f.lastIndexOf('.'))))
+    }
+  })
 }
 
 class LoggingService {

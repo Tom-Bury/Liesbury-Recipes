@@ -14,7 +14,7 @@ const stringHash = (str: string): number => {
 }
 
 const downloadFileFromUrl = async (url: string): Promise<Buffer> => {
-  const res = await fetch(url)
+  const res = await fetch(url.trim())
   const buffer = await res.buffer()
   return buffer
 }
@@ -69,6 +69,7 @@ export const getAllRecipes = async (): Promise<TRecipe[]> => {
       return {
         ...r,
         url: r.url.trim(),
+        imgUrl: r.imgUrl.trim(),
         imgPath: getRecipeImagePath(r),
         id: `${stringHash(r.title)}`
       }
