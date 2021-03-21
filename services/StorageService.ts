@@ -1,5 +1,7 @@
 import { Storage, Bucket } from '@google-cloud/storage'
+import * as dotenv from 'dotenv'
 
+dotenv.config()
 class StorageService {
   private bucket: Bucket
 
