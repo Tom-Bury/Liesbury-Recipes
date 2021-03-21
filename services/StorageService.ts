@@ -1,12 +1,9 @@
 import { Storage, Bucket } from '@google-cloud/storage'
-import * as dotenv from 'dotenv'
-
-dotenv.config()
 
 class StorageService {
   private bucket: Bucket
 
-  public bucketUrl = `https://storage.googleapis.com/${process.env.GCS_BUCKET_NAME}`
+  public static bucketUrl = `https://storage.googleapis.com/${process.env.GCS_BUCKET_NAME}`
 
   constructor() {
     const bucketName = process.env.GCS_BUCKET_NAME
@@ -22,12 +19,12 @@ class StorageService {
     this.bucket = storage.bucket(bucketName as string)
   }
 
-  public async uploadFile(file: Buffer, fileName: string) {
+  public async uploadFile(file: Buffer, fileName: string): Promise<void> {
     const newFileRef = this.bucket.file(fileName)
     await newFileRef.save(file)
   }
 
-  public async fileExists(fileName: string) {
+  public async fileExists(fileName: string): Promise<boolean> {
     const fileRef = this.bucket.file(fileName)
     const response = await fileRef.exists()
     const exists = response[0]
@@ -35,4 +32,4 @@ class StorageService {
   }
 }
 
-export default new StorageService()
+export default StorageService
