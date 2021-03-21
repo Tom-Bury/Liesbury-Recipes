@@ -33,25 +33,33 @@ const getOpenGraphImgUrl = async (url: string): Promise<string | null> => {
 }
 
 const savePreviewImages = (recipes: TRecipe[]) => {
-  recipes.forEach(async r => {
-    const fileName = `${stringHash(r.title)}.jpg`
-    const storage = new StorageService()
-    const exists = await storage.fileExists(fileName)
-    if (!exists) {
-      if (r.imgUrl) {
-        LoggingService.writeLog(`Fetching custom image for ${r.url}: ${r.imgUrl}`)
-        const img = await downloadFileFromUrl(r.imgUrl)
-        storage.uploadFile(img, fileName)
-      } else {
-        LoggingService.writeLog(`Fetching OG image for ${r.url}`)
-        const imgUrl = await getOpenGraphImgUrl(r.url)
-        if (imgUrl) {
-          const img = await downloadFileFromUrl(imgUrl)
+  let storage: StorageService
+  try {
+    storage = new StorageService()
+  } catch (error) {
+    throw Error('Could not initialize storage service')
+  }
+
+  if (storage) {
+    recipes.forEach(async r => {
+      const fileName = `${stringHash(r.title)}.jpg`
+      const exists = await storage.fileExists(fileName)
+      if (!exists) {
+        if (r.imgUrl) {
+          LoggingService.writeLog(`Fetching custom image for ${r.url}: ${r.imgUrl}`)
+          const img = await downloadFileFromUrl(r.imgUrl)
           storage.uploadFile(img, fileName)
+        } else {
+          LoggingService.writeLog(`Fetching OG image for ${r.url}`)
+          const imgUrl = await getOpenGraphImgUrl(r.url)
+          if (imgUrl) {
+            const img = await downloadFileFromUrl(imgUrl)
+            storage.uploadFile(img, fileName)
+          }
         }
       }
-    }
-  })
+    })
+  }
 }
 
 const getRecipeImagePath = (recipe: TRecipe): string => {
