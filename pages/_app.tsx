@@ -2,13 +2,9 @@ import * as React from 'react'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import '../styles/globals.css'
+import * as dotenv from 'dotenv'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const fetch2 = require('@vercel/fetch-retry')(require('node-fetch'))
-
-if (!globalThis.fetch) {
-  globalThis.fetch = fetch2
-}
+dotenv.config()
 
 export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
