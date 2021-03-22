@@ -46,7 +46,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const paths = allRecipes.map(r => ({ params: { recipeId: r.id } }))
   return {
     paths,
-    fallback: false
+    fallback: true
   }
 }
 
