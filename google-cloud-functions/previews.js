@@ -47,7 +47,8 @@ const getOpenGraphImgUrl = async url => {
   try {
     const { error, result } = await ogs({ url: url.trim() })
     if (!error && result.success) {
-      return ogData.ogImage.url
+      consoleLog('Open graph result', result)
+      return result.ogImage.url
     }
     return null
   } catch (error) {
