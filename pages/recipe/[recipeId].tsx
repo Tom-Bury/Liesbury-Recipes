@@ -25,6 +25,7 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
       <Link href="/">
         <a>Back</a>
       </Link>
+      <hr />
       <a href={recipe.url} target="_blank" rel="noopener noreferrer">
         {recipe.title}
       </a>
@@ -46,7 +47,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const paths = allRecipes.map(r => ({ params: { recipeId: r.id } }))
   return {
     paths,
-    fallback: false
+    fallback: true
   }
 }
 
