@@ -1,10 +1,11 @@
 import fetch from 'node-fetch'
 import neatCsv from 'neat-csv'
 import { TRecipe } from 'types/recipe.type'
-import LoggingService from 'services/LoggingService'
-import OGS from 'open-graph-scraper'
-import StorageService from 'services/StorageService'
+import * as dotenv from 'dotenv'
 
+dotenv.config()
+
+const BUCKET_URL = `https://storage.googleapis.com/${process.env.GCS_BUCKET_NAME}`
 const SHEETS_DATA_URL =
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vQSX6_vVklWYgnay7sSHwIDzN7h76paDCNPXqUSK7JaKGXE8gH17uymHre3L7pX3dE9jTx4bdSiejf5/pub?output=csv'
 
@@ -13,58 +14,9 @@ const stringHash = (str: string): number => {
   return str.split('').reduce((prevHash, currVal) => ((prevHash << 5) - prevHash + currVal.charCodeAt(0)) | 0, 0)
 }
 
-const downloadFileFromUrl = async (url: string): Promise<Buffer> => {
-  const res = await fetch(url.trim())
-  const buffer = await res.buffer()
-  return buffer
-}
-
-const getOpenGraphImgUrl = async (url: string): Promise<string | null> => {
-  try {
-    const { error, result } = await OGS({ url: url.trim() })
-    if (!error && result.success) {
-      const ogData = result as any
-      return ogData.ogImage.url
-    }
-    return null
-  } catch (error) {
-    return null
-  }
-}
-
-const savePreviewImages = (recipes: TRecipe[]) => {
-  let storage: StorageService
-  try {
-    storage = new StorageService()
-  } catch (error) {
-    throw Error('Could not initialize storage service')
-  }
-
-  if (storage) {
-    recipes.forEach(async r => {
-      const fileName = `${stringHash(r.title)}.jpg`
-      const exists = await storage.fileExists(fileName)
-      if (!exists) {
-        if (r.imgUrl) {
-          LoggingService.writeLog(`Fetching custom image for ${r.url}: ${r.imgUrl}`)
-          const img = await downloadFileFromUrl(r.imgUrl)
-          storage.uploadFile(img, fileName)
-        } else {
-          LoggingService.writeLog(`Fetching OG image for ${r.url}`)
-          const imgUrl = await getOpenGraphImgUrl(r.url)
-          if (imgUrl) {
-            const img = await downloadFileFromUrl(imgUrl)
-            storage.uploadFile(img, fileName)
-          }
-        }
-      }
-    })
-  }
-}
-
 const getRecipeImagePath = (recipe: TRecipe): string => {
   const fileName = `${stringHash(recipe.title)}.jpg`
-  return `${StorageService.bucketUrl}/${fileName}`
+  return `${BUCKET_URL}/${fileName}`
 }
 
 export const getAllRecipes = async (): Promise<TRecipe[]> => {
@@ -72,8 +24,6 @@ export const getAllRecipes = async (): Promise<TRecipe[]> => {
     const res = await fetch(SHEETS_DATA_URL)
     const text = await res.buffer()
     const recipes = await neatCsv<TRecipe>(text)
-    LoggingService.writeLog(`Successfully fetched ${recipes.length} recipes`)
-    savePreviewImages(recipes)
     return recipes.map(r => {
       return {
         ...r,
@@ -84,7 +34,6 @@ export const getAllRecipes = async (): Promise<TRecipe[]> => {
       }
     })
   } catch (error) {
-    LoggingService.writeLog(error)
     // TODO: save recipes in file & retrieve ?
     return []
   }
