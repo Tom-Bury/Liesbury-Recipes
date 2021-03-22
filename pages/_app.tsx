@@ -2,9 +2,6 @@ import * as React from 'react'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import '../styles/globals.css'
-import * as dotenv from 'dotenv'
-
-dotenv.config()
 
 export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
