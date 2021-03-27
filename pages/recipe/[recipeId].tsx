@@ -2,6 +2,8 @@ import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import { useRouter } from 'next/dist/client/router'
 import * as React from 'react'
 import { TRecipe } from 'types/recipe.type'
+import Card from '~/components/Card/Card'
+import ElementTitle from '~/components/ElementTitle'
 import SectionTitle from '~/components/SectionTitle'
 import { getAllRecipes } from '~/utils/recipesData.utils'
 
@@ -31,17 +33,23 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
   return (
     <div className="flex flex-1 flex-col items-center">
       <div className="max-w-6xl w-full flex flex-1">
-        <div className="max-w-6xl w-full h-72 lg:h-96 absolute top-0 z-0" style={style} />
-        <div className="test flex flex-1 flex-col z-10 mt-60 lg:mt-80 p-8 pt-8 bg-lightest">
+        <div className="max-w-6xl w-full h-80 fixed top-0 z-0" style={style} />
+        <div className="test flex flex-1 flex-col z-10 mt-72 p-8 pt-8 bg-lightest">
           <div className="sticky top-0 pt-6 bg-lightest">
             <SectionTitle>{recipe.title}</SectionTitle>
             <hr className="border-t-4 border-primary" />
           </div>
-          {indices.map(i => (
-            <div key={i} className="h-20 w-20 bg-dark p-8 m-8">
-              {i}
-            </div>
-          ))}
+          <div className="flex flex-1 flex-col items-start pt-8">
+            <ElementTitle>Original recipe</ElementTitle>
+            <Card hoverable className="p-8">To recipe</Card>
+            {indices.map(i => (
+              <div key={i} className="h-20 w-20 bg-dark p-8 m-8">
+                {i}
+              </div>
+            ))}
+            <ElementTitle>Ingredients</ElementTitle>
+            <ElementTitle>Recipe</ElementTitle>
+          </div>
         </div>
       </div>
     </div>
