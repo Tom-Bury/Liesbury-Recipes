@@ -1,7 +1,5 @@
-import { ColumnLayout } from 'layouts'
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import { useRouter } from 'next/dist/client/router'
-import Image from 'next/image'
 import * as React from 'react'
 import { TRecipe } from 'types/recipe.type'
 import SectionTitle from '~/components/SectionTitle'
@@ -31,18 +29,20 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
   const indices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
   return (
-    <div className="flex flex-1">
-      <div className="w-full h-72 fixed z-0" style={style} />
-      <div className="test flex flex-1 flex-col z-10 mt-60 p-8 pt-8 bg-light">
-        <div className="sticky top-0 pt-6 bg-light">
-          <SectionTitle>{recipe.title}</SectionTitle>
-          <hr className="border-t-4 border-primary" />
-        </div>
-        {indices.map(i => (
-          <div key={i} className="h-20 w-20 bg-dark p-8 m-8">
-            {i}
+    <div className="flex flex-1 flex-col items-center">
+      <div className="max-w-6xl w-full flex flex-1">
+        <div className="max-w-6xl w-full h-72 lg:h-96 absolute top-0 z-0" style={style} />
+        <div className="test flex flex-1 flex-col z-10 mt-60 lg:mt-80 p-8 pt-8 bg-lightest">
+          <div className="sticky top-0 pt-6 bg-lightest">
+            <SectionTitle>{recipe.title}</SectionTitle>
+            <hr className="border-t-4 border-primary" />
           </div>
-        ))}
+          {indices.map(i => (
+            <div key={i} className="h-20 w-20 bg-dark p-8 m-8">
+              {i}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
