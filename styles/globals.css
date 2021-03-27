@@ -10,3 +10,7 @@ body {
 .recipeCard {
   @apply max-w-sm w-full;
 }
+
+.test {
+  clip-path: polygon(50% 0, 100% 3%, 100% 100%, 0 100%, 0 3%);
+}
