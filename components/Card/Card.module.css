@@ -16,16 +16,36 @@
   }
 }
 
-.card-hoverable:hover {
-  @apply bg-dark -translate-y-1 scale-105;
+@media(hover: hover) and (pointer: fine) {
+  .card-hoverable:hover {
+    @apply bg-dark -translate-y-1 scale-105;
 
-  p,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply text-lightest;
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      @apply text-lightest;
+    }
+  }
+}
+
+@media(hover: none) {
+
+  .card-hoverable:hover,
+  .card-hoverable:active {
+    @apply bg-dark -translate-y-1 scale-105;
+
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      @apply text-lightest;
+    }
   }
 }
