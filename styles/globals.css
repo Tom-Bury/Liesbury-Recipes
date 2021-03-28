@@ -11,7 +11,6 @@ body {
   @apply max-w-sm w-full;
 }
 
-.test {
-  /* clip-path: polygon(50% 0, 100% 3%, 100% 100%, 0 100%, 0 3%); */
+.rooftop {
   clip-path: polygon(50% 0%, 85% 48px, 100% 48px, 100% 100%, 0 100%, 0 48px, 15% 48px);
 }
