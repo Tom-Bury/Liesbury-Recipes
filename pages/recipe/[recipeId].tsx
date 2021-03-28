@@ -4,6 +4,7 @@ import * as React from 'react'
 import { TRecipe } from 'types/recipe.type'
 import Card from '~/components/Card/Card'
 import ElementTitle from '~/components/ElementTitle'
+import LinkWrap from '~/components/LinkWrap'
 import SectionTitle from '~/components/SectionTitle'
 import { getAllRecipes } from '~/utils/recipesData.utils'
 
@@ -32,23 +33,33 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
 
   return (
     <div className="flex flex-1 flex-col items-center">
-      <div className="max-w-6xl w-full flex flex-1">
-        <div className="max-w-6xl w-full h-80 fixed top-0 z-0" style={style} />
-        <div className="test flex flex-1 flex-col z-10 mt-72 p-8 pt-8 bg-lightest">
-          <div className="sticky top-0 pt-6 bg-lightest">
+      <div className="max-w-6xl w-full flex flex-1 justify-center">
+        <div className="max-w-5xl w-full h-80 fixed top-0 z-0" style={style} />
+        <div className="test flex flex-1 flex-col z-10 mt-72 p-8 pt-8 bg-lightest items-center">
+          <div className="sticky w-full top-0 pt-8 bg-lightest flex flex-col flex-1 items-center z-10">
             <SectionTitle>{recipe.title}</SectionTitle>
-            <hr className="border-t-4 border-primary" />
+            <hr className="border-t-4 border-primary max-w-5xl w-full" />
           </div>
-          <div className="flex flex-1 flex-col items-start pt-8">
+          <div className="max-w-5xl w-full flex flex-1 flex-col items-start pt-8">
             <ElementTitle>Original recipe</ElementTitle>
-            <Card hoverable className="p-8">To recipe</Card>
+            <LinkWrap href={recipe.url}>
+              <Card hoverable className="p-8 m-8">
+                <h4>To original website</h4>
+              </Card>
+            </LinkWrap>
+
+            <ElementTitle>Ingredients</ElementTitle>
             {indices.map(i => (
               <div key={i} className="h-20 w-20 bg-dark p-8 m-8">
                 {i}
               </div>
             ))}
-            <ElementTitle>Ingredients</ElementTitle>
             <ElementTitle>Recipe</ElementTitle>
+            {indices.map(i => (
+              <div key={i} className="h-20 w-20 bg-dark p-8 m-8">
+                {i}
+              </div>
+            ))}
           </div>
         </div>
       </div>
