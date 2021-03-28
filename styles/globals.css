@@ -11,3 +11,7 @@ body {
   @apply max-w-sm w-full;
   -webkit-tap-highlight-color: transparent;
 }
+
+.rooftop {
+  clip-path: polygon(50% 0%, 85% 48px, 100% 48px, 100% 100%, 0 100%, 0 48px, 15% 48px);
+}
