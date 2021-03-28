@@ -13,5 +13,5 @@ body {
 
 .test {
   /* clip-path: polygon(50% 0, 100% 3%, 100% 100%, 0 100%, 0 3%); */
-  clip-path: polygon(50% 0%, 75% 48px, 100% 48px, 100% 100%, 0 100%, 0 48px, 25% 48px);
+  clip-path: polygon(50% 0%, 85% 48px, 100% 48px, 100% 100%, 0 100%, 0 48px, 15% 48px);
 }
