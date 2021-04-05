@@ -45,13 +45,16 @@ const downloadFileFromUrl = async url => {
 
 const getOpenGraphImgUrl = async url => {
   try {
-    const { error, result } = await ogs({ url: url.trim() })
+    const { error, result } = await ogs({ url: url.trim(), timeout: 5000 })
+    consoleLog('OG error', error)
+    consoleLog('OG result', result.success)
     if (!error && result.success) {
-      consoleLog('Open graph result', result)
-      return result.ogImage.url
+      consoleLog('OG found', result.ogImage.url || result.twitterImage.url)
+      return result.ogImage.url || result.twitterImage.url
     }
     return null
   } catch (error) {
+    consoleLog('Error catch getOpenGraphImgUrl', error)
     return null
   }
 }
@@ -70,20 +73,23 @@ exports.entry = async (req, res) => {
 
   consoleLog('toFetch', toFetch)
 
-  toFetch.forEach(async r => {
-    if (r.imgUrl !== '') {
-      const img = await downloadFileFromUrl(r.imgUrl)
-      uploadFile(img, r.fileName)
-      consoleLog(`Fetched imgUrl ${r.imgUrl}`)
-    } else {
-      const imgUrl = await getOpenGraphImgUrl(r.url)
-      consoleLog(`Going to fetch OG url ${imgUrl}`)
-      if (imgUrl) {
-        const img = await downloadFileFromUrl(imgUrl)
-        uploadFile(img, r.fileName)
+  await Promise.all(
+    toFetch.map(async r => {
+      if (r.imgUrl !== '') {
+        const img = await downloadFileFromUrl(r.imgUrl)
+        await uploadFile(img, r.fileName)
+        consoleLog(`Fetched imgUrl ${r.imgUrl}`)
+      } else {
+        consoleLog('Getting OG urls', r.title)
+        const imgUrl = await getOpenGraphImgUrl(r.url)
+        consoleLog(`Going to fetch OG url ${imgUrl}`)
+        if (imgUrl) {
+          const img = await downloadFileFromUrl(imgUrl)
+          await uploadFile(img, r.fileName)
+        }
       }
-    }
-  })
+    })
+  )
 
   res.status(200).json({
     recipes,
