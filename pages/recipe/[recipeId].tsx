@@ -3,9 +3,9 @@ import { useRouter } from 'next/dist/client/router'
 import * as React from 'react'
 import { TRecipe } from 'types/recipe.type'
 import ElementTitle from '~/components/ElementTitle'
+import LinkCard from '~/components/LinkCard/LinkCard'
 import SectionTitle from '~/components/SectionTitle'
 import { getAllRecipes } from '~/utils/recipesData.utils'
-import LinkCard from '~/components/LinkCard/LinkCard'
 
 type TProps = {
   recipe: TRecipe | undefined
@@ -14,12 +14,10 @@ type TProps = {
 const RecipePage: NextPage<TProps> = ({ recipe }) => {
   const router = useRouter()
   if (router.isFallback) {
-    // TODO
     return <p>Loading...</p>
   }
   if (!recipe) {
-    // TODO
-    return <p>Recipe not found</p>
+    return <p>Recept niet gevonden 😥</p>
   }
 
   const style = {
@@ -39,15 +37,25 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
             <SectionTitle>{recipe.title}</SectionTitle>
             <hr className="border-t-4 border-primary w-full" />
           </div>
-          <div className="flex flex-1 flex-col items-start pt-8">
-            <ElementTitle>Original recipe</ElementTitle>
-            <LinkCard url={recipe.url} title="To original recipe website" />
-            <ElementTitle>Ingredients</ElementTitle>
-            {indices.map(i => (
-              <div key={i} className="h-20 w-20 bg-dark p-8 m-8">
-                {`todo ${i}`}
-              </div>
-            ))}
+          <div className="flex flex-1 flex-col pt-8">
+            <section className="w-full flex flex-col items-start">
+              <ElementTitle>Origineel recept </ElementTitle>
+              <LinkCard url={recipe.url} title={new URL(recipe.url).hostname} className="mx-8 my-4" />
+            </section>
+
+            {recipe.ingredients && (
+              <section className="w-full flex flex-col items-start my-8">
+                <ElementTitle>Ingrediënten</ElementTitle>
+                <ul className="list-disc list-inside mx-8 my-4">
+                  {recipe.ingredients.split(',').map(i => (
+                    <li key={i} className="text-lg text-darkest">
+                      {i.trim()}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
             <ElementTitle>Recipe</ElementTitle>
             {indices.map(i => (
               <div key={i} className="h-20 w-20 bg-dark p-8 m-8">

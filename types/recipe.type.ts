@@ -4,4 +4,5 @@ export type TRecipe = {
   imgUrl: string
   imgPath: string
   id: string
+  ingredients?: string
 }
