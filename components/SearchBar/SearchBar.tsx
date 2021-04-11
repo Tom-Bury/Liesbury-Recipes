@@ -23,7 +23,7 @@ const SearchBar: React.FC<TProps> = ({ onSearch }) => {
         type="search"
         name="search"
         id="search"
-        placeholder="Search"
+        placeholder="Zoeken"
         autoComplete="off"
         className={classNames(
           'bg-primary h-12 w-full text-white px-5 pr-10 rounded-full text-md focus:outline-none focus:ring-4 focus:ring-dark focus:ring-opacity-50 transition duration-150',

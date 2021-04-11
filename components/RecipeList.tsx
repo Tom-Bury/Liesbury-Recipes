@@ -12,9 +12,9 @@ type TProps = {
 const RecipeList: React.FC<TProps> = ({ recipes, className }) => (
   <HorizontalCenterLayout>
     <GridLayout className={className}>
-      {recipes.map((recipe: TRecipe) => (
+      {recipes.map((recipe: TRecipe, i) => (
         <LinkWrap key={recipe.id} href={`/recipe/${recipe.id}`} className="recipeCard">
-          <RecipeCard title={recipe.title} imgPath={recipe.imgPath} />
+          <RecipeCard title={recipe.title} imgPath={recipe.imgPath} preloadImage={i <= 9} />
         </LinkWrap>
       ))}
     </GridLayout>
