@@ -36,4 +36,8 @@
   p {
     @apply mb-2;
   }
+
+  hr {
+    @apply my-4 text-primary
+  }
 }

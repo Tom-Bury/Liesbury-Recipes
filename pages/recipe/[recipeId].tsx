@@ -12,7 +12,7 @@ import RecipeInstructions from '~/components/RecipeInstructions/RecipeInstructio
 
 type TProps = {
   recipe: TRecipe | undefined
-  instructions?: string
+  instructions: string | undefined
 }
 
 const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
@@ -76,16 +76,17 @@ const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const allRecipes = await getAllRecipes()
   const recipe = params ? allRecipes.find(r => r.id === params.recipeId) : undefined
-  console.log(recipe)
-  const recipeInstructions = recipe?.steps ? await getRecipeInstructionsMarkdown(recipe.steps) : undefined
-
-  const processedInstructions = recipeInstructions ? await remark().use(html).process(recipeInstructions) : undefined
-  const instructionsHtml = processedInstructions ? processedInstructions.toString() : undefined
+  let instructions = null
+  if (recipe && recipe.steps !== '') {
+    const recipeInstructionsData = await getRecipeInstructionsMarkdown(recipe.steps)
+    const processedInstructions = recipeInstructionsData ? await remark().use(html).process(recipeInstructionsData) : null
+    instructions = processedInstructions ? processedInstructions.toString() : undefined
+  }
 
   return {
     props: {
-      recipe: params ? allRecipes.find(r => r.id === params.recipeId) : undefined,
-      instructions: instructionsHtml
+      recipe,
+      instructions
     }
   }
 }
