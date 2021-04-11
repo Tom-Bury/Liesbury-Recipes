@@ -1,6 +1,4 @@
 .instructions {
-  border: 1px solid red;
-
   @apply text-darkest text-lg;
 
   h1 {
