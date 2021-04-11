@@ -2,16 +2,20 @@ import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import { useRouter } from 'next/dist/client/router'
 import * as React from 'react'
 import { TRecipe } from 'types/recipe.type'
+import remark from 'remark'
+import html from 'remark-html'
 import ElementTitle from '~/components/ElementTitle'
 import LinkCard from '~/components/LinkCard/LinkCard'
 import SectionTitle from '~/components/SectionTitle'
-import { getAllRecipes } from '~/utils/recipesData.utils'
+import { getAllRecipes, getRecipeInstructionsMarkdown } from '~/utils/recipesData.utils'
+import RecipeInstructions from '~/components/RecipeInstructions/RecipeInstructions'
 
 type TProps = {
   recipe: TRecipe | undefined
+  instructions?: string
 }
 
-const RecipePage: NextPage<TProps> = ({ recipe }) => {
+const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
   const router = useRouter()
   if (router.isFallback) {
     return <p>Loading...</p>
@@ -56,12 +60,12 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
               </section>
             )}
 
-            <ElementTitle>Recipe</ElementTitle>
-            {indices.map(i => (
-              <div key={i} className="h-20 w-20 bg-dark p-8 m-8">
-                {`todo ${i}`}
-              </div>
-            ))}
+            {instructions && (
+              <section className="w-full flex flex-col items-start">
+                <ElementTitle>Recept</ElementTitle>
+                <RecipeInstructions instructionsHtml={instructions} className="px-8 py-4" />
+              </section>
+            )}
           </div>
         </div>
       </div>
@@ -71,9 +75,17 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const allRecipes = await getAllRecipes()
+  const recipe = params ? allRecipes.find(r => r.id === params.recipeId) : undefined
+  console.log(recipe)
+  const recipeInstructions = recipe?.steps ? await getRecipeInstructionsMarkdown(recipe.steps) : undefined
+
+  const processedInstructions = recipeInstructions ? await remark().use(html).process(recipeInstructions) : undefined
+  const instructionsHtml = processedInstructions ? processedInstructions.toString() : undefined
+
   return {
     props: {
-      recipe: params ? allRecipes.find(r => r.id === params.recipeId) : undefined
+      recipe: params ? allRecipes.find(r => r.id === params.recipeId) : undefined,
+      instructions: instructionsHtml
     }
   }
 }

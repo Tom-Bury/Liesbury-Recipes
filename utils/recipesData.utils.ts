@@ -39,4 +39,14 @@ export const getAllRecipes = async (): Promise<TRecipe[]> => {
   }
 }
 
-export const test = () => null
+export const getRecipeInstructionsMarkdown = async (url: string): Promise<string> => {
+  try {
+    const encoded = Buffer.from(url.trim()).toString('base64').replace('=', '').replace('/', '_').replace('+', '-')
+    const oneDriveLink = `https://api.onedrive.com/v1.0/shares/u!${encoded}/root/content`
+    console.log(oneDriveLink)
+    const res = await fetch(oneDriveLink)
+    return await res.text()
+  } catch (error) {
+    return ''
+  }
+}
