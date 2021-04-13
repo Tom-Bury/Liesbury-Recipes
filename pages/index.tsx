@@ -60,7 +60,7 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const recipes: TRecipe[] = await getAllRecipes()
+  const recipes: TRecipe[] = (await getAllRecipes()).reverse()
   return {
     props: {
       recipes

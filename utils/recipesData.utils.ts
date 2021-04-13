@@ -1,13 +1,11 @@
 import fetch from 'node-fetch'
-import neatCsv from 'neat-csv'
 import { TRecipe } from 'types/recipe.type'
 import * as dotenv from 'dotenv'
 
 dotenv.config()
 
 const BUCKET_URL = `https://storage.googleapis.com/${process.env.GCS_BUCKET_NAME}`
-const SHEETS_DATA_URL =
-  'https://docs.google.com/spreadsheets/d/e/2PACX-1vQSX6_vVklWYgnay7sSHwIDzN7h76paDCNPXqUSK7JaKGXE8gH17uymHre3L7pX3dE9jTx4bdSiejf5/pub?output=csv'
+const SHEETS_DATA_URL = `${BUCKET_URL}/recipes.json`
 
 const stringHash = (str: string): number => {
   // eslint-disable-next-line no-bitwise
@@ -22,8 +20,7 @@ const getRecipeImagePath = (recipe: TRecipe): string => {
 export const getAllRecipes = async (): Promise<TRecipe[]> => {
   try {
     const res = await fetch(SHEETS_DATA_URL)
-    const text = await res.buffer()
-    const recipes = await neatCsv<TRecipe>(text)
+    const recipes = (await res.json()) as TRecipe[]
     return recipes.map(r => {
       return {
         ...r,
@@ -39,4 +36,18 @@ export const getAllRecipes = async (): Promise<TRecipe[]> => {
   }
 }
 
-export const test = () => null
+export const getRecipeInstructionsMarkdown = async (url: string): Promise<string | null> => {
+  try {
+    if (url.length === 0) {
+      return null
+    }
+
+    const encoded = Buffer.from(url.trim()).toString('base64').replace('=', '').replace('/', '_').replace('+', '-')
+    const oneDriveLink = `https://api.onedrive.com/v1.0/shares/u!${encoded}/root/content`
+    console.log(oneDriveLink)
+    const res = await fetch(oneDriveLink)
+    return await res.text()
+  } catch (error) {
+    return null
+  }
+}
