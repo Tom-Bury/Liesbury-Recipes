@@ -30,8 +30,6 @@ const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
     'background-size': 'cover'
   }
 
-  const indices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
   return (
     <div className="flex flex-1 justify-center">
       <div className="max-w-5xl w-full h-80 fixed top-0 z-0" style={style} />
