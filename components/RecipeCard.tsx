@@ -1,7 +1,6 @@
 import * as React from 'react'
 import Image from 'next/image'
 import Card from './Card/Card'
-import ElementTitle from './ElementTitle'
 
 type TProps = {
   title: string
@@ -17,7 +16,7 @@ const RecipeCard: React.FC<TProps> = ({ title, imgPath, preloadImage }) => {
           <Image className="rounded-xl" src={imgPath} alt={title} layout="fill" objectFit="cover" priority={preloadImage} />
         </div>
         <div className="flex-1 flex-col p-6">
-          <ElementTitle>{title}</ElementTitle>
+          <h3 className="text-center">{title}</h3>
         </div>
       </div>
     </Card>

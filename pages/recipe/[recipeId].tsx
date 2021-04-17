@@ -4,9 +4,7 @@ import * as React from 'react'
 import { TRecipe } from 'types/recipe.type'
 import remark from 'remark'
 import html from 'remark-html'
-import ElementTitle from '~/components/ElementTitle'
 import LinkCard from '~/components/LinkCard/LinkCard'
-import SectionTitle from '~/components/SectionTitle'
 import { getAllRecipes, getRecipeInstructionsMarkdown } from '~/utils/recipesData.utils'
 import RecipeInstructions from '~/components/RecipeInstructions/RecipeInstructions'
 
@@ -36,18 +34,18 @@ const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
       <div className="rooftop flex flex-1 z-10 mt-72 py-8 bg-lightest items-center">
         <div className="flex flex-col flex-1 max-w-5xl pt-0 mx-auto">
           <div className="sticky top-0 pt-8 bg-lightest flex flex-col flex-1 items-center z-10">
-            <SectionTitle>{recipe.title}</SectionTitle>
+            <h2>{recipe.title}</h2>
             <hr className="border-t-4 border-primary w-full" />
           </div>
           <div className="flex flex-1 flex-col pt-8">
             <section className="w-full flex flex-col items-start">
-              <ElementTitle>Origineel recept </ElementTitle>
+              <h3>Origineel recept </h3>
               <LinkCard url={recipe.url} title={new URL(recipe.url).hostname} className="mx-8 my-4" />
             </section>
 
             {recipe.ingredients && (
               <section className="w-full flex flex-col items-start my-8">
-                <ElementTitle>Ingrediënten</ElementTitle>
+                <h3>Ingrediënten</h3>
                 <ul className="list-disc list-inside mx-8 my-4">
                   {recipe.ingredients.split(',').map(i => (
                     <li key={i} className="text-lg text-darkest">
