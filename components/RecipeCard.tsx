@@ -16,7 +16,7 @@ const RecipeCard: React.FC<TProps> = ({ title, imgPath, preloadImage }) => {
           <Image className="rounded-xl" src={imgPath} alt={title} layout="fill" objectFit="cover" priority={preloadImage} />
         </div>
         <div className="flex-1 flex-col p-6">
-          <h3 className="text-center">{title}</h3>
+          <h3 className="text-center text-dark">{title}</h3>
         </div>
       </div>
     </Card>

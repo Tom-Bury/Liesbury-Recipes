@@ -19,7 +19,7 @@ const Banner: React.FC = () => (
       height={FRONT_IMAGE_SCALE * FRONT_IMAGE_DIMENSIONS.height}
       onClick={() => window.location.reload()}
     />
-    <h1 className="mt-4">{PAGE_TITLE}</h1>
+    <h1 className="mt-4 text-darkest">{PAGE_TITLE}</h1>
   </HorizontalCenterLayout>
 )
 
