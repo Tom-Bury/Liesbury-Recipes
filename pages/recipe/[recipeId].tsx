@@ -26,14 +26,14 @@ const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
 
   const style = {
     background: `url(${recipe.imgPath})`,
-    'background-position': 'center',
-    'background-size': 'cover'
+    backgroundPosition: 'center',
+    backgroundSize: 'cover'
   }
 
   return (
     <div className="flex flex-1 justify-center">
       <div className="max-w-5xl w-full h-80 fixed top-0 z-0" style={style} />
-      <div className="rooftop flex flex-1 z-10 mt-72 pt-8 bg-lightest items-center">
+      <div className="rooftop flex flex-1 z-10 mt-72 py-8 bg-lightest items-center">
         <div className="flex flex-col flex-1 max-w-5xl p-8 lg:p-0 pt-0 mx-auto">
           <div className="sticky top-0 pt-8 bg-lightest flex flex-col flex-1 items-center z-10">
             <SectionTitle>{recipe.title}</SectionTitle>
@@ -60,7 +60,6 @@ const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
 
             {instructions && (
               <section className="w-full flex flex-col items-start">
-                <ElementTitle>Recept</ElementTitle>
                 <RecipeInstructions instructionsHtml={instructions} className="px-8 py-4" />
               </section>
             )}

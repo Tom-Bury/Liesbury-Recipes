@@ -13,7 +13,7 @@ const RecipeList: React.FC<TProps> = ({ recipes, className }) => (
   <HorizontalCenterLayout>
     <GridLayout className={className}>
       {recipes.map((recipe: TRecipe, i) => (
-        <LinkWrap key={recipe.id} href={`/recipe/${recipe.id}`} className="recipeCard">
+        <LinkWrap key={recipe.id} href={`/recipe/${recipe.id}`} className="rmMobileClickBox">
           <RecipeCard title={recipe.title} imgPath={recipe.imgPath} preloadImage={i <= 9} />
         </LinkWrap>
       ))}
