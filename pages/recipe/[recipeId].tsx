@@ -34,7 +34,7 @@ const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
     <div className="flex flex-1 justify-center">
       <div className="max-w-5xl w-full h-80 fixed top-0 z-0" style={style} />
       <div className="rooftop flex flex-1 z-10 mt-72 py-8 bg-lightest items-center">
-        <div className="flex flex-col flex-1 max-w-5xl p-8 lg:p-0 pt-0 mx-auto">
+        <div className="flex flex-col flex-1 max-w-5xl pt-0 mx-auto">
           <div className="sticky top-0 pt-8 bg-lightest flex flex-col flex-1 items-center z-10">
             <SectionTitle>{recipe.title}</SectionTitle>
             <hr className="border-t-4 border-primary w-full" />
