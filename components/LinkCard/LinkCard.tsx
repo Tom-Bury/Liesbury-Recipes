@@ -6,7 +6,7 @@ import LinkWrap from '../LinkWrap'
 import styles from './LinkCard.module.css'
 
 type TProps = {
-  url: string
+  url: string | URL
   title: string
   className?: string
 }

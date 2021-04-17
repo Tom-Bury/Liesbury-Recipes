@@ -17,8 +17,8 @@
 
   ol,
   ul {
-    @apply list-outside mb-6;
-    margin-left: 0.8em;
+    @apply list-outside mb-6 px-4;
+    margin-left: 1rem;
 
     li {
       @apply mb-2;
@@ -34,7 +34,7 @@
   }
 
   p {
-    @apply mb-2;
+    @apply mb-2 px-4;
   }
 
   hr {

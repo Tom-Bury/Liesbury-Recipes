@@ -39,6 +39,13 @@ const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
     backgroundSize: 'cover'
   }
 
+  let recipeUrl
+  try {
+    recipeUrl = new URL(recipe.url)
+  } catch (_) {
+    // Noop
+  }
+
   return (
     <div className="flex flex-1 justify-center">
       <div className="max-w-5xl w-full h-80 fixed top-0 z-0" style={style} />
@@ -49,17 +56,17 @@ const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
             <hr className="border-t-4 border-primary w-full" />
           </div>
           <div className="grid grid-cols-1 gap-y-8 pt-8">
-            {recipe.url && (
+            {recipeUrl?.hostname && (
               <section className="w-full flex flex-col items-start px-8">
                 <h3 className="text-dark">Origineel recept </h3>
-                <LinkCard url={recipe.url} title={new URL(recipe.url).hostname} className="mx-8 my-4" />
+                <LinkCard url={recipeUrl} title={new URL(recipe.url).hostname} className="mx-8 my-4" />
               </section>
             )}
 
             {recipe.ingredients && (
               <section className="w-full flex flex-col items-start px-8">
                 <h3 className="text-dark">Ingrediënten</h3>
-                <ul className="list-disc list-inside mx-8 my-4 text-dark">
+                <ul className="list-disc list-inside px-4 my-4 text-dark">
                   {recipe.ingredients.split(',').map(i => (
                     <li key={i} className="text-lg">
                       {i.trim()}
