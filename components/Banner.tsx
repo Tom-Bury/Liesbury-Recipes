@@ -1,7 +1,6 @@
 import { HorizontalCenterLayout } from 'layouts'
 import * as React from 'react'
 import Image from 'next/image'
-import PageTitle from './PageTitle'
 
 const FRONT_IMAGE_DIMENSIONS = {
   width: 250,
@@ -20,7 +19,7 @@ const Banner: React.FC = () => (
       height={FRONT_IMAGE_SCALE * FRONT_IMAGE_DIMENSIONS.height}
       onClick={() => window.location.reload()}
     />
-    <PageTitle className="mt-4">{PAGE_TITLE}</PageTitle>
+    <h1 className="mt-4 text-darkest">{PAGE_TITLE}</h1>
   </HorizontalCenterLayout>
 )
 

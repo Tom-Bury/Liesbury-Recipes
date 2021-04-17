@@ -1,0 +1,43 @@
+.markdownWrap {
+
+  h1,
+  h2 {
+    @apply font-bold mb-8;
+  }
+
+  h3,
+  h4 {
+    @apply mb-6;
+  }
+
+  h5,
+  h6 {
+    @apply mb-4 font-bold;
+  }
+
+  ol,
+  ul {
+    @apply list-outside mb-6 px-4;
+    margin-left: 1rem;
+
+    li {
+      @apply mb-2;
+    }
+  }
+
+  ol {
+    @apply list-decimal;
+  }
+
+  ul {
+    @apply list-disc;
+  }
+
+  p {
+    @apply mb-2 px-4;
+  }
+
+  hr {
+    @apply my-6 text-primary
+  }
+}
