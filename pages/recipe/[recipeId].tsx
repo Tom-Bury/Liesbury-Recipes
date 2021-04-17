@@ -4,9 +4,11 @@ import * as React from 'react'
 import { TRecipe } from 'types/recipe.type'
 import remark from 'remark'
 import html from 'remark-html'
+import { HorizontalCenterLayout } from 'layouts'
 import LinkCard from '~/components/LinkCard/LinkCard'
 import { getAllRecipes, getRecipeInstructionsMarkdown } from '~/utils/recipesData.utils'
 import MarkdownSnippet from '~/components/MarkdownSnippet/MarkdownSnippet'
+import Loading from '~/components/Loading'
 
 type TProps = {
   recipe: TRecipe | undefined
@@ -16,10 +18,19 @@ type TProps = {
 const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
   const router = useRouter()
   if (router.isFallback) {
-    return <p>Loading...</p>
+    return (
+      <HorizontalCenterLayout className="h-screen justify-center">
+        <Loading />
+        <h3 className="text-dark">Laden...</h3>
+      </HorizontalCenterLayout>
+    )
   }
   if (!recipe) {
-    return <p>Recept niet gevonden 😥</p>
+    return (
+      <HorizontalCenterLayout className="h-screen justify-center">
+        <h3 className="text-dark">Recept niet gevonden 😥</h3>
+      </HorizontalCenterLayout>
+    )
   }
 
   const style = {
@@ -34,14 +45,16 @@ const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
       <div className="rooftop flex flex-1 z-10 mt-72 lg:mb-16 pt-8 bg-lightest items-center">
         <div className="flex flex-col flex-1 max-w-5xl pt-0 mx-auto">
           <div className="sticky top-0 pt-8 bg-lightest flex flex-col flex-1 items-center z-10">
-            <h2 className="text-darkest">{recipe.title}</h2>
+            <h2 className="text-darkest text-center">{recipe.title}</h2>
             <hr className="border-t-4 border-primary w-full" />
           </div>
           <div className="flex flex-1 flex-col pt-8">
-            <section className="w-full flex flex-col items-start px-8">
-              <h3 className="text-dark">Origineel recept </h3>
-              <LinkCard url={recipe.url} title={new URL(recipe.url).hostname} className="mx-8 my-4" />
-            </section>
+            {recipe.url && (
+              <section className="w-full flex flex-col items-start px-8">
+                <h3 className="text-dark">Origineel recept </h3>
+                <LinkCard url={recipe.url} title={new URL(recipe.url).hostname} className="mx-8 my-4" />
+              </section>
+            )}
 
             {recipe.ingredients && (
               <section className="w-full flex flex-col items-start my-8 p-8">

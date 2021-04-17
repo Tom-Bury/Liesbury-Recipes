@@ -12,15 +12,25 @@
 
   h5,
   h6 {
-    @apply mb-4;
+    @apply mb-4 font-bold;
   }
 
+  ol,
   ul {
-    @apply list-disc list-inside mb-4;
+    @apply list-outside mb-6;
+    margin-left: 0.8em;
+
+    li {
+      @apply mb-2;
+    }
   }
 
   ol {
-    @apply list-decimal list-inside mb-4;
+    @apply list-decimal;
+  }
+
+  ul {
+    @apply list-disc;
   }
 
   p {
@@ -28,6 +38,6 @@
   }
 
   hr {
-    @apply my-4 text-primary
+    @apply my-6 text-primary
   }
 }

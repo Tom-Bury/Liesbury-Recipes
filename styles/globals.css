@@ -36,10 +36,7 @@ h4 {
   @apply text-lg font-normal
 }
 
-h5 {
-  @apply text-base
-}
-
+h5,
 h6 {
   @apply text-base
 }
