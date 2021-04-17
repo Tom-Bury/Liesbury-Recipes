@@ -45,10 +45,10 @@ const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
       <div className="rooftop flex flex-1 z-10 mt-72 lg:mb-16 pt-8 bg-lightest items-center">
         <div className="flex flex-col flex-1 max-w-5xl pt-0 mx-auto">
           <div className="sticky top-0 pt-8 bg-lightest flex flex-col flex-1 items-center z-10">
-            <h2 className="text-darkest text-center">{recipe.title}</h2>
+            <h2 className="text-darkest text-center px-2">{recipe.title}</h2>
             <hr className="border-t-4 border-primary w-full" />
           </div>
-          <div className="flex flex-1 flex-col pt-8">
+          <div className="grid grid-cols-1 gap-y-8 pt-8">
             {recipe.url && (
               <section className="w-full flex flex-col items-start px-8">
                 <h3 className="text-dark">Origineel recept </h3>
@@ -57,11 +57,11 @@ const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
             )}
 
             {recipe.ingredients && (
-              <section className="w-full flex flex-col items-start my-8 p-8">
+              <section className="w-full flex flex-col items-start px-8">
                 <h3 className="text-dark">Ingrediënten</h3>
-                <ul className="list-disc list-inside mx-8 my-4">
+                <ul className="list-disc list-inside mx-8 my-4 text-dark">
                   {recipe.ingredients.split(',').map(i => (
-                    <li key={i} className="text-lg text-darkest">
+                    <li key={i} className="text-lg">
                       {i.trim()}
                     </li>
                   ))}
