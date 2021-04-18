@@ -8,9 +8,9 @@ export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw/index.js').then(
+        navigator.serviceWorker.register('/sw.js').then(
           registration => {
-            console.log('Service Worker registration successful with scope: ', registration.scope)
+            console.log('Service Worker registration successful with scope: ', registration)
           },
           err => {
             console.log('Service Worker registration failed: ', err)
