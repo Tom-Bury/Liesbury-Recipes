@@ -8,7 +8,11 @@ export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     <>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        {/* PWA manifest */}
         <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icons/liesbury-192.png" />
+        <meta name="theme-color" content="#005259" />
 
         <title>Liesbury Recipes</title>
         <meta name="description" content="A collection of recipes found across the internet that we like to cook." />
