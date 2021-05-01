@@ -2,24 +2,8 @@ import * as React from 'react'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import '../styles/globals.css'
-import { useEffect } from 'react'
 
 export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').then(
-          registration => {
-            console.log('Service Worker registration successful with scope: ', registration)
-          },
-          err => {
-            console.log('Service Worker registration failed: ', err)
-          }
-        )
-      })
-    }
-  }, [])
-
   return (
     <>
       <Head>
@@ -34,7 +18,7 @@ export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
 
         {/* PWA data */}
         <link rel="manifest" href="/manifest.json" />
-        <link rel="a.pple-touch-icon" href="/icons/liesbury-192.png" />
+        <link rel="apple-touch-icon" href="/icons/liesbury-192.png" />
         <meta name="theme-color" content="#005259" />
 
         {/* Facebook meta tags */}

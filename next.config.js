@@ -9,9 +9,6 @@ module.exports = withPWA({
     webpack5: true
   },
   pwa: {
-    dest: 'public',
-    fallbacks: {
-      image: 'images/liesbury-recipes-colored.svg'
-    }
+    dest: 'public'
   }
 })
