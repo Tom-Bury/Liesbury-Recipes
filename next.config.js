@@ -1,16 +1,17 @@
-module.exports = {
+const withPWA = require('next-pwa')
+
+module.exports = withPWA({
   target: process.env.BUILD_TARGET || 'server',
   images: {
     domains: ['storage.googleapis.com']
   },
-  webpack: (config, { isServer }) => {
-    // Fixes npm packages that depend on `fs` module
-    if (!isServer) {
-      config.node = {
-        fs: 'empty'
-      }
+  future: {
+    webpack5: true
+  },
+  pwa: {
+    dest: 'public',
+    fallbacks: {
+      image: 'images/liesbury-recipes-colored.svg'
     }
-
-    return config
   }
-}
+})
