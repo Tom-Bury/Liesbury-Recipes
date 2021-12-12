@@ -1,12 +1,12 @@
+import { TRecipe } from 'backend/types/recipes.types'
 import * as React from 'react'
-import { TRecipe } from 'types/recipe.type'
 import LinkCard from './LinkCard/LinkCard'
 import MarkdownSnippet from './MarkdownSnippet/MarkdownSnippet'
 
 type TRecipeDataProps = {
-  recipeUrl: URL | undefined
+  recipeUrl?: URL
   recipe: TRecipe
-  instructions: string | null
+  instructions?: string
 }
 
 const RecipeData: React.FC<TRecipeDataProps> = ({ recipeUrl, recipe, instructions }) => (
@@ -31,7 +31,7 @@ const RecipeData: React.FC<TRecipeDataProps> = ({ recipeUrl, recipe, instruction
       </section>
     )}
 
-    {instructions && (
+    {!!instructions && (
       <section className="w-full flex flex-col items-start bg-light">
         <MarkdownSnippet instructionsHtml={instructions} className="p-8 py-16 text-darkest" />
       </section>

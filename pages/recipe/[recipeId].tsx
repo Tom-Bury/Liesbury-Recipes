@@ -1,17 +1,18 @@
+import { getAllRecipeIds, getRecipeById } from 'backend/recipes'
+import { TRecipe } from 'backend/types/recipes.types'
 import { HorizontalCenterLayout } from 'layouts'
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import { useRouter } from 'next/dist/client/router'
+import { ParsedUrlQuery } from 'querystring'
 import * as React from 'react'
 import remark from 'remark'
 import html from 'remark-html'
-import { TRecipe } from 'types/recipe.type'
 import RecipeData from '~/components/RecipeData'
 import RecipePlaceholder from '~/components/RecipePlaceholder'
-import { getAllRecipes, getRecipeInstructionsMarkdown } from '~/utils/recipesData.utils'
 
 type TProps = {
-  recipe: TRecipe | undefined
-  instructions: string | null
+  recipe?: TRecipe
+  instructions?: string
 }
 
 const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
@@ -26,7 +27,7 @@ const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
   }
 
   const recipeImgStyle = {
-    background: `url(${recipe.imgPath})`,
+    background: `url(${recipe.imgUrl})`,
     backgroundPosition: 'center',
     backgroundSize: 'cover'
   }
@@ -54,31 +55,39 @@ const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
   )
 }
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const allRecipes = await getAllRecipes()
-  const recipe = params ? allRecipes.find(r => r.id === params.recipeId) : undefined
-  let instructions = null
-  if (recipe && recipe.steps !== '') {
-    const recipeInstructionsData = await getRecipeInstructionsMarkdown(recipe.steps)
-    const processedInstructions = recipeInstructionsData ? await remark().use(html).process(recipeInstructionsData) : null
-    instructions = processedInstructions ? processedInstructions.toString() : null
-  }
-
-  return {
-    props: {
-      recipe,
-      instructions
-    },
-    revalidate: 60 * 5 // Regenerate the page when a new request comes in, at most each 5 minutes
-  }
+interface IParams extends ParsedUrlQuery {
+  recipeId: string
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const allRecipes = await getAllRecipes()
-  const paths = allRecipes.map(r => ({ params: { recipeId: r.id } }))
+  const allRecipes = await getAllRecipeIds()
+  const paths = allRecipes.map(recipeId => ({ params: { recipeId } }))
   return {
     paths,
     fallback: true
+  }
+}
+
+export const getStaticProps: GetStaticProps<TProps, IParams> = async ({ params }) => {
+  if (params?.recipeId) {
+    const recipe = await getRecipeById(params.recipeId)
+    // let instructions
+    // if (recipe && recipe.steps !== '') {
+    // const recipeInstructionsData = await getRecipeInstructionsMarkdown(recipe.steps)
+    // const processedInstructions = recipeInstructionsData ? await remark().use(html).process(recipeInstructionsData) : null
+    // instructions = processedInstructions ? processedInstructions.toString() : null
+    // }
+
+    return {
+      props: {
+        recipe
+      },
+      revalidate: 60 * 5 // Regenerate the page when a new request comes in, at most each 5 minutes
+    }
+  }
+  return {
+    props: {},
+    revalidate: 60 * 5 // Regenerate the page when a new request comes in, at most each 5 minutes
   }
 }
 
