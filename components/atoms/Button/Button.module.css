@@ -1,0 +1,18 @@
+.button {
+  @apply rounded-xl bg-primary text-white text-lg p-2 transition duration-200 ease-out transform;
+}
+
+
+@media(hover: hover) and (pointer: fine) {
+  .button:hover {
+    @apply bg-dark;
+  }
+}
+
+@media(hover: none) {
+
+  .button:hover,
+  .button:active {
+    @apply bg-dark;
+  }
+}

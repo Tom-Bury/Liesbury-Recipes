@@ -5,7 +5,8 @@ module.exports = {
   rules: {
     'jsx-a11y/anchor-is-valid': 'off',
     'react/jsx-props-no-spreading': 'off',
-    'prettier/prettier': 'error'
+    'prettier/prettier': 'error',
+    'react/require-default-props': 'off'
   },
   overrides: [
     {

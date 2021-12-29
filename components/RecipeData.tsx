@@ -18,7 +18,7 @@ const RecipeData: React.FC<TRecipeDataProps> = ({ recipeUrl, recipe, instruction
       </section>
     )}
 
-    {recipe.ingredients && (
+    {/* {recipe.ingredients && (
       <section className="w-full flex flex-col items-start px-8">
         <h3 className="text-dark">Ingrediënten</h3>
         <ul className="list-disc list-inside px-4 my-4 text-dark">
@@ -29,7 +29,7 @@ const RecipeData: React.FC<TRecipeDataProps> = ({ recipeUrl, recipe, instruction
           ))}
         </ul>
       </section>
-    )}
+    )} */}
 
     {!!instructions && (
       <section className="w-full flex flex-col items-start bg-light">

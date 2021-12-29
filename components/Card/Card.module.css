@@ -1,5 +1,5 @@
 .card-base {
-  @apply cursor-pointer rounded-xl shadow bg-light;
+  @apply cursor-pointer rounded-xl shadow bg-light text-darkest;
 }
 
 .card-hoverable {
