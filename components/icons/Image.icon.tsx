@@ -5,9 +5,10 @@ type TIcon = {
   height?: number
   fill?: string
   stroke?: string
+  className?: string
 }
 
-const ImageIcon: React.FC<TIcon> = ({ width, height, fill, stroke }) => {
+const ImageIcon: React.FC<TIcon> = ({ width, height, fill, stroke, className }) => {
   return (
     <svg
       version="1.0"
@@ -18,6 +19,7 @@ const ImageIcon: React.FC<TIcon> = ({ width, height, fill, stroke }) => {
       stroke={stroke || fill || 'black'}
       width={width || 24}
       height={height || 24}
+      className={className}
     >
       <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)">
         <path d="M1220 4877 c-92 -31 -156 -71 -222 -138 -63 -65 -119 -169 -137 -257 -8 -37 -11 -431 -11 -1290 0 -1362 -2 -1302 62 -1426 43 -82 148 -185 229 -225 130 -64 41 -61 1845 -61 1143 0 1658 3 1700 11 104 19 197 70 278 151 39 40 83 96 98 124 60 113 58 51 58 1429 0 1018 -3 1270 -14 1310 -48 182 -199 333 -381 381 -41 11 -364 14 -1745 14 l-1695 -1 -65 -22z m3410 -422 c63 -32 60 0 58 -828 l-3 -755 -300 351 c-383 448 -405 472 -479 510 -58 30 -67 32 -171 32 -101 0 -114 -2 -165 -28 -30 -16 -68 -40 -84 -55 -16 -15 -210 -244 -431 -509 l-402 -481 -149 149 c-163 164 -208 194 -314 209 -77 11 -153 -1 -228 -35 -48 -22 -107 -76 -370 -338 l-312 -312 2 1015 c3 946 4 1017 20 1040 10 13 28 30 40 37 18 10 363 12 1641 13 1427 0 1621 -2 1647 -15z" />

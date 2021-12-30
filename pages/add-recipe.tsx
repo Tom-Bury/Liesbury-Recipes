@@ -3,6 +3,7 @@ import { NextPage } from 'next'
 import { HorizontalCenterLayout } from 'layouts'
 import { useReducer, useState } from 'react'
 import colors from 'public/colors'
+import getPreviewImage from 'api/getPreviewImage'
 import Button from '~/components/atoms/Button/Button'
 import Card from '~/components/Card/Card'
 import ImageIcon from '~/components/icons/Image.icon'
@@ -32,10 +33,11 @@ const formReducer = (state: TFormState, action: TFormAction): TFormState => {
   }
 }
 
-const AddRecipePage: NextPage = _ => {
+const AddRecipePage: NextPage = () => {
   const [formState, dispatchFormAction] = useReducer(formReducer, {})
-  const [recipeImgSrcUrl, setRecipeImgSrcUrl] = useState<string>('')
-  const [recipeImgPreviewError, setRecipeImgPreviewError] = useState<boolean>(false)
+  const [recipeImgSrcUrl, setRecipeImgSrcUrl] = useState('')
+  const [recipeImgPreviewError, setRecipeImgPreviewError] = useState(false)
+  const [recipeImgLoading, setRecipeImgLoading] = useState(false)
 
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault()
@@ -47,12 +49,32 @@ const AddRecipePage: NextPage = _ => {
       key: event.target.name as EFormKeys,
       value: event.target.value
     })
+
+    if (event.target.name === EFormKeys.recipeUrl || event.target.name === EFormKeys.imgUrl) {
+      setRecipeImgPreviewError(false)
+      setRecipeImgLoading(false)
+    }
   }
 
-  const setImageSource = (__: any) => {
-    if (formState.recipeUrl) {
-      setRecipeImgSrcUrl(formState.recipeUrl)
-      setRecipeImgPreviewError(false)
+  const setImageSource = async () => {
+    setRecipeImgLoading(true)
+    if (formState.recipeUrl && !formState.imgUrl) {
+      try {
+        if (formState.recipeUrl !== recipeImgSrcUrl) {
+          const previewImgUrl = await getPreviewImage(formState.recipeUrl)
+          setRecipeImgSrcUrl(previewImgUrl)
+          setRecipeImgPreviewError(false)
+        }
+      } catch (error) {
+        console.error('Error fetching preview image', error)
+        setRecipeImgSrcUrl('')
+        setRecipeImgPreviewError(true)
+      } finally {
+        setRecipeImgLoading(false)
+      }
+    } else if (formState.imgUrl) {
+      setRecipeImgSrcUrl(formState.imgUrl)
+      setRecipeImgLoading(false)
     }
   }
 
@@ -71,21 +93,26 @@ const AddRecipePage: NextPage = _ => {
                 <div className="grid grid-rows-1 gap-y-3">
                   <Input label="Naam" id={EFormKeys.recipeTitle} onChange={handleInputChange} />
                   <Input label="Link naar het recept" id={EFormKeys.recipeUrl} onChange={handleInputChange} onBlur={setImageSource} />
-                  <span className="flex flex-row w-full items-center">
+
+                  <span className="flex flex-row w-full items-center mt-4">
                     <h6 className="italic font-semibold mr-2 text-primary">Optioneel</h6>
                     <hr className="flex-1 my-4 border-t-4 border-primary border-dotted" />
                   </span>
                   <Input label="Link naar een afbeelding" id={EFormKeys.imgUrl} onChange={handleInputChange} onBlur={setImageSource} />
                   <span className="flex flex-row w-full items-center">
-                    <p className="mr-2 whitespace-nowrap italic">Of upload:</p>
-                    <input type="file" className="w-full text-sm text-dark hover:text-darkest" />
+                    <p className="mr-2 whitespace-nowrap italic">Of upload (TODO):</p>
+                    <input disabled type="file" className="w-full text-sm text-dark hover:text-darkest" />
                   </span>
                 </div>
               </div>
+
               <span className="h-1 w-auto md:h-auto md:w-1 my-4 md:my-0 mx-0 md:mx-4 bg-primary" />
+
               <div className="flex-1 flex flex-col items-center justify-center">
                 {recipeImgSrcUrl && <img alt="Recipe preview" src={recipeImgSrcUrl} onError={handleRecipePreviewImgError} />}
-                {!recipeImgSrcUrl && <ImageIcon width={48} height={48} fill={colors.dark} />}
+                {!recipeImgSrcUrl && (
+                  <ImageIcon className={recipeImgLoading ? 'animate-bounce' : ''} width={48} height={48} fill={colors.dark} />
+                )}
                 {recipeImgPreviewError && <p className="mt-2 italic bold text-primary text-center">Preview kan niet geladen worden</p>}
               </div>
             </div>
