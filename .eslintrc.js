@@ -6,7 +6,9 @@ module.exports = {
     'jsx-a11y/anchor-is-valid': 'off',
     'react/jsx-props-no-spreading': 'off',
     'prettier/prettier': 'error',
-    'react/require-default-props': 'off'
+    'react/require-default-props': 'off',
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': ['error']
   },
   overrides: [
     {

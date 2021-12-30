@@ -6,80 +6,91 @@ import colors from 'public/colors'
 import Button from '~/components/atoms/Button/Button'
 import Card from '~/components/Card/Card'
 import ImageIcon from '~/components/icons/Image.icon'
+import Input from '~/components/atoms/Input/Input'
 
-type TInputProps = {
-  name: string
-  id: string
-  onChange?: React.ChangeEventHandler<HTMLInputElement>
-  onBlur?: React.FocusEventHandler<HTMLInputElement>
+enum EFormKeys {
+  recipeTitle = 'recipeTitle',
+  recipeUrl = 'recipeUrl',
+  imgUrl = 'imgUrl'
 }
 
-const LabeledInput = ({ name, id, onChange, onBlur }: TInputProps) => (
-  <label htmlFor="title">
-    <p>{name}</p>
-    <input
-      className="px-2 w-full py-1 bg-lightest rounded-sm focus:outline-none focus:border-primary focus:ring-primary focus:ring-2"
-      id={id}
-      name={id}
-      onChange={onChange}
-      onBlur={onBlur}
-    />
-  </label>
-)
+type TFormState = Partial<
+  {
+    [formKey in EFormKeys]: string
+  }
+>
 
-const formReducer = (state: any, event: any) => {
+type TFormAction = {
+  key: EFormKeys
+  value: string
+}
+
+const formReducer = (state: TFormState, action: TFormAction): TFormState => {
   return {
     ...state,
-    [event.name]: event.value
+    [action.key]: action.value
   }
 }
 
 const AddRecipePage: NextPage = _ => {
-  const [formData, setFormData] = useReducer(formReducer, {})
+  const [formState, dispatchFormAction] = useReducer(formReducer, {})
   const [recipeImgSrcUrl, setRecipeImgSrcUrl] = useState<string>('')
+  const [recipeImgPreviewError, setRecipeImgPreviewError] = useState<boolean>(false)
 
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault()
-    console.log(formData)
+    console.log(formState)
   }
 
-  const handleChange = (event: { target: { name: any; value: any } }) => {
-    setFormData({
-      name: event.target.name,
+  const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = event => {
+    dispatchFormAction({
+      key: event.target.name as EFormKeys,
       value: event.target.value
     })
   }
 
   const setImageSource = (__: any) => {
-    setRecipeImgSrcUrl(formData.recipeUrl)
+    if (formState.recipeUrl) {
+      setRecipeImgSrcUrl(formState.recipeUrl)
+      setRecipeImgPreviewError(false)
+    }
+  }
+
+  const handleRecipePreviewImgError = () => {
+    setRecipeImgSrcUrl('')
+    setRecipeImgPreviewError(true)
   }
 
   return (
     <HorizontalCenterLayout className="h-screen flex justify-center items-center p-4">
-      <Card className="p-8 w-full md:w-11/12 md:max-w-4xl">
-        <form onSubmit={handleSubmit}>
+      <Card className="p-8 w-full lg:w-11/12 lg:max-w-6xl">
+        <form onSubmit={handleSubmit} className="flex flex-col">
           <fieldset>
-            <div className="flex flex-col md:flex-row">
-              <div className="flex-1 pb-4 md:py-2 md:pr-4 grid grid-rows-1 gap-y-3 border-b-2 md:border-b-0 md:border-r-2 border-primary">
-                <LabeledInput name="Naam" id="recipeTitle" onChange={handleChange} />
-                <LabeledInput name="Link naar het recept" id="recipeUrl" onChange={handleChange} onBlur={setImageSource} />
-                <span className="flex flex-row w-full items-center">
-                  <h6 className="italic font-semibold mr-2 text-primary">Optioneel</h6>
-                  <hr className="flex-1 my-4 border-t-4 border-primary border-dotted" />
-                </span>
-                <LabeledInput name="Link naar een afbeelding" id="recipeUrl" onChange={handleChange} onBlur={setImageSource} />
-                <span className="flex flex-row w-full items-center">
-                  <p className="mr-2 whitespace-nowrap italic">Of upload:</p>
-                  <input type="file" className="w-full text-sm text-dark hover:text-darkest" />
-                </span>
+            <div className="flex flex-col md:flex-row items-stretch">
+              <div className="flex-1">
+                <div className="grid grid-rows-1 gap-y-3">
+                  <Input label="Naam" id={EFormKeys.recipeTitle} onChange={handleInputChange} />
+                  <Input label="Link naar het recept" id={EFormKeys.recipeUrl} onChange={handleInputChange} onBlur={setImageSource} />
+                  <span className="flex flex-row w-full items-center">
+                    <h6 className="italic font-semibold mr-2 text-primary">Optioneel</h6>
+                    <hr className="flex-1 my-4 border-t-4 border-primary border-dotted" />
+                  </span>
+                  <Input label="Link naar een afbeelding" id={EFormKeys.imgUrl} onChange={handleInputChange} onBlur={setImageSource} />
+                  <span className="flex flex-row w-full items-center">
+                    <p className="mr-2 whitespace-nowrap italic">Of upload:</p>
+                    <input type="file" className="w-full text-sm text-dark hover:text-darkest" />
+                  </span>
+                </div>
               </div>
-              <div className="flex mt-4 md:mt-0 md:ml-4 flex-1 justify-center items-center">
-                {recipeImgSrcUrl && <img className="w-full md:w-auto md:max-h-full" alt="Recipe preview" src={recipeImgSrcUrl} />}
+              <span className="h-1 w-auto md:h-auto md:w-1 my-4 md:my-0 mx-0 md:mx-4 bg-primary" />
+              <div className="flex-1 flex flex-col items-center justify-center">
+                {recipeImgSrcUrl && <img alt="Recipe preview" src={recipeImgSrcUrl} onError={handleRecipePreviewImgError} />}
                 {!recipeImgSrcUrl && <ImageIcon width={48} height={48} fill={colors.dark} />}
+                {recipeImgPreviewError && <p className="mt-2 italic bold text-primary text-center">Preview kan niet geladen worden</p>}
               </div>
             </div>
           </fieldset>
-          <Button className="mt-4" type="submit">
+          <Button className="mt-4 w-full max-w-md self-center" type="submit">
             Save!
           </Button>
         </form>
