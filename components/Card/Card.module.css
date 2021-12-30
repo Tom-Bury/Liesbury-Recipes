@@ -1,9 +1,9 @@
 .card-base {
-  @apply cursor-pointer rounded-xl shadow bg-light text-darkest;
+  @apply rounded-xl shadow bg-light text-darkest;
 }
 
 .card-hoverable {
-  @apply transition duration-200 ease-out transform;
+  @apply cursor-pointer transition duration-200 ease-out transform;
 
   p,
   h1,

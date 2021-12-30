@@ -12,7 +12,7 @@ const Input: React.FC<TInputProps> = ({ label, id, onChange, onBlur }) => {
     <label htmlFor={id}>
       {label && <p>{label}</p>}
       <input
-        className="px-2 w-full py-1 bg-lightest rounded-sm focus:outline-none focus:border-primary focus:ring-primary focus:ring-2"
+        className="px-2 w-full py-1 bg-lightest truncate rounded-sm focus:outline-none focus:border-primary focus:ring-primary focus:ring-2"
         id={id}
         name={id}
         onChange={onChange}

@@ -2,9 +2,16 @@
   @apply rounded-xl bg-primary text-white text-lg p-2 transition duration-200 ease-out transform;
 }
 
+.button:disabled {
+  @apply opacity-25 cursor-not-allowed;
+}
+
+
+
+
 
 @media(hover: hover) and (pointer: fine) {
-  .button:hover {
+  .button:hover:not([disabled]) {
     @apply bg-dark;
   }
 }
