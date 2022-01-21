@@ -10,7 +10,13 @@ const getPreviewImage = async (url: string): Promise<string> => {
     queryUrl.search = new URLSearchParams({
       url
     }).toString()
-    const res = await fetch(queryUrl.toString())
+    const res = await fetch(queryUrl.toString(), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': 'http://localhost:3000'
+      },
+      credentials: 'include'
+    })
 
     switch (res.status) {
       case 200: {

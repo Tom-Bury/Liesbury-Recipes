@@ -17,8 +17,10 @@ const addRecipe = async (recipe: TAddRecipeBody): Promise<TAddRecipeResponse> =>
     const res = await fetch(queryUrl.toString(), {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': 'http://localhost:3000'
       },
+      credentials: 'include',
       body: JSON.stringify(recipe)
     })
 
@@ -28,6 +30,10 @@ const addRecipe = async (recipe: TAddRecipeBody): Promise<TAddRecipeResponse> =>
       }
       case 404: {
         throw new Error(EErrorCode.HTTP_404)
+      }
+      case 401: {
+        alert('Niet geauthoriseerd')
+        window.location.reload()
       }
       default: {
         throw new Error(EErrorCode.SERVER_ERROR)

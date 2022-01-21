@@ -6,7 +6,13 @@ const searchRecipes = async (query: string): Promise<TRecipe[]> => {
     queryUrl.search = new URLSearchParams({
       search: query
     }).toString()
-    const res = await fetch(queryUrl.toString())
+    const res = await fetch(queryUrl.toString(), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': 'http://localhost:3000'
+      },
+      credentials: 'include'
+    })
     const recipes = (await res.json()) as TRecipe[]
     return recipes
   } catch (error) {
