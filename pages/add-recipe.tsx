@@ -1,38 +1,49 @@
 import * as React from 'react'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import { HorizontalCenterLayout } from 'layouts'
 import { useReducer, useState } from 'react'
 import colors from 'public/colors'
 import getPreviewImage from 'api/getPreviewImage'
 import addRecipe from 'api/addRecipe'
 import { useRouter } from 'next/router'
+import remark from 'remark'
+import html from 'remark-html'
 import Button from '~/components/atoms/Button/Button'
 import Card from '~/components/Card/Card'
 import ImageIcon from '~/components/icons/Image.icon'
 import Input from '~/components/atoms/Input/Input'
 import Loading from '~/components/Loading'
+import MarkdownSnippet from '~/components/MarkdownSnippet/MarkdownSnippet'
 
 enum EFormKeys {
   recipeTitle = 'recipeTitle',
   recipeUrl = 'recipeUrl',
-  imgUrl = 'imgUrl'
+  imgUrl = 'imgUrl',
+  instructions = 'instructions'
 }
 
 type TFormState = Partial<
   {
-    [formKey in EFormKeys]: string
+    [formKey in EFormKeys]: {
+      value: string
+      formattedValue: string
+    }
   }
 >
 
 type TFormAction = {
   key: EFormKeys
   value: string
+  formattedValue?: string
 }
 
 const formReducer = (state: TFormState, action: TFormAction): TFormState => {
   return {
     ...state,
-    [action.key]: action.value
+    [action.key]: {
+      value: action.value,
+      formattedValue: action.formattedValue || action.value.trim()
+    }
   }
 }
 
@@ -46,7 +57,7 @@ const AddRecipePage: NextPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitOnError, setIsSubmitOnError] = useState(false)
 
-  const isFormValid = !!formState.recipeTitle && !!formState.recipeUrl
+  const isFormValid = (!!formState.recipeTitle?.formattedValue && !!formState.recipeUrl?.formattedValue) || true
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault()
@@ -54,8 +65,8 @@ const AddRecipePage: NextPage = () => {
       setIsSubmitting(true)
       try {
         const result = await addRecipe({
-          title: formState.recipeTitle || '', // TODO: typing doesn't know isFormValid guarantees non empty values
-          url: formState.recipeUrl || '',
+          title: formState.recipeTitle?.formattedValue || '', // TODO: typing doesn't know isFormValid guarantees non empty values
+          url: formState.recipeUrl?.formattedValue || '',
           imgUrl: recipeImgSrcUrl
         })
 
@@ -69,13 +80,15 @@ const AddRecipePage: NextPage = () => {
         setIsSubmitting(false)
       }
     }
-    console.log(formState)
   }
 
-  const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = event => {
+  const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = async event => {
+    const key = event.target.name as EFormKeys
+    const { value } = event.target
+
     dispatchFormAction({
-      key: event.target.name as EFormKeys,
-      value: event.target.value
+      key,
+      value
     })
 
     setIsSubmitOnError(false)
@@ -86,12 +99,25 @@ const AddRecipePage: NextPage = () => {
     }
   }
 
+  const handleTextAreaChange: React.ChangeEventHandler<HTMLTextAreaElement> = async event => {
+    const key = event.target.name as EFormKeys
+    const { value } = event.target
+    const processed = await remark().use(html).process(value)
+    const formattedValue = processed ? processed.toString() : 'Syntax error'
+
+    dispatchFormAction({
+      key,
+      value,
+      formattedValue
+    })
+  }
+
   const setImageSource = async () => {
     setRecipeImgLoading(true)
-    if (formState.recipeUrl && !formState.imgUrl) {
+    if (formState.recipeUrl?.formattedValue && !formState.imgUrl?.formattedValue) {
       try {
-        if (formState.recipeUrl !== recipeImgSrcUrl) {
-          const previewImgUrl = await getPreviewImage(formState.recipeUrl)
+        if (formState.recipeUrl?.formattedValue !== recipeImgSrcUrl) {
+          const previewImgUrl = await getPreviewImage(formState.recipeUrl?.formattedValue)
           setRecipeImgSrcUrl(previewImgUrl)
           setRecipeImgPreviewError(false)
         }
@@ -102,8 +128,8 @@ const AddRecipePage: NextPage = () => {
       } finally {
         setRecipeImgLoading(false)
       }
-    } else if (formState.imgUrl) {
-      setRecipeImgSrcUrl(formState.imgUrl)
+    } else if (formState.imgUrl?.formattedValue) {
+      setRecipeImgSrcUrl(formState.imgUrl?.formattedValue)
       setRecipeImgLoading(false)
     }
   }
@@ -114,9 +140,9 @@ const AddRecipePage: NextPage = () => {
   }
 
   return (
-    <HorizontalCenterLayout className="h-screen flex md:justify-center items-center p-4">
-      <Card className="p-8 w-full lg:w-11/12 lg:max-w-6xl">
-        <form onSubmit={handleSubmit} className="flex flex-col">
+    <HorizontalCenterLayout className="h-screen flex md:justify-center items-center p-2 md:p-4">
+      <Card className="p-4 md:p-8 w-full lg:w-11/12 lg:max-w-6xl">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
           <fieldset>
             <div className="flex flex-col md:flex-row items-stretch">
               <div className="flex-1">
@@ -149,10 +175,29 @@ const AddRecipePage: NextPage = () => {
               </div>
             </div>
           </fieldset>
+          {/* <fieldset>
+            <div className="flex flex-col md:flex-row">
+              <div className="flex-1">
+                <textarea
+                  id={EFormKeys.instructions}
+                  name={EFormKeys.instructions}
+                  className="w-full min-h-full p-2 rounded-sm bg-lightest focus:outline-none focus:border-primary focus:ring-primary focus:ring-2 resize-y"
+                  onChange={handleTextAreaChange}
+                  rows={4}
+                />
+              </div>
+              <span className="h-1 w-auto md:h-auto md:w-1 my-4 md:my-0 mx-0 md:mx-4 bg-primary" />
+              <div className="flex-1 overflow-auto rounded-sm border-primary border-2">
+                <MarkdownSnippet instructionsHtml={formState.instructions?.formattedValue || ''} className="p-2 text-darkest" />
+              </div>
+            </div>
+          </fieldset> */}
           {!isSubmitting && (
-            <Button disabled={!isFormValid} className="mt-4 w-full max-w-md self-center" type="submit">
-              Opslaan!
-            </Button>
+            <span className="flex flex-1 justify-center">
+              <Button disabled={!isFormValid} className="w-full max-w-md" type="submit">
+                Opslaan!
+              </Button>
+            </span>
           )}
           {isSubmitting && (
             <span className="self-center mt-8">
@@ -166,6 +211,23 @@ const AddRecipePage: NextPage = () => {
       </Card>
     </HorizontalCenterLayout>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async context => {
+  const { cookies } = context.req
+
+  if (!cookies.authToken) {
+    return {
+      redirect: {
+        destination: '/login?redirectTo=add-recipe',
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {}
+  }
 }
 
 export default AddRecipePage

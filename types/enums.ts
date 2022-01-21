@@ -10,6 +10,7 @@ export enum ECategory {
 
 export enum EErrorCode {
   HTTP_404 = 'HTTP_404',
+  HTTP_401 = 'HTTP_401',
   SERVER_ERROR = 'SERVER_ERROR',
   UNKNOWN_ERROR = 'UNKNOWN_ERROR'
 }
