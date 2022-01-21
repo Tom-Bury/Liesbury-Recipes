@@ -113,9 +113,9 @@ const AddRecipePage: NextPage = () => {
   }
 
   const setImageSource = async () => {
-    setRecipeImgLoading(true)
     if (formState.recipeUrl?.formattedValue && !formState.imgUrl?.formattedValue) {
       try {
+        setRecipeImgLoading(true)
         if (formState.recipeUrl?.formattedValue !== recipeImgSrcUrl) {
           const previewImgUrl = await getPreviewImage(formState.recipeUrl?.formattedValue)
           setRecipeImgSrcUrl(previewImgUrl)
@@ -192,18 +192,15 @@ const AddRecipePage: NextPage = () => {
               </div>
             </div>
           </fieldset> */}
-          {!isSubmitting && (
-            <span className="flex flex-1 justify-center">
+          <span className="flex flex-1 justify-center">
+            {!isSubmitting && (
               <Button disabled={!isFormValid} className="w-full max-w-md" type="submit">
                 Opslaan!
               </Button>
-            </span>
-          )}
-          {isSubmitting && (
-            <span className="self-center mt-8">
-              <Loading />
-            </span>
-          )}
+            )}
+            {isSubmitting && <Loading />}
+          </span>
+
           {isSubmitOnError && (
             <h6 className="text-error font-bold self-center mt-2">Kon recept niet opslaan. Is alles correct ingevuld?</h6>
           )}
