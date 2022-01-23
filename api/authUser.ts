@@ -22,7 +22,7 @@ const authUser = async (password: string): Promise<void> => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'http://localhost:3000'
+        'Access-Control-Allow-Origin': window.location.origin
       },
       credentials: 'include',
       body: JSON.stringify({

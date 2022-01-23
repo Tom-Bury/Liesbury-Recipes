@@ -19,7 +19,8 @@ enum EFormKeys {
   recipeTitle = 'recipeTitle',
   recipeUrl = 'recipeUrl',
   imgUrl = 'imgUrl',
-  instructions = 'instructions'
+  instructions = 'instructions',
+  imgFile = 'imgFile'
 }
 
 type TFormState = Partial<
@@ -67,7 +68,8 @@ const AddRecipePage: NextPage = () => {
         const result = await addRecipe({
           title: formState.recipeTitle?.formattedValue || '', // TODO: typing doesn't know isFormValid guarantees non empty values
           url: formState.recipeUrl?.formattedValue || '',
-          imgUrl: recipeImgSrcUrl
+          imgUrl: recipeImgSrcUrl || '',
+          previewImgFileData: formState.imgFile?.formattedValue || undefined
         })
 
         if (result.recipeId && result.title) {
@@ -96,6 +98,26 @@ const AddRecipePage: NextPage = () => {
     if (event.target.name === EFormKeys.recipeUrl || event.target.name === EFormKeys.imgUrl) {
       setRecipeImgPreviewError(false)
       setRecipeImgLoading(false)
+    }
+  }
+
+  const handleFileInputChange: React.ChangeEventHandler<HTMLInputElement> = async event => {
+    if (event.target.files && event.target.files?.length > 0) {
+      const file = event.target.files?.[0]
+      const fileLocalUrl = URL.createObjectURL(file)
+      setRecipeImgSrcUrl(fileLocalUrl)
+
+      const fileReader = new FileReader()
+      fileReader.onload = () => {
+        dispatchFormAction({
+          key: EFormKeys.imgFile,
+          value: fileReader.result as string
+        })
+      }
+      fileReader.onerror = error => {
+        alert('Kon afbeelding niet uploaden :c')
+      }
+      fileReader.readAsDataURL(file)
     }
   }
 
@@ -155,9 +177,14 @@ const AddRecipePage: NextPage = () => {
                     <hr className="flex-1 my-4 border-t-4 border-primary border-dotted" />
                   </span>
                   <Input label="Link naar een afbeelding" id={EFormKeys.imgUrl} onChange={handleInputChange} onBlur={setImageSource} />
-                  <span className="flex flex-row w-full items-center opacity-25 cursor-not-allowed">
+                  <span className="flex flex-row w-full items-center">
                     <p className="mr-2 whitespace-nowrap italic">Of upload (TODO):</p>
-                    <input disabled type="file" className="w-full text-sm text-dark hover:text-darkest" />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="w-full text-sm text-dark hover:text-darkest"
+                      onChange={handleFileInputChange}
+                    />
                   </span>
                 </div>
               </div>

@@ -4,6 +4,7 @@ type TAddRecipeBody = {
   title: string
   url: string
   imgUrl: string
+  previewImgFileData?: string
 }
 
 type TAddRecipeResponse = {
@@ -18,7 +19,7 @@ const addRecipe = async (recipe: TAddRecipeBody): Promise<TAddRecipeResponse> =>
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'http://localhost:3000'
+        'Access-Control-Allow-Origin': window.location.origin
       },
       credentials: 'include',
       body: JSON.stringify(recipe)
@@ -32,8 +33,7 @@ const addRecipe = async (recipe: TAddRecipeBody): Promise<TAddRecipeResponse> =>
         throw new Error(EErrorCode.HTTP_404)
       }
       case 401: {
-        alert('Niet geauthoriseerd')
-        window.location.reload()
+        throw new Error(EErrorCode.HTTP_401)
       }
       default: {
         throw new Error(EErrorCode.SERVER_ERROR)
