@@ -13,7 +13,7 @@ const getPreviewImage = async (url: string): Promise<string> => {
     const res = await fetch(queryUrl.toString(), {
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'http://localhost:3000'
+        'Access-Control-Allow-Origin': window.location.origin
       },
       credentials: 'include'
     })
