@@ -1,13 +1,34 @@
-.card-icon-hoverable {
+.hoverable {
   .dark-icon {
-    transition: fFilter 200ms cubic-bezier(0, 0, 0.2, 1);
+    transition: fFilter 300ms cubic-bezier(0, 0, 0.2, 1);
     filter: invert(19%) sepia(43%) saturate(5589%) hue-rotate(171deg) brightness(97%) contrast(101%);
+  }
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    transition: fFilter 300ms cubic-bezier(0, 0, 0.2, 1);
+    @apply text-dark;
   }
 }
 
-.card-icon-hoverable:hover {
+.hoverable:hover {
 
   .dark-icon {
-    filter: invert(100%) sepia(9%) saturate(7442%) hue-rotate(196deg) brightness(110%) contrast(104%);
+    filter: invert(19%) sepia(94%) saturate(1146%) hue-rotate(154deg) brightness(96%) contrast(101%);
+  }
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-darkest;
   }
 }
