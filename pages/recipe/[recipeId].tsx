@@ -5,18 +5,23 @@ import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import { useRouter } from 'next/dist/client/router'
 import { ParsedUrlQuery } from 'querystring'
 import * as React from 'react'
+import Image from 'next/image'
+import useLoginStatus from 'hooks/useLoginStatus'
 // import remark from 'remark'
 // import html from 'remark-html'
 import RecipeData from '~/components/RecipeData'
 import RecipePlaceholder from '~/components/RecipePlaceholder'
+import CircularButton from '~/components/atoms/FloatingButton/CircularButton'
+import BackButton from '~/components/atoms/BackButton/BackButton'
 
 type TProps = {
   recipe?: TRecipe
-  instructions?: string
 }
 
-const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
-  const { isFallback } = useRouter()
+const RecipePage: NextPage<TProps> = ({ recipe }) => {
+  const router = useRouter()
+  const { isFallback } = router
+  const isLoggedIn = useLoginStatus()
 
   if (!recipe) {
     return (
@@ -32,13 +37,6 @@ const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
     backgroundSize: 'cover'
   }
 
-  let recipeUrl
-  try {
-    recipeUrl = new URL(recipe.url)
-  } catch (_) {
-    // Noop
-  }
-
   return (
     <div className="flex flex-1 justify-center">
       <div className="max-w-5xl w-full h-80 fixed top-0 z-0" style={recipeImgStyle} />
@@ -48,9 +46,28 @@ const RecipePage: NextPage<TProps> = ({ recipe, instructions }) => {
             <h2 className="text-darkest text-center px-2">{isFallback ? '...' : recipe.title}</h2>
             <hr className="border-t-4 border-primary w-full" />
           </div>
-          {isFallback ? <RecipePlaceholder /> : <RecipeData recipe={recipe} recipeUrl={recipeUrl} instructions={instructions} />}
+          {isFallback ? <RecipePlaceholder /> : <RecipeData recipe={recipe} />}
         </div>
       </div>
+      <BackButton />
+      {isLoggedIn && (
+        <span className="fixed w-full max-w-5xl bottom-0 flex flex-row">
+          <CircularButton
+            className="ml-auto my-4 mr-4 lg:mr-0 z-50"
+            onPress={() => {
+              localStorage.setItem('recipe', JSON.stringify(recipe))
+              router.push({
+                pathname: '/add-recipe',
+                query: {
+                  prefilled: true
+                }
+              })
+            }}
+          >
+            <Image src="/icons/edit.svg" alt="Edit icon" width={24} height={24} />
+          </CircularButton>
+        </span>
+      )}
     </div>
   )
 }
