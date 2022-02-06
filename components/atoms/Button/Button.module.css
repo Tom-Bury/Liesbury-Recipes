@@ -1,5 +1,5 @@
 .button {
-  @apply rounded-xl bg-primary text-white text-lg p-2 transition duration-200 ease-out transform;
+  @apply bg-primary text-white text-lg p-2 transition duration-200 ease-out transform;
 }
 
 .button:disabled {

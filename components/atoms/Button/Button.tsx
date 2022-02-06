@@ -6,17 +6,18 @@ type TProps = {
   className?: string
   type?: 'button' | 'submit' | 'reset'
   disabled?: boolean
+  circular?: boolean
   onPress?: () => void
 }
 
-const Card: React.FC<TProps> = ({ type, children, className, disabled }) => {
-  const classes = classNames(styles.button, className)
+const Button: React.FC<TProps> = ({ type, children, className, disabled, circular, onPress }) => {
+  const classes = classNames(styles.button, className, circular ? 'rounded-full' : 'rounded-xl')
   return (
     // eslint-disable-next-line react/button-has-type
-    <button type={type || 'button'} className={classes} disabled={disabled}>
+    <button type={type || 'button'} className={classes} disabled={disabled} onClick={onPress}>
       {children}
     </button>
   )
 }
 
-export default Card
+export default Button
