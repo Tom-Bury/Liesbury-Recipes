@@ -14,7 +14,7 @@ if (admin.apps.length === 0) {
 
 const converter = <T>() => ({
   toFirestore: (data: T) => data,
-  fromFirestore: (snap: FirebaseFirestore.QueryDocumentSnapshot) => snap.data() as T
+  fromFirestore: (snap: FirebaseFirestore.QueryDocumentSnapshot) => (({ ...snap.data(), id: snap.id } as unknown) as T)
 })
 
 const typedCollection = <T>(collectionPath: string) => firestore().collection(collectionPath).withConverter(converter<T>())

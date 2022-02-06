@@ -3,4 +3,5 @@ export type TRecipe = {
   imgUrl: string
   url: string
   id: string
+  instructions: string
 }

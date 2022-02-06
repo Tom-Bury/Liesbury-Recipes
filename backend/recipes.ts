@@ -3,7 +3,7 @@ import { TRecipe } from './types/recipes.types'
 
 export const getLastNRecipes = async (n: number): Promise<TRecipe[]> => {
   const lastNRecipes = await db.recipes.limit(n).get()
-  return lastNRecipes.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+  return lastNRecipes.docs.map(doc => doc.data())
 }
 
 export const getAllRecipeIds = async (): Promise<string[]> => {

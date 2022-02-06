@@ -5,6 +5,7 @@ type TAddRecipeBody = {
   url: string
   imgUrl: string
   previewImgFileData?: string
+  instructions?: string
 }
 
 type TAddRecipeResponse = {
@@ -12,7 +13,7 @@ type TAddRecipeResponse = {
   title: string
 }
 
-const addRecipe = async (recipe: TAddRecipeBody): Promise<TAddRecipeResponse> => {
+export const addRecipe = async (recipe: TAddRecipeBody): Promise<TAddRecipeResponse> => {
   try {
     const queryUrl = new URL('https://europe-west1-liesbury-recipes-322314.cloudfunctions.net/add-recipe')
     const res = await fetch(queryUrl.toString(), {
@@ -44,4 +45,34 @@ const addRecipe = async (recipe: TAddRecipeBody): Promise<TAddRecipeResponse> =>
   }
 }
 
-export default addRecipe
+export const updateRecipe = async (recipe: TAddRecipeBody, recipeId: string): Promise<TAddRecipeResponse> => {
+  try {
+    const queryUrl = new URL('https://europe-west1-liesbury-recipes-322314.cloudfunctions.net/add-recipe')
+    const res = await fetch(queryUrl.toString(), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': window.location.origin
+      },
+      credentials: 'include',
+      body: JSON.stringify({ id: recipeId, ...recipe })
+    })
+
+    switch (res.status) {
+      case 200: {
+        return (await res.json()) as TAddRecipeResponse
+      }
+      case 404: {
+        throw new Error(EErrorCode.HTTP_404)
+      }
+      case 401: {
+        throw new Error(EErrorCode.HTTP_401)
+      }
+      default: {
+        throw new Error(EErrorCode.SERVER_ERROR)
+      }
+    }
+  } catch (error) {
+    throw new Error(EErrorCode.UNKNOWN_ERROR)
+  }
+}
