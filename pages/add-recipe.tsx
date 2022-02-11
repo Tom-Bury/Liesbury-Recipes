@@ -263,8 +263,9 @@ const AddRecipePage: NextPage = () => {
           )}
         </form>
       </Card>
-
-      <BackButton />
+      <span className="fab-container">
+        <BackButton />
+      </span>
     </HorizontalCenterLayout>
   )
 }

@@ -57,7 +57,9 @@ const LoginPage: NextPage = () => {
           {isUnknownError && <h6 className="text-error font-bold text-center mt-2">Er is iets misgelopen, probeer het later opnieuw</h6>}
         </form>
       </Card>
-      <BackButton />
+      <span className="fab-container">
+        <BackButton />
+      </span>
     </HorizontalCenterLayout>
   )
 }

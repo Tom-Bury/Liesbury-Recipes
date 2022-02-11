@@ -23,6 +23,10 @@ body {
   clip-path: polygon(50% 0%, 85% 48px, 100% 48px, 100% 100%, 0 100%, 0 48px, 15% 48px);
 }
 
+.fab-container {
+  @apply fixed w-full max-w-5xl bottom-0 flex flex-row z-50
+}
+
 h1,
 h2 {
   @apply font-title font-medium

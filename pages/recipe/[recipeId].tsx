@@ -11,7 +11,7 @@ import useLoginStatus from 'hooks/useLoginStatus'
 // import html from 'remark-html'
 import RecipeData from '~/components/RecipeData'
 import RecipePlaceholder from '~/components/RecipePlaceholder'
-import CircularButton from '~/components/atoms/FloatingButton/CircularButton'
+import CircularButton from '~/components/atoms/CircularButton/CircularButton'
 import BackButton from '~/components/atoms/BackButton/BackButton'
 
 type TProps = {
@@ -49,9 +49,9 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
           {isFallback ? <RecipePlaceholder /> : <RecipeData recipe={recipe} />}
         </div>
       </div>
-      <BackButton />
-      {isLoggedIn && (
-        <span className="fixed w-full max-w-5xl bottom-0 flex flex-row">
+      <span className="fab-container justify-between">
+        <BackButton />
+        {isLoggedIn && (
           <CircularButton
             className="ml-auto my-4 mr-4 lg:mr-0 z-50"
             onPress={() => {
@@ -66,8 +66,8 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
           >
             <Image src="/icons/edit.svg" alt="Edit icon" width={24} height={24} />
           </CircularButton>
-        </span>
-      )}
+        )}
+      </span>
     </div>
   )
 }
