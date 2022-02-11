@@ -6,8 +6,6 @@ import colors from 'public/colors'
 import getPreviewImage from 'api/getPreviewImage'
 import { addRecipe, updateRecipe } from 'api/addRecipe'
 import { useRouter } from 'next/router'
-import remark from 'remark'
-import html from 'remark-html'
 import { TRecipe } from 'backend/types/recipes.types'
 import { addRecipeFormReducer, ERecipeKeys } from 'reducers/add-recipe.reducer'
 import Button from '~/components/atoms/Button/Button'
@@ -15,7 +13,6 @@ import Card from '~/components/Card/Card'
 import ImageIcon from '~/components/icons/Image.icon'
 import Input from '~/components/atoms/Input/Input'
 import Loading from '~/components/Loading'
-import MarkdownSnippet from '~/components/MarkdownSnippet/MarkdownSnippet'
 import BackButton from '~/components/atoms/BackButton/BackButton'
 import MarkdownInputArea from '~/components/atoms/MarkdownInputArea/MarkdownInputArea.component'
 import ListInput from '~/components/atoms/ListInput/ListInput.component'
@@ -133,12 +130,12 @@ const AddRecipePage: NextPage = () => {
   }
 
   const handleTextAreaChange = (key: ERecipeKeys.instructions | ERecipeKeys.tips) => {
-    return (markdownInput: string, processdHtml: string) => {
+    return (markdownInput: string) => {
       dispatchFormAction({
         type: 'markdown',
         key,
         markdown: markdownInput,
-        html: processdHtml
+        html: ''
       })
     }
   }
@@ -186,17 +183,23 @@ const AddRecipePage: NextPage = () => {
             <div className="flex flex-col md:flex-row items-stretch">
               <div className="flex-1">
                 <div className="grid grid-rows-1 gap-y-3">
-                  <Input label="Naam" id={ERecipeKeys.recipeTitle} onChange={handleInputChange} value={formState.recipeTitle} />
+                  <Input label="Naam" id={ERecipeKeys.recipeTitle} onChange={handleInputChange} value={formState.recipeTitle || ''} />
                   <Separator label="Optioneel" />
                   <Input
                     label="Link naar het recept"
                     id={ERecipeKeys.recipeUrl}
                     onChange={handleInputChange}
-                    value={formState.recipeUrl}
+                    value={formState.recipeUrl || ''}
                     onBlur={setImageSource}
                   />
 
-                  <Input label="Link naar een afbeelding" id={ERecipeKeys.imgUrl} onChange={handleInputChange} onBlur={setImageSource} />
+                  <Input
+                    label="Link naar een afbeelding"
+                    id={ERecipeKeys.imgUrl}
+                    value={formState.imgUrl || ''}
+                    onChange={handleInputChange}
+                    onBlur={setImageSource}
+                  />
                   <span className="flex flex-row w-full items-center">
                     <p className="mr-2 whitespace-nowrap italic">Of upload:</p>
                     <input
@@ -234,8 +237,7 @@ const AddRecipePage: NextPage = () => {
             <MarkdownInputArea
               label="Instructies"
               id={ERecipeKeys.instructions}
-              textAreaValue={formState.instructions?.markdown}
-              markdownValue={formState.instructions?.html}
+              textAreaValue={formState.instructions?.markdown || ''}
               onChange={handleTextAreaChange(ERecipeKeys.instructions)}
             />
 
@@ -243,8 +245,7 @@ const AddRecipePage: NextPage = () => {
             <MarkdownInputArea
               label="Lizzy's tips"
               id={ERecipeKeys.tips}
-              textAreaValue={formState.tips?.markdown}
-              markdownValue={formState.tips?.html}
+              textAreaValue={formState.tips?.markdown || ''}
               onChange={handleTextAreaChange(ERecipeKeys.tips)}
             />
           </fieldset>
