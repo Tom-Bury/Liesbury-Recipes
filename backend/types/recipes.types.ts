@@ -1,7 +1,9 @@
 export type TRecipe = {
   title: string
-  imgUrl: string
-  url: string
+  imgUrl?: string
+  url?: string
   id: string
-  instructions: string
+  instructions?: string
+  tips?: string
+  ingredients?: string[]
 }

@@ -2,10 +2,12 @@ import { EErrorCode } from 'types/enums'
 
 type TAddRecipeBody = {
   title: string
-  url: string
-  imgUrl: string
+  url?: string
+  imgUrl?: string
   previewImgFileData?: string
   instructions?: string
+  ingredients?: string[]
+  tips?: string
 }
 
 type TAddRecipeResponse = {

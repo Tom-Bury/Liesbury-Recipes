@@ -44,7 +44,7 @@ const AddRecipePage: NextPage = () => {
           type: 'full-recipe',
           recipe
         })
-        setRecipeImgSrcUrl(recipe.imgUrl)
+        setRecipeImgSrcUrl(recipe.imgUrl || '')
       } catch (error) {
         // Should not happen
         setShouldUpdateRecipe(false)
@@ -61,15 +61,17 @@ const AddRecipePage: NextPage = () => {
       try {
         const formData = {
           title: formState.recipeTitle || '', // TODO: typing doesn't know isFormValid guarantees non empty values
-          url: formState.recipeUrl || '',
-          imgUrl: recipeImgSrcUrl || '',
-          previewImgFileData: formState.imgFile || undefined,
-          instructions: formState.instructions?.markdown || undefined
+          url: formState.recipeUrl,
+          imgUrl: recipeImgSrcUrl,
+          previewImgFileData: formState.imgFile,
+          instructions: formState.instructions,
+          tips: formState.tips
         }
         const result =
           shouldUpdateRecipe && formState.recipeId ? await updateRecipe(formData, formState.recipeId) : await addRecipe(formData)
 
         if (result.recipeId && result.title) {
+          // TODO: fix wait for recipe to be ready in BE
           setTimeout(() => {
             router.push(`/recipe/${result.recipeId}`)
           }, 1000)
@@ -132,10 +134,9 @@ const AddRecipePage: NextPage = () => {
   const handleTextAreaChange = (key: ERecipeKeys.instructions | ERecipeKeys.tips) => {
     return (markdownInput: string) => {
       dispatchFormAction({
-        type: 'markdown',
+        type: 'simple',
         key,
-        markdown: markdownInput,
-        html: ''
+        value: markdownInput
       })
     }
   }
@@ -237,7 +238,7 @@ const AddRecipePage: NextPage = () => {
             <MarkdownInputArea
               label="Instructies"
               id={ERecipeKeys.instructions}
-              textAreaValue={formState.instructions?.markdown || ''}
+              textAreaValue={formState.instructions || ''}
               onChange={handleTextAreaChange(ERecipeKeys.instructions)}
             />
 
@@ -245,7 +246,7 @@ const AddRecipePage: NextPage = () => {
             <MarkdownInputArea
               label="Lizzy's tips"
               id={ERecipeKeys.tips}
-              textAreaValue={formState.tips?.markdown || ''}
+              textAreaValue={formState.tips || ''}
               onChange={handleTextAreaChange(ERecipeKeys.tips)}
             />
           </fieldset>

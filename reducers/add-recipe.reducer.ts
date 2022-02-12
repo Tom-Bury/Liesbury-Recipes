@@ -7,7 +7,8 @@ export enum ERecipeKeys {
   imgUrl = 'imgUrl',
   instructions = 'instructions',
   tips = 'tips',
-  imgFile = 'imgFile'
+  imgFile = 'imgFile',
+  ingredients = 'ingredients'
 }
 
 type TAddRecipeFormState = {
@@ -15,33 +16,28 @@ type TAddRecipeFormState = {
   [ERecipeKeys.recipeTitle]?: string
   [ERecipeKeys.recipeUrl]?: string
   [ERecipeKeys.imgUrl]?: string
-  [ERecipeKeys.instructions]?: {
-    markdown: string
-    html: string
-  }
-  [ERecipeKeys.tips]?: {
-    markdown: string
-    html: string
-  }
+  [ERecipeKeys.instructions]?: string
+  [ERecipeKeys.tips]?: string
   [ERecipeKeys.imgFile]?: string
+  [ERecipeKeys.ingredients]?: string[]
 }
 
 type TSimpleFormAction = {
   type: 'simple'
-  key: ERecipeKeys.recipeId | ERecipeKeys.recipeTitle | ERecipeKeys.recipeUrl | ERecipeKeys.imgUrl | ERecipeKeys.imgFile
+  key:
+    | ERecipeKeys.recipeId
+    | ERecipeKeys.recipeTitle
+    | ERecipeKeys.recipeUrl
+    | ERecipeKeys.imgUrl
+    | ERecipeKeys.imgFile
+    | ERecipeKeys.instructions
+    | ERecipeKeys.tips
   value: string
-}
-
-type TMarkdownFormAction = {
-  type: 'markdown'
-  key: ERecipeKeys.instructions | ERecipeKeys.tips
-  markdown: string
-  html: string
 }
 
 type TListFormAction = {
   type: 'list'
-  key: ERecipeKeys.tips
+  key: ERecipeKeys.ingredients
   values: string[]
 }
 
@@ -50,7 +46,7 @@ type TFullRecipeFormAction = {
   recipe: TRecipe
 }
 
-type TAddRecipeFormAction = TSimpleFormAction | TMarkdownFormAction | TListFormAction | TFullRecipeFormAction
+type TAddRecipeFormAction = TSimpleFormAction | TListFormAction | TFullRecipeFormAction
 
 export const addRecipeFormReducer = (state: TAddRecipeFormState, action: TAddRecipeFormAction): TAddRecipeFormState => {
   switch (action.type) {
@@ -59,29 +55,20 @@ export const addRecipeFormReducer = (state: TAddRecipeFormState, action: TAddRec
         ...state,
         [action.key]: action.value
       }
-    case 'markdown':
-      return {
-        ...state,
-        [action.key]: {
-          markdown: action.markdown,
-          html: action.html
-        }
-      }
     case 'list':
       return {
         ...state // TODO
       }
     case 'full-recipe': {
-      const { id, title, imgUrl, url, instructions } = action.recipe
+      const { id, title, imgUrl, url, instructions, tips, ingredients } = action.recipe
       return {
         [ERecipeKeys.recipeId]: id,
         [ERecipeKeys.recipeTitle]: title,
-        [ERecipeKeys.instructions]: {
-          markdown: instructions,
-          html: ''
-        },
+        [ERecipeKeys.instructions]: instructions,
         [ERecipeKeys.imgUrl]: imgUrl,
-        [ERecipeKeys.recipeUrl]: url
+        [ERecipeKeys.recipeUrl]: url,
+        [ERecipeKeys.tips]: tips,
+        [ERecipeKeys.ingredients]: ingredients
       }
     }
     default:
