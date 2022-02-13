@@ -1,5 +1,6 @@
 import * as React from 'react'
 import Image from 'next/image'
+import classNames from 'classnames'
 
 const FRONT_IMAGE_DIMENSIONS = {
   width: 250,
@@ -7,13 +8,19 @@ const FRONT_IMAGE_DIMENSIONS = {
 }
 const FRONT_IMAGE_SCALE = 0.5
 
-const Loading: React.FC = () => (
-  <div className="py-8 animate-bounce">
+type TProps = {
+  width?: number
+  height?: number
+  className?: string
+}
+
+const Loading: React.FC<TProps> = ({ width, height, className }) => (
+  <div className={classNames(className, 'animate-bounce')}>
     <Image
       src="/images/liesbury-recipes-colored.svg"
       alt="Liesbury's receptenlijst"
-      width={FRONT_IMAGE_SCALE * FRONT_IMAGE_DIMENSIONS.width}
-      height={FRONT_IMAGE_SCALE * FRONT_IMAGE_DIMENSIONS.height}
+      width={width || FRONT_IMAGE_SCALE * FRONT_IMAGE_DIMENSIONS.width}
+      height={height || FRONT_IMAGE_SCALE * FRONT_IMAGE_DIMENSIONS.height}
     />
   </div>
 )

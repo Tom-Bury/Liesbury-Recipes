@@ -35,7 +35,7 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
       <hr className="mb-8 border-2 border-primary lg:mx-8" />
       {isLoading && (
         <HorizontalCenterLayout>
-          <Loading />
+          <Loading className="py-8" />
         </HorizontalCenterLayout>
       )}
       {!isLoading && currRecipes.length > 0 && <RecipeList recipes={currRecipes} />}
