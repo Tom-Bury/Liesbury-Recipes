@@ -40,7 +40,7 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
   return (
     <div className="flex flex-1 justify-center">
       <div className="max-w-5xl w-full h-80 fixed top-0 z-0" style={recipeImgStyle} />
-      <div className="rooftop flex flex-1 z-10 mt-72 lg:mb-16 pt-8 bg-lightest items-center">
+      <div className="rooftop flex flex-1 z-10 mt-72 mb-24 pt-8 bg-lightest items-center">
         <div className="flex flex-col flex-1 max-w-5xl pt-0 mx-auto">
           <div className="sticky top-0 pt-8 bg-lightest flex flex-col flex-1 items-center z-10">
             <h2 className="text-darkest text-center px-2">{isFallback ? '...' : recipe.title}</h2>
