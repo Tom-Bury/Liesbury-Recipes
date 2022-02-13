@@ -177,8 +177,8 @@ const AddRecipePage: NextPage = () => {
   // }
 
   return (
-    <HorizontalCenterLayout className="h-screen flex md:justify-center items-center p-2 md:p-4">
-      <Card className="my-8 p-4 md:p-8 w-full lg:w-11/12 lg:max-w-6xl">
+    <HorizontalCenterLayout className="flex md:justify-center items-center p-2 md:p-4">
+      <Card className="mt-4 mb-16 p-4 md:p-8 w-full lg:w-11/12 lg:max-w-6xl">
         <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
           <fieldset>
             <div className="flex flex-col md:flex-row items-stretch">
@@ -256,7 +256,7 @@ const AddRecipePage: NextPage = () => {
                 Opslaan!
               </Button>
             )}
-            {isSubmitting && <Loading />}
+            {isSubmitting && <Loading height={40} width={66} />}
           </span>
 
           {isSubmitOnError && (
