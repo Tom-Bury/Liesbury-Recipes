@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { HorizontalCenterLayout } from 'layouts'
 import { useState } from 'react'
@@ -62,6 +62,23 @@ const LoginPage: NextPage = () => {
       </span>
     </HorizontalCenterLayout>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async context => {
+  const { cookies } = context.req
+
+  if (cookies.authToken) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {}
+  }
 }
 
 export default LoginPage
