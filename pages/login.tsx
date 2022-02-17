@@ -42,7 +42,7 @@ const LoginPage: NextPage = () => {
   }
 
   return (
-    <HorizontalCenterLayout className="h-screen flex justify-center items-center p-2 md:p-4">
+    <HorizontalCenterLayout className="h-screen flex justify-center items-center p-4">
       <h1 className="text-darkest">Beheerder?</h1>
       <hr className="w-full max-w-xl mb-8 border-2 border-primary" />
       <Card className="p-4 md:p-8 w-full max-w-xl">
