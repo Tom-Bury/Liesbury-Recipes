@@ -9,6 +9,8 @@ import Image from 'next/image'
 import useLoginStatus from 'hooks/useLoginStatus'
 // import remark from 'remark'
 // import html from 'remark-html'
+import { useState } from 'react'
+import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import RecipeData from '~/components/RecipeData'
 import RecipePlaceholder from '~/components/RecipePlaceholder'
 import CircularButton from '~/components/atoms/CircularButton/CircularButton'
@@ -22,6 +24,21 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
   const router = useRouter()
   const { isFallback } = router
   const isLoggedIn = useLoginStatus()
+  const [offset, setOffset] = useState(0)
+
+  useScrollPosition(
+    ({ currPos }) => {
+      console.log('scrolly', currPos.y)
+      if (currPos.y <= 400) {
+        console.log('setting', currPos.y)
+        setOffset(currPos.y)
+      }
+    },
+    [],
+    undefined,
+    true,
+    5
+  )
 
   if (!recipe) {
     return (
@@ -31,15 +48,23 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
     )
   }
 
-  const recipeImgStyle = {
-    background: `url(${recipe.imgUrl})`,
+  const recipeImgStyle5xl = {
+    background: `linear-gradient(to top, #000000 0%, #00000000 50%), url(${recipe.imgUrl})`,
     backgroundPosition: 'center',
-    backgroundSize: 'cover'
+    backgroundSize: 'cover',
+    filter: `brightness(${1 - Math.min(offset / 500, 1)})`
+  }
+
+  const recipeImgStyleSmall = {
+    ...recipeImgStyle5xl,
+    filter: `blur(${0.01 * offset}px) brightness(${1 - Math.min(offset / 500, 1)})`,
+    transform: `scale(${1.4 - 0.001 * offset})`
   }
 
   return (
     <div className="flex flex-1 justify-center">
-      <div className="max-w-5xl w-full h-80 fixed top-0 z-0" style={recipeImgStyle} />
+      <div className="max-w-5xl w-full h-80 fixed top-0 z-0 lg:hidden" style={recipeImgStyleSmall} />
+      <div className="max-w-5xl w-full h-80 fixed top-0 z-0 hidden lg:flex" style={recipeImgStyle5xl} />
       <div className="rooftop flex flex-1 z-10 mt-72 mb-24 pt-8 bg-lightest items-center">
         <div className="flex flex-col flex-1 max-w-5xl pt-0 mx-auto">
           <div className="sticky top-0 pt-8 bg-lightest flex flex-col flex-1 items-center z-10">
