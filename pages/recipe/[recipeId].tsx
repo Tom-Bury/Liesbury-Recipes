@@ -135,12 +135,12 @@ export const getStaticProps: GetStaticProps<TProps, IParams> = async ({ params }
       props: {
         recipe
       },
-      revalidate: 60 * 5 // Regenerate the page when a new request comes in, at most each 5 minutes
+      revalidate: 60 // Regenerate the page when a new request comes in, at most each 5 minutes
     }
   }
   return {
     props: {},
-    revalidate: 60 * 5 // Regenerate the page when a new request comes in, at most each 5 minutes
+    revalidate: 60 // Regenerate the page when a new request comes in, at most each 5 minutes
   }
 }
 
