@@ -13,8 +13,8 @@ import { useState } from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import RecipeData from '~/components/RecipeData'
 import RecipePlaceholder from '~/components/RecipePlaceholder'
-import CircularButton from '~/components/atoms/CircularButton/CircularButton'
 import BackButton from '~/components/atoms/BackButton/BackButton'
+import FloatingActionButton from '~/components/atoms/FloatingActionButton/FloatingActionButton.component'
 
 type TProps = {
   recipe?: TRecipe
@@ -77,8 +77,8 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
       <span className="fab-container justify-between">
         <BackButton />
         {isLoggedIn && (
-          <CircularButton
-            className="ml-auto my-4 mr-4 lg:mr-0 z-50"
+          <FloatingActionButton
+            placement="right"
             onPress={() => {
               localStorage.setItem('recipe', JSON.stringify(recipe))
               router.push({
@@ -90,7 +90,7 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
             }}
           >
             <Image src="/icons/edit.svg" alt="Edit icon" width={24} height={24} />
-          </CircularButton>
+          </FloatingActionButton>
         )}
       </span>
     </div>

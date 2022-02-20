@@ -1,0 +1,18 @@
+.float-left {
+  @apply left-4;
+}
+
+.float-right {
+  @apply right-4;
+}
+
+
+@screen lg {
+  .float-left {
+    left: calc(calc(100% - 1024px) / 2)
+  }
+
+  .float-right {
+    right: calc(calc(100% - 1024px) / 2)
+  }
+}
