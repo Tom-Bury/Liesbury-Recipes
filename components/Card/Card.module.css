@@ -1,9 +1,17 @@
 .card-base {
-  @apply cursor-pointer rounded-xl shadow bg-light;
+  @apply rounded-xl shadow text-darkest;
+}
+
+.card-gradient {
+  @apply bg-gradient-to-b	from-primary to-light;
+}
+
+.card-plain {
+  @apply bg-light
 }
 
 .card-hoverable {
-  @apply transition duration-200 ease-out transform;
+  @apply cursor-pointer transition duration-500 ease-out transform;
 
   p,
   h1,
@@ -12,13 +20,22 @@
   h4,
   h5,
   h6 {
-    @apply transition duration-200 ease-out;
+    @apply transition duration-500 ease-out;
   }
 }
 
+.card-hoverable.card-gradient:hover {
+  @apply bg-gradient-to-b	from-primary to-dark
+}
+
+.card-hoverable.card-plain:hover {
+  @apply bg-dark
+}
+
+
 @media(hover: hover) and (pointer: fine) {
   .card-hoverable:hover {
-    @apply bg-dark -translate-y-1 scale-105;
+    @apply -translate-y-1 scale-105;
 
     p,
     h1,
@@ -36,7 +53,7 @@
 
   .card-hoverable:hover,
   .card-hoverable:active {
-    @apply bg-dark -translate-y-1 scale-105;
+    @apply  bg-gradient-to-b	from-primary to-dark  -translate-y-1 scale-105;
 
     p,
     h1,

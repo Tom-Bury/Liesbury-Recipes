@@ -1,0 +1,26 @@
+.button {
+  @apply bg-primary text-white text-lg p-2 transition duration-200 ease-out transform;
+}
+
+.button:disabled {
+  @apply opacity-25 cursor-not-allowed;
+}
+
+
+
+
+/* touch screens */
+@media(hover: none) and (pointer: coarse) {
+  .button:hover:not([disabled]), .button:active {
+    @apply bg-dark;
+  }
+
+}
+
+/* mouse */
+@media(hover: hover) and (pointer: fine) {
+
+  .button:hover, .button:active, .button:focus {
+    @apply bg-dark;
+  }
+}

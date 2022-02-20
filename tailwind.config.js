@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+// eslint-disable-next-line no-unused-vars
 const colors = require('tailwindcss/colors')
 
 // https://coolors.co/005259-005a62-00636c-006d77-83c5be-d5eceb-edf6f9-e8c6b9-e29578
@@ -7,7 +9,7 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     colors: {
-      white: colors.white,
+      white: '#ffffff',
       lightest: '#EDF6F9',
       light: '#D5ECEB',
       dark: '#006D77',

@@ -9,11 +9,8 @@ export enum ECategory {
 }
 
 export enum EErrorCode {
-  E1 = 'E1',
-  E2 = 'E2'
-}
-
-export enum EErrorMessage {
-  E1 = 'Error while fetching data',
-  E2 = 'Error while fetching logfile'
+  HTTP_404 = 'HTTP_404',
+  HTTP_401 = 'HTTP_401',
+  SERVER_ERROR = 'SERVER_ERROR',
+  UNKNOWN_ERROR = 'UNKNOWN_ERROR'
 }

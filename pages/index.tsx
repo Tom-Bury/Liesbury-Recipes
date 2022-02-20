@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { GetStaticProps, NextPage } from 'next'
-
 import { ColumnLayout, HorizontalCenterLayout } from 'layouts'
-import { TRecipe } from 'types/recipe.type'
-import { getAllRecipes } from 'utils/recipesData.utils'
+import { TRecipe } from 'backend/types/recipes.types'
+import { getLastNRecipes } from 'backend/recipes'
+import searchRecipes from 'api/searchRecipes'
+import useFadeInStyle from 'hooks/useFadeInStyle'
 import SearchBar from '~/components/SearchBar/SearchBar'
 import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
@@ -16,51 +17,42 @@ type TProps = {
 const IndexPage: NextPage<TProps> = ({ recipes }) => {
   const [currRecipes, setCurrRecipes] = React.useState(recipes)
   const [isLoading, setIsLoading] = React.useState(false)
+  const fadeInStyle = useFadeInStyle()
 
-  const searchRecipes = async (query: string) => {
+  const onSubmitSearch = async (query: string) => {
     setIsLoading(true)
-    const res = await fetch(
-      `/api/SearchRecipe?${new URLSearchParams({
-        q: query
-      })}`
-    )
-    if (res.status === 200) {
-      const responseBody = await res.json()
-      const newRecipes: TRecipe[] = responseBody.results
-      if (newRecipes.length === 0) {
-        // TODO: display no recipes found string
-      }
-      setCurrRecipes(newRecipes)
-      setIsLoading(false)
-    } else {
-      // TODO: no recipes found
-      setCurrRecipes([])
-      setIsLoading(false)
-    }
+    const foundRecipes = await searchRecipes(query)
+    setCurrRecipes(foundRecipes)
+    setIsLoading(false)
   }
 
   return (
-    <ColumnLayout className="pb-8">
+    <ColumnLayout className={`pb-8 ${fadeInStyle}`}>
       <Banner />
       <HorizontalCenterLayout className="my-8 mx-4">
         <div className="max-w-xl w-full">
-          <SearchBar onSearch={searchRecipes} />
+          <SearchBar onSearch={onSubmitSearch} />
         </div>
       </HorizontalCenterLayout>
-      <hr className="mb-8 border-2 border-primary lg:mx-8" />
-      {isLoading ? (
+      <hr className="mb-8 border-t-4 border-primary lg:mx-8" />
+      {isLoading && (
         <HorizontalCenterLayout>
-          <Loading />
+          <Loading className="py-8" />
         </HorizontalCenterLayout>
-      ) : (
-        <RecipeList recipes={currRecipes} />
+      )}
+      {!isLoading && currRecipes.length > 0 && <RecipeList recipes={currRecipes} />}
+      {!isLoading && currRecipes.length === 0 && (
+        <HorizontalCenterLayout className="h-screen">
+          <h2 className="text-darkest mb-8">Geen recepten gevonden 😭</h2>
+          <h3 className="text-primary">Misschien kan je iets anders proberen zoeken?</h3>
+        </HorizontalCenterLayout>
       )}
     </ColumnLayout>
   )
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const recipes: TRecipe[] = (await getAllRecipes()).reverse()
+  const recipes = await getLastNRecipes(10)
   return {
     props: {
       recipes

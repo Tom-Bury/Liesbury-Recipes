@@ -3,6 +3,10 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+fieldset {
+  @apply border-4 border-dark p-4 rounded-xl
+}
+
 body {
   background-color: #EDF6F9;
 }

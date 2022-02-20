@@ -5,7 +5,10 @@ module.exports = {
   rules: {
     'jsx-a11y/anchor-is-valid': 'off',
     'react/jsx-props-no-spreading': 'off',
-    'prettier/prettier': 'error'
+    'prettier/prettier': 'error',
+    'react/require-default-props': 'off',
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': ['error']
   },
   overrides: [
     {
@@ -25,7 +28,8 @@ module.exports = {
         '@typescript-eslint/camelcase': 'off',
         '@typescript-eslint/explicit-function-return-type': ['off'],
         '@typescript-eslint/no-explicit-any': 'off',
-        '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }]
+        '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+        'import/prefer-default-export': 'off'
       }
     },
     {
