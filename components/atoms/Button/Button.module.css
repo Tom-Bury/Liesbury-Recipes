@@ -9,17 +9,18 @@
 
 
 
-
-@media(hover: hover) and (pointer: fine) {
-  .button:hover:not([disabled]) {
+/* touch screens */
+@media(hover: none) and (pointer: coarse) {
+  .button:hover:not([disabled]), .button:active {
     @apply bg-dark;
   }
+
 }
 
-@media(hover: none) {
+/* mouse */
+@media(hover: hover) and (pointer: fine) {
 
-  .button:hover,
-  .button:active {
+  .button:hover, .button:active, .button:focus {
     @apply bg-dark;
   }
 }
