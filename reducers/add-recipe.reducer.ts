@@ -52,7 +52,7 @@ type TFullRecipeFormAction = {
   recipe: TRecipe
 }
 
-type TAddRecipeFormAction = TSimpleFormAction | TListFormAction | TFullRecipeFormAction
+type TAddRecipeFormAction = TSimpleFormAction | TListAddFormAction | TListRemoveFormAction | TFullRecipeFormAction
 
 export const addRecipeFormReducer = (state: TAddRecipeFormState, action: TAddRecipeFormAction): TAddRecipeFormState => {
   switch (action.type) {
@@ -61,10 +61,19 @@ export const addRecipeFormReducer = (state: TAddRecipeFormState, action: TAddRec
         ...state,
         [action.key]: action.value
       }
-    case 'list':
+    case 'list-add':
       return {
-        ...state // TODO
+        ...state,
+        [action.key]: [...(state[action.key] || []), action.value]
       }
+    case 'list-remove': {
+      const newList = state[action.key] || []
+      newList.splice(action.index, 1)
+      return {
+        ...state,
+        [action.key]: newList.length > 0 ? newList : undefined
+      }
+    }
     case 'full-recipe': {
       const { id, title, imgUrl, url, instructions, tips, ingredients } = action.recipe
       return {
