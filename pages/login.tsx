@@ -5,6 +5,7 @@ import { HorizontalCenterLayout } from 'layouts'
 import { useState } from 'react'
 import authUser from 'api/authUser'
 import { EErrorCode } from 'types/enums'
+import useFadeInStyle from 'hooks/useFadeInStyle'
 import Card from '~/components/Card/Card'
 import Input from '~/components/atoms/Input/Input'
 import Button from '~/components/atoms/Button/Button'
@@ -12,6 +13,7 @@ import BackButton from '~/components/atoms/BackButton/BackButton'
 
 const LoginPage: NextPage = () => {
   const router = useRouter()
+  const fadeInStyle = useFadeInStyle()
 
   const [password, setPassword] = useState('')
   const [isNotAuthorized, setIsNotAuthorized] = useState(false)
@@ -42,7 +44,7 @@ const LoginPage: NextPage = () => {
   }
 
   return (
-    <HorizontalCenterLayout className="h-screen flex justify-center items-center p-4">
+    <HorizontalCenterLayout className={`h-screen flex justify-center items-center p-4 ${fadeInStyle}`}>
       <h1 className="text-darkest">Beheerder?</h1>
       <hr className="w-full max-w-xl mb-8 border-2 border-primary" />
       <Card className="p-4 md:p-8 w-full max-w-xl">

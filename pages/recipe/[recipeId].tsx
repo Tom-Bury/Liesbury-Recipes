@@ -9,6 +9,7 @@ import Image from 'next/image'
 import useLoginStatus from 'hooks/useLoginStatus'
 import { useState } from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
+import useFadeInStyle from 'hooks/useFadeInStyle'
 import RecipeData from '~/components/RecipeData/RecipeData'
 import RecipePlaceholder from '~/components/RecipePlaceholder'
 import BackButton from '~/components/atoms/BackButton/BackButton'
@@ -23,6 +24,7 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
   const { isFallback } = router
   const isLoggedIn = useLoginStatus()
   const [offset, setOffset] = useState(0)
+  const fadeInStyle = useFadeInStyle()
 
   useScrollPosition(
     ({ currPos }) => {
@@ -58,7 +60,7 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
   }
 
   return (
-    <div className="flex flex-1 justify-center">
+    <div className={`flex flex-1 justify-center ${fadeInStyle}`}>
       <div className="max-w-5xl w-full h-80 fixed top-0 z-0 lg:hidden" style={recipeImgStyleSmall} />
       <div className="max-w-5xl w-full h-80 fixed top-0 z-0 hidden lg:flex" style={recipeImgStyle5xl} />
       <div className="rooftop flex flex-1 z-10 mt-72 mb-24 pt-8 bg-lightest items-center">

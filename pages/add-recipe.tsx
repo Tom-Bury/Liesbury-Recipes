@@ -8,6 +8,7 @@ import { addRecipe, updateRecipe } from 'api/addRecipe'
 import { useRouter } from 'next/router'
 import { TRecipe } from 'backend/types/recipes.types'
 import { addRecipeFormReducer, ERecipeKeys } from 'reducers/add-recipe.reducer'
+import useFadeInStyle from 'hooks/useFadeInStyle'
 import Button from '~/components/atoms/Button/Button'
 import Card from '~/components/Card/Card'
 import ImageIcon from '~/components/icons/Image.icon'
@@ -34,6 +35,9 @@ const AddRecipePage: NextPage = () => {
   const [recipeImgLoading, setRecipeImgLoading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitOnError, setIsSubmitOnError] = useState(false)
+
+  const [animateAway, setAnimateAway] = useState(false)
+  const fadeInStyle = useFadeInStyle()
 
   useEffect(() => {
     if (shouldUpdateRecipe) {
@@ -65,6 +69,7 @@ const AddRecipePage: NextPage = () => {
           imgUrl: recipeImgSrcUrl,
           previewImgFileData: formState.imgFile,
           instructions: formState.instructions,
+          ingredients: formState.ingredients,
           tips: formState.tips
         }
         const result =
@@ -72,6 +77,7 @@ const AddRecipePage: NextPage = () => {
 
         if (result.recipeId && result.title) {
           // TODO: fix wait for recipe to be ready in BE
+          setAnimateAway(true)
           setTimeout(() => {
             router.push(`/recipe/${result.recipeId}`)
           }, 1000)
@@ -185,8 +191,10 @@ const AddRecipePage: NextPage = () => {
   }
 
   return (
-    <HorizontalCenterLayout className="flex md:justify-center items-center p-2 md:p-4">
-      <Card className="mt-4 mb-16 p-4 md:p-8 w-full lg:w-11/12 lg:max-w-6xl">
+    <HorizontalCenterLayout className={`flex md:justify-center items-center p-2 md:p-4 ${fadeInStyle}`}>
+      <Card
+        className={`mt-4 mb-16 p-4 md:p-8 w-full lg:w-11/12 lg:max-w-6xl transition-opacity duration-500 ${animateAway ? 'opacity-0' : ''}`}
+      >
         <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
           <fieldset>
             <div className="flex flex-col md:flex-row items-stretch">
