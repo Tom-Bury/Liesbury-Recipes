@@ -17,7 +17,7 @@ const FloatingActionButton: React.FC<TProps> = props => {
     className,
     placementClass,
     styles['fab-shadow'],
-    'w-16 h-16 flex items-center justify-center border-4 border-dark fixed bottom-0 mb-4 z-100'
+    'w-16 h-16 flex items-center justify-center border-4 border-dark fixed bottom-0 mb-4 z-50'
   )
   return <Button className={classes} {...otherProps} circular />
 }

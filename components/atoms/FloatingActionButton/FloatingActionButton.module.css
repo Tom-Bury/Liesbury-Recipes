@@ -12,10 +12,24 @@
 
 @screen lg {
   .float-left {
-    left: calc(calc(100% - 1024px) / 2)
+    @apply ml-4;
+    left: calc(calc(100% - 1024px) / 2);
   }
 
   .float-right {
+    @apply mr-4;
+    right: calc(calc(100% - 1024px) / 2)
+  }
+}
+
+@media (min-width: 1040px) {
+  .float-left {
+    @apply ml-0;
+    left: calc(calc(100% - 1024px) / 2);
+  }
+
+  .float-right {
+    @apply mr-0;
     right: calc(calc(100% - 1024px) / 2)
   }
 }
