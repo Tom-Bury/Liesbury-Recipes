@@ -34,7 +34,7 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
     [],
     undefined,
     true,
-    5
+    20
   )
 
   if (!recipe) {
@@ -45,23 +45,39 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
     )
   }
 
-  const recipeImgStyle5xl = {
+  const recipeImgBaseStyle = {
     background: `linear-gradient(to top, #000000 0%, #00000000 50%), url(${recipe.imgUrl})`,
     backgroundPosition: 'center',
     backgroundSize: 'cover',
-    filter: `brightness(${1 - Math.min(offset / 500, 1)})`
+    opacity: 1 - Math.min(offset / 200, 1),
+    top: -offset / 3
   }
 
-  const recipeImgStyleSmall = {
-    ...recipeImgStyle5xl,
-    filter: `blur(${0.01 * offset}px) brightness(${1 - Math.min(offset / 500, 1)})`,
-    transform: `scale(${1.4 - 0.001 * offset})`
+  const darkenedStyle = {
+    opacity: 1,
+    filter: 'brightness(0.75)'
+  }
+
+  const blurredStyle = {
+    opacity: 1,
+    filter: 'blur(10px) brightness(0.75)'
+  }
+
+  const scaledStyle = {
+    transform: `scale(${1.2 - 0.0005 * Math.min(offset, 200)})`
   }
 
   return (
     <div className={`flex flex-1 justify-center ${fadeInStyle}`}>
-      <div className="max-w-5xl w-full h-80 fixed top-0 z-0 lg:hidden" style={recipeImgStyleSmall} />
-      <div className="max-w-5xl w-full h-80 fixed top-0 z-0 hidden lg:flex" style={recipeImgStyle5xl} />
+      <span className="max-w-5xl w-full h-80 fixed top-0 z-0 overflow-hidden">
+        <div className="absolute top-0 right-0 left-0 bottom-0 hidden lg:flex" style={{ ...recipeImgBaseStyle, ...darkenedStyle }} />
+        <div className="absolute top-0 right-0 left-0 bottom-0 hidden lg:flex" style={recipeImgBaseStyle} />
+        <div
+          className="absolute top-0 right-0 left-0 bottom-0 lg:hidden"
+          style={{ ...recipeImgBaseStyle, ...blurredStyle, ...scaledStyle }}
+        />
+        <div className="absolute top-0 right-0 left-0 bottom-0 lg:hidden" style={{ ...recipeImgBaseStyle, ...scaledStyle }} />
+      </span>
       <div className="rooftop flex flex-1 z-10 mt-72 mb-24 pt-8 bg-lightest items-center">
         <div className="flex flex-col flex-1 max-w-5xl pt-0 mx-auto">
           <div className="sticky top-0 pt-8 bg-lightest flex flex-col flex-1 items-center z-10">
