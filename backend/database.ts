@@ -1,10 +1,14 @@
 import { firestore } from 'firebase-admin'
 import * as admin from 'firebase-admin'
 import { TRecipe } from './types/recipes.types'
-import serviceAccount from '../.secrets/firestore-sa.json'
 
 if (admin.apps.length === 0) {
   // initialize Firebase admin
+  if (!process.env.FIRESTORE_PROJECT_ID || !process.env.FIRESTORE_PROJECT_ID) {
+    throw new Error('No firestore service account / project ID setup')
+  }
+  const serviceAccount = JSON.parse(process.env.FIRESTORE_SA || '')
+
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount as any),
     projectId: process.env.FIRESTORE_PROJECT_ID
