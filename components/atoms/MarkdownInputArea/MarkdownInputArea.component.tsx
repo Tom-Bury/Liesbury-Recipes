@@ -22,7 +22,7 @@ const MarkdownInputArea: React.FC<TProps> = ({ label, id, textAreaValue, onChang
           <textarea
             id={id}
             name={id}
-            className="w-full min-h-full p-2 rounded-sm bg-lightest focus:outline-none focus:border-primary focus:ring-primary focus:ring-2 resize-y"
+            className="w-full min-h-full p-2 rounded-sm bg-lightest shadow-inner focus:outline-none focus:border-primary focus:ring-primary focus:ring-2 resize-y"
             onChange={handleTextAreaChange}
             value={textAreaValue || ''}
             rows={4}

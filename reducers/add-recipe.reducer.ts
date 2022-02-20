@@ -35,10 +35,16 @@ type TSimpleFormAction = {
   value: string
 }
 
-type TListFormAction = {
-  type: 'list'
+type TListAddFormAction = {
+  type: 'list-add'
   key: ERecipeKeys.ingredients
-  values: string[]
+  value: string
+}
+
+type TListRemoveFormAction = {
+  type: 'list-remove'
+  key: ERecipeKeys.ingredients
+  index: number
 }
 
 type TFullRecipeFormAction = {

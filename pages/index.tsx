@@ -32,7 +32,7 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
           <SearchBar onSearch={onSubmitSearch} />
         </div>
       </HorizontalCenterLayout>
-      <hr className="mb-8 border-2 border-primary lg:mx-8" />
+      <hr className="mb-8 border-t-4 border-primary lg:mx-8" />
       {isLoading && (
         <HorizontalCenterLayout>
           <Loading className="py-8" />

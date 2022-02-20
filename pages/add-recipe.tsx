@@ -168,13 +168,21 @@ const AddRecipePage: NextPage = () => {
     setRecipeImgPreviewError(true)
   }
 
-  // const handleAddIngredient = (ingr: string) => {
-  //   dispatchFormAction(createFormAction(EFormKeys.ingredients, ingr.trim()))
-  // }
+  const handleAddIngredient = (ingr: string) => {
+    dispatchFormAction({
+      type: 'list-add',
+      key: ERecipeKeys.ingredients,
+      value: ingr.trim()
+    })
+  }
 
-  // const handleRemoveIngredient = (index: number) => {
-  //   dispatchFormAction()
-  // }
+  const handleRemoveIngredient = (index: number) => {
+    dispatchFormAction({
+      type: 'list-remove',
+      key: ERecipeKeys.ingredients,
+      index
+    })
+  }
 
   return (
     <HorizontalCenterLayout className="flex md:justify-center items-center p-2 md:p-4">
@@ -227,13 +235,14 @@ const AddRecipePage: NextPage = () => {
             </div>
           </fieldset>
           <fieldset className="mt-4">
-            {/* <ListInput
+            <ListInput
               label="Ingrediënten"
-              id={EFormKeys.ingredients}
-              items={['een', 'twee', 'drie', 'vier', 'vijf', 'zes', 'zeven', 'acht', 'negen', 'tien']}
-              onAdd={newItem}
+              id={ERecipeKeys.ingredients}
+              items={formState.ingredients}
+              onAdd={handleAddIngredient}
+              onRemove={handleRemoveIngredient}
             />
-            <Separator /> */}
+            <Separator />
 
             <MarkdownInputArea
               label="Instructies"
