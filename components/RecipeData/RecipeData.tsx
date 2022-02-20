@@ -24,7 +24,7 @@ const Ingredients: React.FC<{ ingredients: string[] }> = ({ ingredients }) => {
       <h3 className="text-darkest mb-4">Ingredienten</h3>
       <span className="grid grid-cols-1 gap-6 place-items-end text-primary">
         {ingredients.map(ingredient => (
-          <li className="border-b-2 border-light list-inside w-full">
+          <li className="border-b-2 border-light list-inside w-full" key={ingredient}>
             <p className="text-darkest inline">{ingredient}</p>
           </li>
         ))}
