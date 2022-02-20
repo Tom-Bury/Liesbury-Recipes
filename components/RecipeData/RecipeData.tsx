@@ -20,8 +20,8 @@ const Instructions: React.FC<{ markdownInstructions: string }> = ({ markdownInst
 
 const Ingredients: React.FC<{ ingredients: string[] }> = ({ ingredients }) => {
   return (
-    <div className="bg-lightest box-border rounded border-4 border-primary px-4 py-3">
-      <h3 className="text-darkest mb-4">Ingredienten</h3>
+    <div className="bg-lightest box-border rounded border-4 border-primary px-4 pt-3 pb-4">
+      <h3 className="text-darkest mb-4">Ingrediënten</h3>
       <span className="grid grid-cols-1 gap-6 place-items-end text-primary">
         {ingredients.map(ingredient => (
           <li className="border-b-2 border-light list-inside w-full" key={ingredient}>

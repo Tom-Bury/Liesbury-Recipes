@@ -75,7 +75,7 @@ const ListInput: React.FC<TListInputProps> = ({ label, items, onAdd, onRemove })
           onKeyDown={handleKeyDown}
         />
         <Button
-          className="ml-2 h-8 w-8 rounded-full flex items-center justify-center font-semibold"
+          className="ml-2 h-8 w-8 rounded-full flex items-center justify-center font-semibold text-center"
           disabled={!newElement}
           onPress={onSubmitNewElement}
         >

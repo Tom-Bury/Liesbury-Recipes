@@ -45,7 +45,7 @@ const LoginPage: NextPage = () => {
   return (
     <HorizontalCenterLayout className={`h-screen flex justify-center items-center p-4 ${fadeInStyle}`}>
       <h1 className="text-darkest">Beheerder?</h1>
-      <hr className="w-full max-w-xl mb-8 border-2 border-primary" />
+      <hr className="w-full max-w-xl mb-8 border-t-4 border-primary" />
       <Card className="p-4 md:p-8 w-full max-w-xl">
         <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
           <fieldset>
