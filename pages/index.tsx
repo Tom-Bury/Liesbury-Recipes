@@ -4,6 +4,7 @@ import { ColumnLayout, HorizontalCenterLayout } from 'layouts'
 import { TRecipe } from 'backend/types/recipes.types'
 import { getLastNRecipes } from 'backend/recipes'
 import searchRecipes from 'api/searchRecipes'
+import useFadeInStyle from 'hooks/useFadeInStyle'
 import SearchBar from '~/components/SearchBar/SearchBar'
 import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
@@ -16,6 +17,7 @@ type TProps = {
 const IndexPage: NextPage<TProps> = ({ recipes }) => {
   const [currRecipes, setCurrRecipes] = React.useState(recipes)
   const [isLoading, setIsLoading] = React.useState(false)
+  const fadeInStyle = useFadeInStyle()
 
   const onSubmitSearch = async (query: string) => {
     setIsLoading(true)
@@ -25,7 +27,7 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
   }
 
   return (
-    <ColumnLayout className="pb-8">
+    <ColumnLayout className={`pb-8 ${fadeInStyle}`}>
       <Banner />
       <HorizontalCenterLayout className="my-8 mx-4">
         <div className="max-w-xl w-full">
