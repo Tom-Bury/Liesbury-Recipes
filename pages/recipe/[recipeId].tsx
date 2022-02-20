@@ -12,7 +12,6 @@ import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import useFadeInStyle from 'hooks/useFadeInStyle'
 import RecipeData from '~/components/RecipeData/RecipeData'
 import RecipePlaceholder from '~/components/RecipePlaceholder'
-import BackButton from '~/components/atoms/BackButton/BackButton'
 import FloatingActionButton from '~/components/atoms/FloatingActionButton/FloatingActionButton.component'
 
 type TProps = {
@@ -72,25 +71,22 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
           {isFallback ? <RecipePlaceholder /> : <RecipeData recipe={recipe} />}
         </div>
       </div>
-      <span className="fab-container justify-between">
-        <BackButton />
-        {isLoggedIn && (
-          <FloatingActionButton
-            placement="right"
-            onPress={() => {
-              localStorage.setItem('recipe', JSON.stringify(recipe))
-              router.push({
-                pathname: '/add-recipe',
-                query: {
-                  prefilled: true
-                }
-              })
-            }}
-          >
-            <Image src="/icons/edit.svg" alt="Edit icon" width={24} height={24} />
-          </FloatingActionButton>
-        )}
-      </span>
+      {isLoggedIn && (
+        <FloatingActionButton
+          placement="right"
+          onPress={() => {
+            localStorage.setItem('recipe', JSON.stringify(recipe))
+            router.push({
+              pathname: '/add-recipe',
+              query: {
+                prefilled: true
+              }
+            })
+          }}
+        >
+          <Image src="/icons/edit.svg" alt="Edit icon" width={24} height={24} />
+        </FloatingActionButton>
+      )}
     </div>
   )
 }

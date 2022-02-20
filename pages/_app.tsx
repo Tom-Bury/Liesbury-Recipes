@@ -2,6 +2,7 @@ import * as React from 'react'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import '../styles/globals.css'
+import BackButton from '~/components/atoms/BackButton/BackButton'
 
 export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
@@ -38,6 +39,7 @@ export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         <meta name="twitter:image" content="/images/liesbury-og-image.png" />
       </Head>
       <Component {...pageProps} />
+      <BackButton />
     </>
   )
 }

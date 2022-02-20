@@ -14,7 +14,6 @@ import Card from '~/components/Card/Card'
 import ImageIcon from '~/components/icons/Image.icon'
 import Input from '~/components/atoms/Input/Input'
 import Loading from '~/components/Loading'
-import BackButton from '~/components/atoms/BackButton/BackButton'
 import MarkdownInputArea from '~/components/atoms/MarkdownInputArea/MarkdownInputArea.component'
 import ListInput from '~/components/atoms/ListInput/ListInput.component'
 
@@ -281,7 +280,6 @@ const AddRecipePage: NextPage = () => {
           )}
         </form>
       </Card>
-      <BackButton />
     </HorizontalCenterLayout>
   )
 }

@@ -9,7 +9,6 @@ import useFadeInStyle from 'hooks/useFadeInStyle'
 import Card from '~/components/Card/Card'
 import Input from '~/components/atoms/Input/Input'
 import Button from '~/components/atoms/Button/Button'
-import BackButton from '~/components/atoms/BackButton/BackButton'
 
 const LoginPage: NextPage = () => {
   const router = useRouter()
@@ -59,9 +58,6 @@ const LoginPage: NextPage = () => {
           {isUnknownError && <h6 className="text-error font-bold text-center mt-2">Er is iets misgelopen, probeer het later opnieuw</h6>}
         </form>
       </Card>
-      <span className="fab-container">
-        <BackButton />
-      </span>
     </HorizontalCenterLayout>
   )
 }
