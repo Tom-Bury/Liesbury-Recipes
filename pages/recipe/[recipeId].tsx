@@ -7,11 +7,9 @@ import { ParsedUrlQuery } from 'querystring'
 import * as React from 'react'
 import Image from 'next/image'
 import useLoginStatus from 'hooks/useLoginStatus'
-// import remark from 'remark'
-// import html from 'remark-html'
 import { useState } from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
-import RecipeData from '~/components/RecipeData'
+import RecipeData from '~/components/RecipeData/RecipeData'
 import RecipePlaceholder from '~/components/RecipePlaceholder'
 import BackButton from '~/components/atoms/BackButton/BackButton'
 import FloatingActionButton from '~/components/atoms/FloatingActionButton/FloatingActionButton.component'
@@ -28,9 +26,7 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
 
   useScrollPosition(
     ({ currPos }) => {
-      console.log('scrolly', currPos.y)
       if (currPos.y <= 400) {
-        console.log('setting', currPos.y)
         setOffset(currPos.y)
       }
     },
@@ -113,12 +109,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<TProps, IParams> = async ({ params }) => {
   if (params?.recipeId) {
     const recipe = await getRecipeById(params.recipeId)
-    // let instructions
-    // if (recipe && recipe.steps !== '') {
-    // const recipeInstructionsData = await getRecipeInstructionsMarkdown(recipe.steps)
-    // const processedInstructions = recipeInstructionsData ? await remark().use(html).process(recipeInstructionsData) : null
-    // instructions = processedInstructions ? processedInstructions.toString() : null
-    // }
 
     return {
       props: {

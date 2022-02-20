@@ -1,0 +1,5 @@
+.recipe-instructions {
+  box-shadow: 3px 3px 0 0 #83C5BE;
+  background-image: radial-gradient(#83C5BE66 1px, transparent 1px);
+  background-size: calc(10 * 1px) calc(10 * 1px);
+}

@@ -1,8 +1,9 @@
 import { TRecipe } from 'backend/types/recipes.types'
 import * as React from 'react'
 import Image from 'next/image'
-import LinkCard from './LinkCard/LinkCard'
-import MarkdownSnippet from './MarkdownSnippet/MarkdownSnippet'
+import LinkCard from '../LinkCard/LinkCard'
+import MarkdownSnippet from '../MarkdownSnippet/MarkdownSnippet'
+import styles from './RecipeData.module.css'
 
 type TRecipeDataProps = {
   recipe: TRecipe
@@ -10,13 +11,7 @@ type TRecipeDataProps = {
 
 const Instructions: React.FC<{ markdownInstructions: string }> = ({ markdownInstructions }) => {
   return (
-    <div
-      className="flex flex-col items-start bg-light rounded"
-      style={{
-        'box-shadow':
-          '3px 3px 0 0 #83C5BE; background-image: radial-gradient(#83C5BE66 1px, transparent 1px); background-size: calc(10 * 1px) calc(10 * 1px)'
-      }}
-    >
+    <div className={`flex flex-col items-start bg-light rounded ${styles['recipe-instructions']}`}>
       <h3 className="text-darkest m-4">Recept</h3>
       <MarkdownSnippet markdownContent={markdownInstructions} className="mx-6 mb-6 text-darkest" />
     </div>

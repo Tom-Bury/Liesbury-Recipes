@@ -11,7 +11,7 @@ type TProps = {
 }
 
 const Button: React.FC<TProps> = ({ type, children, className, disabled, circular, onPress }) => {
-  const classes = classNames(styles.button, className, circular ? 'rounded-full' : 'rounded-xl')
+  const classes = classNames(styles.button, className, circular ? 'rounded-full' : 'rounded-xl', 'rmMobileClickBox')
   return (
     // eslint-disable-next-line react/button-has-type
     <button type={type || 'button'} className={classes} disabled={disabled} onClick={onPress}>
