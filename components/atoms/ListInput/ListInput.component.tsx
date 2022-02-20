@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { useCallback, useState } from 'react'
 import Button from '../Button/Button'
+import Input from '../Input/Input'
 
 type TListInputProps = {
   label: string
@@ -53,8 +54,9 @@ const ListInput: React.FC<TListInputProps> = ({ label, items, onAdd, onRemove })
   }, [newElement, onAdd, setNewElement])
 
   const handleKeyDown = useCallback(
-    (event: any) => {
+    (event: React.KeyboardEvent) => {
       if (event.key === 'Enter') {
+        event.preventDefault()
         onSubmitNewElement()
       }
     },
