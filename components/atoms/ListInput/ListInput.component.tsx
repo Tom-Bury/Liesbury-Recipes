@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { useCallback, useState } from 'react'
 import Button from '../Button/Button'
-import Input from '../Input/Input'
 
 type TListInputProps = {
   label: string

@@ -34,9 +34,10 @@ const Ingredients: React.FC<{ ingredients: string[] }> = ({ ingredients }) => {
 }
 
 const Tips: React.FC<{ markdownTips: string }> = ({ markdownTips }) => {
+  const title = "Lizzy's tips"
   return (
     <div className="items-start bg-gradient-to-tr	from-primary to-light rounded-lg p-4">
-      <h3 className="text-darkest">Lizzy's tips</h3>
+      <h3 className="text-darkest">{title}</h3>
       <span className="flex flex-row mx-4">
         <Image src="/images/lizzy-tips.svg" alt="Liesbury's receptenlijst" width={100} height={221} />
 
