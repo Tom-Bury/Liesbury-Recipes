@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { GetStaticProps, NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import { ColumnLayout, HorizontalCenterLayout } from 'layouts'
 import { TRecipe } from 'backend/types/recipes.types'
 import { getLastNRecipes } from 'backend/recipes'
@@ -51,13 +51,12 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const recipes = await getLastNRecipes(10)
+export const getServerSideProps: GetServerSideProps = async () => {
+  const recipes = await getLastNRecipes(20)
   return {
     props: {
       recipes
-    },
-    revalidate: 60 // in seconds
+    }
   }
 }
 

@@ -9,6 +9,7 @@ import { useRouter } from 'next/router'
 import { TRecipe } from 'backend/types/recipes.types'
 import { addRecipeFormReducer, ERecipeKeys } from 'reducers/add-recipe.reducer'
 import useFadeInStyle from 'hooks/useFadeInStyle'
+import { EErrorCode } from 'types/enums'
 import Button from '~/components/atoms/Button/Button'
 import Card from '~/components/Card/Card'
 import ImageIcon from '~/components/icons/Image.icon'
@@ -55,7 +56,7 @@ const AddRecipePage: NextPage = () => {
     }
   }, [])
 
-  const isFormValid = !!formState.recipeTitle && !!formState.recipeUrl
+  const isFormValid = !!formState.recipeTitle && !!recipeImgSrcUrl
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault()
@@ -84,6 +85,21 @@ const AddRecipePage: NextPage = () => {
       } catch (error) {
         console.error('Error submitting recipe', error)
         setIsSubmitOnError(true)
+
+        if (error === EErrorCode.HTTP_401) {
+          localStorage.setItem(
+            'recipe',
+            JSON.stringify({
+              title: formState.recipeTitle || '',
+              url: formState.recipeUrl,
+              imgUrl: recipeImgSrcUrl,
+              instructions: formState.instructions,
+              ingredients: formState.ingredients,
+              tips: formState.tips
+            })
+          )
+          router.push('/login?redirectTo=add-recipe?prefilled=true')
+        }
       } finally {
         setIsSubmitting(false)
       }
