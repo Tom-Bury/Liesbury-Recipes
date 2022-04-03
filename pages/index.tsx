@@ -56,8 +56,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   return {
     props: {
       recipes
-    },
-    revalidate: 60 // in seconds
+    }
   }
 }
 
