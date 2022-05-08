@@ -52,7 +52,7 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const recipes = await getLastNRecipes(20)
+  const recipes = await getLastNRecipes(100)
   return {
     props: {
       recipes
