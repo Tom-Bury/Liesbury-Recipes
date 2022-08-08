@@ -6,4 +6,5 @@ export type TRecipe = {
   instructions?: string
   tips?: string
   ingredients?: string[]
+  blurHash?: string
 }
