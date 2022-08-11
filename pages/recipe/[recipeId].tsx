@@ -18,8 +18,18 @@ type TProps = {
   recipe?: TRecipe
 }
 
-const SlidingRecipeImage: React.FC<{ url?: string }> = ({ url }) => {
+const SlidingRecipeImage: React.FC<{ url?: string; blurHash?: string }> = ({ url, blurHash }) => {
   const [offset, setOffset] = useState(0)
+  const [blurHashOpacity, setBlurHashOpacity] = useState(1)
+
+  React.useEffect(() => {
+    if (blurHashOpacity < 1 && blurHashOpacity > 0) {
+      setBlurHashOpacity(prev => prev - 0.1)
+    }
+    if (blurHashOpacity <= 0) {
+      setBlurHashOpacity(0)
+    }
+  }, [blurHashOpacity])
 
   useScrollPosition(
     ({ currPos }) => {
@@ -33,15 +43,27 @@ const SlidingRecipeImage: React.FC<{ url?: string }> = ({ url }) => {
     20
   )
 
+  const blurHashedRecipeImgBaseStyle = {
+    background: `linear-gradient(to top, #000000 0%, #00000000 50%), url(${blurHash})`,
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    opacity: blurHashOpacity - Math.min(offset / 200, 1),
+    filter: 'blur(10px)'
+  }
+
+  const otherOpacity = blurHashOpacity === 0 ? 1 : 1 - blurHashOpacity
+
   const recipeImgBaseStyle = {
     background: `linear-gradient(to top, #000000 0%, #00000000 50%), url(${url})`,
     backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
-    opacity: 1 - Math.min(offset / 200, 1)
+    opacity: otherOpacity - Math.min(offset / 200, 1)
   }
 
   const darkenedStyle = {
-    opacity: 1,
+    opacity: otherOpacity,
     filter: 'brightness(0.75)'
   }
 
@@ -50,7 +72,7 @@ const SlidingRecipeImage: React.FC<{ url?: string }> = ({ url }) => {
   }
 
   const blurredStyle = {
-    opacity: 1,
+    opacity: otherOpacity,
     filter: 'blur(10px) brightness(0.75)'
   }
 
@@ -60,10 +82,13 @@ const SlidingRecipeImage: React.FC<{ url?: string }> = ({ url }) => {
 
   return (
     <span className="max-w-5xl w-full h-80 fixed top-0 z-0 overflow-hidden">
+      {url && <Image className="hidden" width="0" height="0" src={url} onLoadingComplete={() => setBlurHashOpacity(0.1)} />}
       <div className="absolute top-0 w-full bottom-0 hidden lg:flex" style={{ ...recipeImgBaseStyle, ...darkenedStyle, ...offsetStyle }} />
       <div className="absolute top-0 w-full bottom-0 hidden lg:flex" style={{ ...recipeImgBaseStyle, ...offsetStyle }} />
+      <div className="absolute top-0 w-full bottom-0 hidden lg:flex" style={{ ...blurHashedRecipeImgBaseStyle, ...offsetStyle }} />
       <div className="absolute top-0 w-full bottom-0 lg:hidden" style={{ ...recipeImgBaseStyle, ...blurredStyle, ...scaledStyle }} />
       <div className="absolute top-0 w-full bottom-0 lg:hidden" style={{ ...recipeImgBaseStyle, ...scaledStyle }} />
+      <div className="absolute top-0 w-full bottom-0 lg:hidden" style={{ ...blurHashedRecipeImgBaseStyle, ...scaledStyle }} />
     </span>
   )
 }
@@ -84,7 +109,7 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
 
   return (
     <div className={`flex flex-1 justify-center ${fadeInStyle}`}>
-      <SlidingRecipeImage url={recipe.imgUrl} />
+      <SlidingRecipeImage url={recipe.imgUrl} blurHash={recipe.blurHash} />
       <div className="rooftop flex flex-1 z-10 mt-72 mb-24 pt-8 bg-lightest items-center">
         <div className="flex flex-col flex-1 max-w-5xl pt-0 mx-auto">
           <div className="sticky top-0 pt-8 bg-lightest flex flex-col flex-1 items-center z-10">
