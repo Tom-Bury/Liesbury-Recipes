@@ -23,6 +23,7 @@ const RecipeCard: React.FC<TProps> = ({ title, imgPath, preloadImage, blurHash }
               objectFit="cover"
               priority={preloadImage}
               blurDataURL={blurHash}
+              placeholder={blurHash ? 'blur' : 'empty'}
             />
           )}
           {!imgPath && <div className="rounded-xl bg-light shadow-inner w-full h-full" />}
