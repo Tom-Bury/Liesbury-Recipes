@@ -13,7 +13,7 @@ const BackButton: React.FC = () => {
 
   const onGoBack = () => {
     if (router.pathname.startsWith('/recipe/')) {
-      localStorage.setItem(ERecipeBackNavigationLocalStorageKeys.HOME_SHOULD_NAVIGATE, true)
+      localStorage.setItem(ERecipeBackNavigationLocalStorageKeys.HOME_SHOULD_NAVIGATE, 'true')
       router.replace('/')
       return
     }
