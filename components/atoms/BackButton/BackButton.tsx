@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import * as React from 'react'
 import Image from 'next/image'
 import FloatingActionButton from '../FloatingActionButton/FloatingActionButton.component'
+import { ERecipeBackNavigationLocalStorageKeys } from '~/utils/navigation.utils'
 
 const canGoBack = (path: string) => {
   return path !== '/' && path !== ''
@@ -12,6 +13,7 @@ const BackButton: React.FC = () => {
 
   const onGoBack = () => {
     if (router.pathname.startsWith('/recipe/')) {
+      localStorage.setItem(ERecipeBackNavigationLocalStorageKeys.HOME_SHOULD_NAVIGATE, true)
       router.replace('/')
       return
     }
