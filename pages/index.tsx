@@ -9,14 +9,35 @@ import SearchBar from '~/components/SearchBar/SearchBar'
 import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
 import Loading from '~/components/Loading'
+import { ERecipeBackNavigationLocalStorageKeys } from '~/utils/navigation.utils'
 
 type TProps = {
   recipes: TRecipe[]
 }
 
+const useRecipeIdToScrollTo = (recipes: TRecipe[]): string | undefined => {
+  const [recipeIdToScrollTo, setRecipeIdToScrollTo] = React.useState<string | undefined>()
+
+  React.useEffect(() => {
+    if (recipes.length > 0 && localStorage.getItem(ERecipeBackNavigationLocalStorageKeys.HOME_SHOULD_NAVIGATE)) {
+      const recipeId = localStorage.getItem(ERecipeBackNavigationLocalStorageKeys.RECIPE_ID_TO_NAVIGATE_TO)
+
+      localStorage.removeItem(ERecipeBackNavigationLocalStorageKeys.HOME_SHOULD_NAVIGATE)
+      localStorage.removeItem(ERecipeBackNavigationLocalStorageKeys.RECIPE_ID_TO_NAVIGATE_TO)
+
+      if (recipeId && recipeId !== '') {
+        setRecipeIdToScrollTo(recipeId)
+      }
+    }
+  }, [recipes])
+
+  return recipeIdToScrollTo
+}
+
 const IndexPage: NextPage<TProps> = ({ recipes }) => {
   const [currRecipes, setCurrRecipes] = React.useState(recipes)
   const [isLoading, setIsLoading] = React.useState(false)
+  const recipeIdToScrollTo = useRecipeIdToScrollTo(currRecipes)
   const fadeInStyle = useFadeInStyle()
 
   const onSubmitSearch = async (query: string) => {
@@ -40,7 +61,7 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
           <Loading className="py-8" />
         </HorizontalCenterLayout>
       )}
-      {!isLoading && currRecipes.length > 0 && <RecipeList recipes={currRecipes} />}
+      {!isLoading && currRecipes.length > 0 && <RecipeList recipes={currRecipes} scrollToRecipeWithId={recipeIdToScrollTo} />}
       {!isLoading && currRecipes.length === 0 && (
         <HorizontalCenterLayout className="h-screen">
           <h2 className="text-darkest mb-8">Geen recepten gevonden 😭</h2>

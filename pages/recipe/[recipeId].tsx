@@ -72,6 +72,7 @@ const SlidingRecipeImage: React.FC<{ url?: string; blurHash?: string }> = ({ url
   }
 
   const blurredStyle = {
+    background: `linear-gradient(to top, #000000 0%, #00000000 50%), url(${blurHash || url})`,
     opacity: otherOpacity,
     filter: 'blur(10px) brightness(0.75)'
   }
