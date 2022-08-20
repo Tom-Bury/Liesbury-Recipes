@@ -3,7 +3,9 @@ import { TRecipe } from './types/recipes.types'
 
 export const getLastNRecipes = async (n: number): Promise<TRecipe[]> => {
   const lastNRecipes = await db.recipes.limit(n).get()
-  return lastNRecipes.docs.map(doc => doc.data())
+  const sortedRecipeDocs = lastNRecipes.docs
+  sortedRecipeDocs.sort((a, b) => b.updateTime.seconds - a.updateTime.seconds) // Sort most recently updated first
+  return sortedRecipeDocs.map(doc => doc.data())
 }
 
 export const getAllRecipeIds = async (): Promise<string[]> => {
