@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { GetServerSideProps, NextPage } from 'next'
+import { GetStaticProps, NextPage } from 'next'
 import { ColumnLayout, HorizontalCenterLayout } from 'layouts'
 import { TRecipe } from 'backend/types/recipes.types'
 import { getLastNRecipes } from 'backend/recipes'
@@ -52,7 +52,7 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
       <Banner />
       <HorizontalCenterLayout className="my-8 mx-4">
         <div className="max-w-xl w-full">
-          <SearchBar onSearch={onSubmitSearch} />
+          <SearchBar onSearch={onSubmitSearch} placeholder={`Zoeken in ${recipes.length} recepten...`} />
         </div>
       </HorizontalCenterLayout>
       <hr className="mb-8 border-t-4 border-primary lg:mx-8" />
@@ -72,12 +72,13 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const recipes = await getLastNRecipes(100)
   return {
     props: {
       recipes
-    }
+    },
+    revalidate: 60
   }
 }
 
