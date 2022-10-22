@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const useFadeInStyle = () => {
+const useFadeInStyle = (): string => {
   const [fadedIn, setFadedIn] = useState(false)
 
   useEffect(() => {
