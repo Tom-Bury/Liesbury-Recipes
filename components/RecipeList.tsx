@@ -1,13 +1,13 @@
 import { TRecipe } from 'backend/types/recipes.types'
 import { HorizontalCenterLayout, GridLayout } from 'layouts'
 import * as React from 'react'
-import { useEffect, useRef } from 'react'
-import { ERecipeBackNavigationLocalStorageKeys } from '~/utils/navigation.utils'
+import { useEffect, useRef, useState } from 'react'
 import LinkWrap from './LinkWrap'
 import RecipeCard from './RecipeCard'
 
 type TProps = {
   recipes: TRecipe[]
+  onRecipeClick?: (recipeId: string) => void
   scrollToRecipeWithId?: string
   className?: string
 }
@@ -16,21 +16,20 @@ type TRecipeRefs = {
   [recipeId: string]: HTMLAnchorElement | null
 }
 
-function onRecipeClick(recipeId: string): void {
-  localStorage.setItem(ERecipeBackNavigationLocalStorageKeys.RECIPE_ID_TO_NAVIGATE_TO, recipeId)
-}
-
-const RecipeList: React.FC<TProps> = ({ recipes, scrollToRecipeWithId, className }) => {
+const RecipeList: React.FC<TProps> = ({ recipes, scrollToRecipeWithId, className, onRecipeClick }) => {
   const recipeRefs = useRef<TRecipeRefs>({})
+  const [initialRecipeIdToScrollTo] = useState(scrollToRecipeWithId)
 
   useEffect(() => {
-    if (scrollToRecipeWithId) {
-      const recipeRef = recipeRefs.current[scrollToRecipeWithId]
+    if (initialRecipeIdToScrollTo) {
+      const recipeRef = recipeRefs.current[initialRecipeIdToScrollTo]
       if (recipeRef) {
-        recipeRef.scrollIntoView()
+        recipeRef.scrollIntoView({
+          block: 'center'
+        })
       }
     }
-  }, [scrollToRecipeWithId])
+  }, [initialRecipeIdToScrollTo])
 
   return (
     <HorizontalCenterLayout>
@@ -43,7 +42,7 @@ const RecipeList: React.FC<TProps> = ({ recipes, scrollToRecipeWithId, className
             }}
             href={`/recipe/${recipe.id}`}
             className="rmMobileClickBox w-full"
-            onClick={() => onRecipeClick(recipe.id)}
+            onClick={onRecipeClick ? () => onRecipeClick(recipe.id) : undefined}
           >
             <RecipeCard title={recipe.title} imgPath={recipe.imgUrl} blurHash={recipe.blurHash} preloadImage={i <= 9} />
           </LinkWrap>
