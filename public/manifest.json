@@ -53,8 +53,7 @@
   "theme_color": "#005259",
   "shortcuts": [],
   "description": "Lijst met recepten gevonden op het internet",
-  "screenshots": [
-  ],
+  "screenshots": [],
   "categories": ["food", "utilities"],
   "lang": "nl",
   "dir": "ltr"

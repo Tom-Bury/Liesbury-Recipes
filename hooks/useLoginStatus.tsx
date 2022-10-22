@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { isAuthTokenCookiePresent } from '~/utils/auth.utils'
 
-const useLoginStatus = () => {
+const useLoginStatus = (): boolean => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   useEffect(() => {
