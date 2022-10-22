@@ -67,7 +67,7 @@ type TLayoutProps = {
 
 const RecipeDataLayout: React.FC<TLayoutProps> = ({ primary, secondary, tertiary, bottom }) => {
   return (
-    <div className="flex flex-col">
+    <div className="grid gap-8">
       {(() => {
         if (primary && secondary && tertiary) {
           return (
@@ -108,7 +108,7 @@ const RecipeDataLayout: React.FC<TLayoutProps> = ({ primary, secondary, tertiary
           </div>
         )
       })()}
-      {bottom && <section className={primary || secondary || tertiary ? 'mt-8' : ''}>{bottom}</section>}
+      {bottom && <section>{bottom}</section>}
     </div>
   )
 }
