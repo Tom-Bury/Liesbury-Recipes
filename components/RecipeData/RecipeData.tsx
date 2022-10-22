@@ -38,8 +38,10 @@ const Tips: React.FC<{ markdownTips: string }> = ({ markdownTips }) => {
   return (
     <div className="items-start bg-gradient-to-tr	from-primary to-light rounded-lg p-4">
       <h3 className="text-darkest">{title}</h3>
-      <span className="flex flex-row mx-4">
-        <Image src="/images/lizzy-tips.svg" alt="Liesbury's receptenlijst" width={100} height={221} />
+      <span className="flex flex-row mr-4">
+        <div className={styles['tips-image-wrap']}>
+          <Image src="/images/lizzy-tips.svg" alt="Liesbury's receptenlijst" width={100} height={221} />
+        </div>
 
         <MarkdownSnippet markdownContent={markdownTips} className="my-4 ml-8 text-darkest" />
       </span>
@@ -64,34 +66,49 @@ type TLayoutProps = {
 }
 
 const RecipeDataLayout: React.FC<TLayoutProps> = ({ primary, secondary, tertiary, bottom }) => {
-  const gridColsClass = tertiary ? 'grid-cols-3' : 'grid-cols-12'
-
-  let primaryContentClasses = 'col-span-12 md:col-span-8'
-  if (tertiary) {
-    primaryContentClasses = 'col-span-3 md:col-span-2'
-  } else if (secondary) {
-    primaryContentClasses = 'col-span-12 md:col-span-7'
-  }
-
-  let secondaryContentClasses = 'col-span-12 md:col-span-8'
-  if (tertiary) {
-    secondaryContentClasses = 'col-span-3 md:col-span-2'
-  } else if (primary) {
-    secondaryContentClasses = 'col-span-12 md:col-span-5'
-  }
-
-  const tertiaryContentClasses = primary || secondary ? 'col-span-3 md:col-span-1 md:row-span-2' : 'col-span-3 md:col-span-2'
-
-  let bottomContentClasses = 'col-span-12 md:col-span-4'
-  if (tertiary) {
-    bottomContentClasses = primary || secondary ? 'col-span-3' : 'col-span-3 md:col-span-1'
-  }
   return (
-    <div className={`grid gap-8 ${gridColsClass}`}>
-      {primary && <section className={primaryContentClasses}>{primary}</section>}
-      {tertiary && <section className={tertiaryContentClasses}>{tertiary}</section>}
-      {secondary && <section className={secondaryContentClasses}>{secondary}</section>}
-      {bottom && <section className={bottomContentClasses}>{bottom}</section>}
+    <div className="flex flex-col">
+      {(() => {
+        if (primary && secondary && tertiary) {
+          return (
+            <div className="grid gap-8 grid-cols-3">
+              <div className="col-span-3 md:col-span-2">
+                <section className="w-full mb-8">{primary}</section>
+                <section className="w-full">{secondary}</section>
+              </div>
+              <section className="col-span-3 md:col-span-1">{tertiary}</section>
+            </div>
+          )
+        }
+
+        if ((secondary && tertiary) || (primary && tertiary)) {
+          return (
+            <div className="grid gap-8 grid-cols-3">
+              <section className="col-span-3 md:col-span-2">{secondary || primary}</section>
+              <section className="col-span-3 md:col-span-1">{tertiary}</section>
+            </div>
+          )
+        }
+
+        if (primary && secondary) {
+          return (
+            <div className="grid gap-8 grid-cols-12">
+              <section className="col-span-12 md:col-span-7">{primary}</section>
+              <section className="col-span-12 md:col-span-5">{secondary}</section>
+            </div>
+          )
+        }
+
+        // Only 1 is available
+        return (
+          <div className="grid gap-8 grid-cols-1">
+            {primary && <section>{primary}</section>}
+            {tertiary && <section>{tertiary}</section>}
+            {secondary && <section>{secondary}</section>}
+          </div>
+        )
+      })()}
+      {bottom && <section className={primary || secondary || tertiary ? 'mt-8' : ''}>{bottom}</section>}
     </div>
   )
 }
