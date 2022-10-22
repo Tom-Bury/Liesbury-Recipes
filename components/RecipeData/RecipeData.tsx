@@ -38,8 +38,10 @@ const Tips: React.FC<{ markdownTips: string }> = ({ markdownTips }) => {
   return (
     <div className="items-start bg-gradient-to-tr	from-primary to-light rounded-lg p-4">
       <h3 className="text-darkest">{title}</h3>
-      <span className="flex flex-row mx-4">
-        <Image src="/images/lizzy-tips.svg" alt="Liesbury's receptenlijst" width={100} height={221} />
+      <span className="flex flex-row mr-4">
+        <div className={styles['tips-image-wrap']}>
+          <Image src="/images/lizzy-tips.svg" alt="Liesbury's receptenlijst" width={100} height={221} />
+        </div>
 
         <MarkdownSnippet markdownContent={markdownTips} className="my-4 ml-8 text-darkest" />
       </span>

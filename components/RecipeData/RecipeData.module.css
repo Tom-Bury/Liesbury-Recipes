@@ -3,3 +3,9 @@
   background-image: radial-gradient(#83C5BE66 1px, transparent 1px);
   background-size: calc(10 * 1px) calc(10 * 1px);
 }
+
+.tips-image-wrap {
+  min-width: 55px;
+  align-self: center
+}
+
