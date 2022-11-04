@@ -3508,6 +3508,11 @@ jws@^4.0.0:
     jwa "^2.0.0"
     safe-buffer "^5.0.1"
 
+ky@^0.32.2:
+  version "0.32.2"
+  resolved "https://registry.yarnpkg.com/ky/-/ky-0.32.2.tgz#dc62001379977b5dbd98f513d95b52fac8bf2207"
+  integrity sha512-eBJeF6IXNwX5rksdwBrE2rIJrU2d84GoTvdM7OmmTIwUVXEMd72wIwvT+nyhrqtv7AzbSNsWz7yRsHgVhj1uog==
+
 language-subtag-registry@~0.3.2:
   version "0.3.21"
   resolved "https://registry.yarnpkg.com/language-subtag-registry/-/language-subtag-registry-0.3.21.tgz#04ac218bea46f04cb039084602c6da9e788dd45a"
