@@ -6,10 +6,10 @@ import { useRouter } from 'next/dist/client/router'
 import { ParsedUrlQuery } from 'querystring'
 import * as React from 'react'
 import Image from 'next/image'
-import useLoginStatus from 'hooks/useLoginStatus'
 import { useState } from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import useFadeInStyle from 'hooks/useFadeInStyle'
+import { useIsLoggedInAtLoadDeferred } from 'hooks/useIsLoggedInAtLoad.hook'
 import RecipeData from '~/components/RecipeData/RecipeData'
 import RecipePlaceholder from '~/components/RecipePlaceholder'
 import FloatingActionButton from '~/components/atoms/FloatingActionButton/FloatingActionButton.component'
@@ -97,7 +97,7 @@ const SlidingRecipeImage: React.FC<{ url?: string; blurHash?: string }> = ({ url
 const RecipePage: NextPage<TProps> = ({ recipe }) => {
   const router = useRouter()
   const { isFallback } = router
-  const isLoggedIn = useLoginStatus()
+  const isLoggedInAtLoad = useIsLoggedInAtLoadDeferred()
   const fadeInStyle = useFadeInStyle()
 
   if (!recipe) {
@@ -120,7 +120,7 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
           {isFallback ? <RecipePlaceholder /> : <RecipeData recipe={recipe} />}
         </div>
       </div>
-      {isLoggedIn && (
+      {isLoggedInAtLoad && (
         <FloatingActionButton
           placement="right"
           onPress={() => {

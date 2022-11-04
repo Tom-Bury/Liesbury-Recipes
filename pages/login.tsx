@@ -6,6 +6,7 @@ import { useState } from 'react'
 import authUser from 'api/authUser'
 import { EErrorCode } from 'types/enums'
 import useFadeInStyle from 'hooks/useFadeInStyle'
+import { AuthApi } from 'api/auth/Auth.api'
 import Card from '~/components/Card/Card'
 import Input from '~/components/atoms/Input/Input'
 import Button from '~/components/atoms/Button/Button'
@@ -27,9 +28,12 @@ const LoginPage: NextPage = () => {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async event => {
     event.preventDefault()
     try {
-      await authUser(password)
-      const { redirectTo } = router.query
-      router.push(`/${redirectTo || ''}`)
+      if (await AuthApi.login(password)) {
+        const { redirectTo } = router.query
+        router.replace(`/${redirectTo || ''}`)
+      } else {
+        throw new Error(EErrorCode.HTTP_401)
+      }
     } catch (error: any) {
       console.error(error)
       if (error.name === EErrorCode.HTTP_401) {

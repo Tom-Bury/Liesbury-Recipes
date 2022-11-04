@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { GetServerSideProps, NextPage } from 'next'
 import { HorizontalCenterLayout } from 'layouts'
-import { useEffect, useReducer, useState } from 'react'
+import { useEffect, useReducer, useRef, useState } from 'react'
 import colors from 'public/colors'
 import getPreviewImage from 'api/getPreviewImage'
 import { addRecipe, updateRecipe } from 'api/addRecipe'
@@ -10,6 +10,8 @@ import { TRecipe } from 'backend/types/recipes.types'
 import { addRecipeFormReducer, ERecipeKeys } from 'reducers/add-recipe.reducer'
 import useFadeInStyle from 'hooks/useFadeInStyle'
 import { EErrorCode } from 'types/enums'
+import { useIsLoggedInAtLoad } from 'hooks/useIsLoggedInAtLoad.hook'
+import { PreviewImageApi } from 'api/preview-image/PreviewImage.api'
 import Button from '~/components/atoms/Button/Button'
 import Card from '~/components/Card/Card'
 import ImageIcon from '~/components/icons/Image.icon'
@@ -27,6 +29,14 @@ const Separator: React.FC<{ label?: string }> = ({ label }) => (
 
 const AddRecipePage: NextPage = () => {
   const router = useRouter()
+  const isLoggedInAtLoad = useIsLoggedInAtLoad()
+
+  useEffect(() => {
+    if (!isLoggedInAtLoad) {
+      router.replace('/login?redirectTo=add-recipe?prefilled=true')
+    }
+  }, [])
+
   const [shouldUpdateRecipe, setShouldUpdateRecipe] = useState(!!router.query.prefilled)
 
   const [formState, dispatchFormAction] = useReducer(addRecipeFormReducer, {})
@@ -55,6 +65,10 @@ const AddRecipePage: NextPage = () => {
       }
     }
   }, [])
+
+  if (!isLoggedInAtLoad) {
+    return <></>
+  }
 
   const isFormValid = !!formState.recipeTitle && !!recipeImgSrcUrl
 
@@ -298,23 +312,6 @@ const AddRecipePage: NextPage = () => {
       </Card>
     </HorizontalCenterLayout>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async context => {
-  const { cookies } = context.req
-
-  if (!cookies.authToken) {
-    return {
-      redirect: {
-        destination: '/login?redirectTo=add-recipe?prefilled=true',
-        permanent: false
-      }
-    }
-  }
-
-  return {
-    props: {}
-  }
 }
 
 export default AddRecipePage
