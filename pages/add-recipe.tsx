@@ -3,7 +3,6 @@ import { NextPage } from 'next'
 import { HorizontalCenterLayout } from 'layouts'
 import { useEffect, useReducer, useState } from 'react'
 import colors from 'public/colors'
-import { addRecipe, updateRecipe } from 'api/addRecipe'
 import { useRouter } from 'next/router'
 import { TRecipe } from 'backend/types/recipes.types'
 import { addRecipeFormReducer, ERecipeKeys } from 'reducers/add-recipe.reducer'
@@ -11,6 +10,7 @@ import useFadeInStyle from 'hooks/useFadeInStyle'
 import { EErrorCode } from 'types/enums'
 import { useIsLoggedInAtLoad } from 'hooks/useIsLoggedInAtLoad.hook'
 import { PreviewImageApi } from 'api/preview-image/PreviewImage.api'
+import { RecipesApi } from 'api/recipes/Recipes.api'
 import Button from '~/components/atoms/Button/Button'
 import Card from '~/components/Card/Card'
 import ImageIcon from '~/components/icons/Image.icon'
@@ -85,15 +85,12 @@ const AddRecipePage: NextPage = () => {
           ingredients: formState.ingredients,
           tips: formState.tips
         }
-        const result =
-          shouldUpdateRecipe && formState.recipeId ? await updateRecipe(formData, formState.recipeId) : await addRecipe(formData)
+        const result = await RecipesApi.new(formData)
+        // shouldUpdateRecipe && formState.recipeId ? await updateRecipe(formData, formState.recipeId) :
 
-        if (result.recipeId && result.title) {
-          // TODO: fix wait for recipe to be ready in BE
+        if (result.id) {
           setAnimateAway(true)
-          setTimeout(() => {
-            router.push(`/recipe/${result.recipeId}`)
-          }, 1000)
+          router.push(`/recipe/${result.id}`)
         }
       } catch (error) {
         console.error('Error submitting recipe', error)
