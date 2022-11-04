@@ -1,11 +1,12 @@
 import * as React from 'react'
-import { GetServerSideProps, NextPage } from 'next'
+import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { HorizontalCenterLayout } from 'layouts'
-import { useState } from 'react'
-import authUser from 'api/authUser'
+import { useEffect, useState } from 'react'
 import { EErrorCode } from 'types/enums'
 import useFadeInStyle from 'hooks/useFadeInStyle'
+import { AuthApi } from 'api/auth/Auth.api'
+import { useIsLoggedIn } from 'hooks/useIsLoggedIn.hook'
 import Card from '~/components/Card/Card'
 import Input from '~/components/atoms/Input/Input'
 import Button from '~/components/atoms/Button/Button'
@@ -13,10 +14,21 @@ import Button from '~/components/atoms/Button/Button'
 const LoginPage: NextPage = () => {
   const router = useRouter()
   const fadeInStyle = useFadeInStyle()
+  const isLoggedIn = useIsLoggedIn()
+
+  useEffect(() => {
+    if (isLoggedIn === true) {
+      router.replace('/')
+    }
+  }, [isLoggedIn])
 
   const [password, setPassword] = useState('')
   const [isNotAuthorized, setIsNotAuthorized] = useState(false)
   const [isUnknownError, setIsUnknownError] = useState(false)
+
+  if (isLoggedIn === true || isLoggedIn === undefined) {
+    return <></>
+  }
 
   const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = event => {
     setPassword(event.target.value)
@@ -27,9 +39,12 @@ const LoginPage: NextPage = () => {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async event => {
     event.preventDefault()
     try {
-      await authUser(password)
-      const { redirectTo } = router.query
-      router.push(`/${redirectTo || ''}`)
+      if (await AuthApi.login(password)) {
+        const { redirectTo } = router.query
+        router.replace(`/${redirectTo || ''}`)
+      } else {
+        throw new Error(EErrorCode.HTTP_401)
+      }
     } catch (error: any) {
       console.error(error)
       if (error.name === EErrorCode.HTTP_401) {
@@ -60,23 +75,6 @@ const LoginPage: NextPage = () => {
       </Card>
     </HorizontalCenterLayout>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async context => {
-  const { cookies } = context.req
-
-  if (cookies.authToken) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false
-      }
-    }
-  }
-
-  return {
-    props: {}
-  }
 }
 
 export default LoginPage

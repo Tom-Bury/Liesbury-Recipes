@@ -3,11 +3,11 @@ import { GetStaticProps, NextPage } from 'next'
 import { ColumnLayout, HorizontalCenterLayout } from 'layouts'
 import { TRecipe } from 'backend/types/recipes.types'
 import { getLastNRecipes } from 'backend/recipes'
-import searchRecipes from 'api/searchRecipes'
 import useFadeInStyle from 'hooks/useFadeInStyle'
 import { useIndexPageCurrentRecipe } from 'hooks/useIndexPageCurrentRecipe'
 import { useCallback } from 'react'
 import { useRouter } from 'next/router'
+import { RecipesApi } from 'api/recipes/Recipes.api'
 import SearchBar from '~/components/SearchBar/SearchBar'
 import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
@@ -26,7 +26,7 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
 
   const onSubmitSearch = async (query: string) => {
     setIsLoading(true)
-    const foundRecipes = await searchRecipes(query)
+    const foundRecipes = await RecipesApi.search(query)
     setCurrRecipes(foundRecipes)
     setIsLoading(false)
   }
