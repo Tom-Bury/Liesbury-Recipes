@@ -18,6 +18,12 @@ export const RecipesApi = {
     }).json()
   },
 
+  update: async (id: string, updatedRecipeData: TAddRecipeBody): Promise<{ id: string }> => {
+    return ApiClient.put(`recipes/recipe/${id}`, {
+      json: updatedRecipeData
+    }).json()
+  },
+
   search: async (query: string): Promise<TRecipe[]> => {
     return ApiClient.get('recipes/search', {
       searchParams: {

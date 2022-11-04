@@ -85,8 +85,8 @@ const AddRecipePage: NextPage = () => {
           ingredients: formState.ingredients,
           tips: formState.tips
         }
-        const result = await RecipesApi.new(formData)
-        // shouldUpdateRecipe && formState.recipeId ? await updateRecipe(formData, formState.recipeId) :
+        const result =
+          shouldUpdateRecipe && formState.recipeId ? await RecipesApi.update(formState.recipeId, formData) : await RecipesApi.new(formData)
 
         if (result.id) {
           setAnimateAway(true)

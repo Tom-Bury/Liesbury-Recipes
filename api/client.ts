@@ -32,6 +32,8 @@ export class ApiClient {
 
   public static post = this.client.post
 
+  public static put = this.client.put
+
   public static saveAccessToken = (accessToken: string): void => {
     localStorage.setItem(this.apiAccessTokenLocalStorageKey, accessToken)
   }
