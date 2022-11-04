@@ -18,13 +18,13 @@ export class ApiClient {
             request.headers.append('Authorization', `Bearer ${accessToken}`)
           }
         }
-      ],
-      afterResponse: [
-        response => {
-          // Do something after every response
-          // For example, check status code etc...
-        }
       ]
+      // afterResponse: [
+      //   response => {
+      //     // Do something after every response
+      //     // For example, check status code etc...
+      //   }
+      // ]
     }
   })
 
