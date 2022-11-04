@@ -34,6 +34,8 @@ export class ApiClient {
 
   public static put = this.client.put
 
+  public static delete = this.client.delete
+
   public static saveAccessToken = (accessToken: string): void => {
     localStorage.setItem(this.apiAccessTokenLocalStorageKey, accessToken)
   }

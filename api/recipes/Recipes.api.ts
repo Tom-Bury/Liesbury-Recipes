@@ -24,6 +24,10 @@ export const RecipesApi = {
     }).json()
   },
 
+  delete: async (id: string): Promise<void> => {
+    await ApiClient.delete(`recipes/recipe/${id}`).text()
+  },
+
   search: async (query: string): Promise<TRecipe[]> => {
     return ApiClient.get('recipes/search', {
       searchParams: {

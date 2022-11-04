@@ -10,9 +10,11 @@ import { useState } from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import useFadeInStyle from 'hooks/useFadeInStyle'
 import { useIsLoggedInAtLoadDeferred } from 'hooks/useIsLoggedInAtLoad.hook'
+import { RecipesApi } from 'api/recipes/Recipes.api'
 import RecipeData from '~/components/RecipeData/RecipeData'
 import RecipePlaceholder from '~/components/RecipePlaceholder'
 import FloatingActionButton from '~/components/atoms/FloatingActionButton/FloatingActionButton.component'
+import Button from '~/components/atoms/Button/Button'
 
 type TProps = {
   recipe?: TRecipe
@@ -114,7 +116,22 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
       <div className="rooftop flex flex-1 z-10 mt-72 mb-24 pt-8 bg-lightest items-center">
         <div className="flex flex-col flex-1 max-w-5xl pt-0 mx-auto">
           <div className="sticky top-0 pt-8 bg-lightest flex flex-col flex-1 items-center z-10">
-            <h2 className="text-darkest text-center px-2">{isFallback ? '...' : recipe.title}</h2>
+            <div className="flex flex-row">
+              <h2 className="text-darkest text-center px-2">{isFallback ? '...' : recipe.title}</h2>
+              {isLoggedInAtLoad && (
+                <Button
+                  className="bg-error absolute right-0 mr-4 lg:mr-0 w-14 h-14 flex items-center justify-center border-4 border-dark"
+                  type="button"
+                  circular
+                  onPress={async () => {
+                    await RecipesApi.delete(recipe.id)
+                    router.back()
+                  }}
+                >
+                  <Image src="/icons/delete.svg" alt="Delete icon" width={24} height={24} />
+                </Button>
+              )}
+            </div>
             <hr className="border-t-4 border-primary w-full" />
           </div>
           {isFallback ? <RecipePlaceholder /> : <RecipeData recipe={recipe} />}
