@@ -8,9 +8,9 @@ import { TRecipe } from 'backend/types/recipes.types'
 import { addRecipeFormReducer, ERecipeKeys } from 'reducers/add-recipe.reducer'
 import useFadeInStyle from 'hooks/useFadeInStyle'
 import { EErrorCode } from 'types/enums'
-import { useIsLoggedInAtLoad } from 'hooks/useIsLoggedInAtLoad.hook'
 import { PreviewImageApi } from 'api/preview-image/PreviewImage.api'
 import { RecipesApi } from 'api/recipes/Recipes.api'
+import { useIsLoggedIn } from 'hooks/useIsLoggedIn.hook'
 import Button from '~/components/atoms/Button/Button'
 import Card from '~/components/Card/Card'
 import ImageIcon from '~/components/icons/Image.icon'
@@ -28,10 +28,10 @@ const Separator: React.FC<{ label?: string }> = ({ label }) => (
 
 const AddRecipePage: NextPage = () => {
   const router = useRouter()
-  const isLoggedInAtLoad = useIsLoggedInAtLoad()
+  const isLoggedIn = useIsLoggedIn()
 
   useEffect(() => {
-    if (!isLoggedInAtLoad) {
+    if (isLoggedIn === false) {
       router.replace('/login?redirectTo=add-recipe?prefilled=true')
     }
   }, [])
@@ -65,7 +65,7 @@ const AddRecipePage: NextPage = () => {
     }
   }, [])
 
-  if (!isLoggedInAtLoad) {
+  if (!isLoggedIn) {
     return <></>
   }
 

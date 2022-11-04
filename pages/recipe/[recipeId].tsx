@@ -9,8 +9,8 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import useFadeInStyle from 'hooks/useFadeInStyle'
-import { useIsLoggedInAtLoadDeferred } from 'hooks/useIsLoggedInAtLoad.hook'
 import { RecipesApi } from 'api/recipes/Recipes.api'
+import { useIsLoggedIn } from 'hooks/useIsLoggedIn.hook'
 import RecipeData from '~/components/RecipeData/RecipeData'
 import RecipePlaceholder from '~/components/RecipePlaceholder'
 import FloatingActionButton from '~/components/atoms/FloatingActionButton/FloatingActionButton.component'
@@ -99,7 +99,7 @@ const SlidingRecipeImage: React.FC<{ url?: string; blurHash?: string }> = ({ url
 const RecipePage: NextPage<TProps> = ({ recipe }) => {
   const router = useRouter()
   const { isFallback } = router
-  const isLoggedInAtLoad = useIsLoggedInAtLoadDeferred()
+  const isLoggedIn = useIsLoggedIn()
   const fadeInStyle = useFadeInStyle()
 
   if (!recipe) {
@@ -118,7 +118,7 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
           <div className="sticky top-0 pt-8 bg-lightest flex flex-col flex-1 items-center z-10">
             <div className="flex flex-row">
               <h2 className="text-darkest text-center px-2">{isFallback ? '...' : recipe.title}</h2>
-              {isLoggedInAtLoad && (
+              {isLoggedIn && (
                 <Button
                   className="bg-error absolute right-0 mr-4 lg:mr-0 w-14 h-14 flex items-center justify-center border-4 border-dark"
                   type="button"
@@ -137,7 +137,7 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
           {isFallback ? <RecipePlaceholder /> : <RecipeData recipe={recipe} />}
         </div>
       </div>
-      {isLoggedInAtLoad && (
+      {isLoggedIn && (
         <FloatingActionButton
           placement="right"
           onPress={() => {
