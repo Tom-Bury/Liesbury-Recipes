@@ -12,8 +12,8 @@ export class ApiClient {
       beforeRequest: [
         request => {
           request.headers.append('Access-Control-Allow-Origin', window.location.origin)
-          this.checkAuthToken()
-          const accessToken = localStorage.getItem(this.apiAccessTokenLocalStorageKey)
+          ApiClient.checkAuthToken()
+          const accessToken = localStorage.getItem(ApiClient.apiAccessTokenLocalStorageKey)
           if (accessToken && accessToken.length > 0) {
             request.headers.append('Authorization', `Bearer ${accessToken}`)
           }
@@ -28,37 +28,37 @@ export class ApiClient {
     }
   })
 
-  public static get = this.client.get
+  public static get = ApiClient.client.get
 
-  public static post = this.client.post
+  public static post = ApiClient.client.post
 
-  public static put = this.client.put
+  public static put = ApiClient.client.put
 
-  public static delete = this.client.delete
+  public static delete = ApiClient.client.delete
 
   public static saveAccessToken = (accessToken: string): void => {
-    localStorage.setItem(this.apiAccessTokenLocalStorageKey, accessToken)
+    localStorage.setItem(ApiClient.apiAccessTokenLocalStorageKey, accessToken)
   }
 
   public static isLoggedIn = (): boolean => {
-    this.checkAuthToken()
-    const accessToken = localStorage.getItem(this.apiAccessTokenLocalStorageKey)
+    ApiClient.checkAuthToken()
+    const accessToken = localStorage.getItem(ApiClient.apiAccessTokenLocalStorageKey)
     return Boolean(accessToken)
   }
 
   private static checkAuthToken = () => {
     try {
-      const accessToken = localStorage.getItem(this.apiAccessTokenLocalStorageKey)
+      const accessToken = localStorage.getItem(ApiClient.apiAccessTokenLocalStorageKey)
       if (accessToken && accessToken.length > 0) {
         const { exp } = parseJwt(accessToken)
         const expMillis = parseInt(`${exp}`, 10) * 1000
         if (expMillis < Date.now()) {
-          localStorage.removeItem(this.apiAccessTokenLocalStorageKey)
+          localStorage.removeItem(ApiClient.apiAccessTokenLocalStorageKey)
         }
       }
     } catch (error) {
       console.error(`Could not check auth token: ${error}`)
-      localStorage.removeItem(this.apiAccessTokenLocalStorageKey)
+      localStorage.removeItem(ApiClient.apiAccessTokenLocalStorageKey)
     }
   }
 }
