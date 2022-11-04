@@ -34,7 +34,7 @@ const AddRecipePage: NextPage = () => {
     if (isLoggedIn === false) {
       router.replace('/login?redirectTo=add-recipe?prefilled=true')
     }
-  }, [])
+  }, [isLoggedIn])
 
   const [shouldUpdateRecipe, setShouldUpdateRecipe] = useState(!!router.query.prefilled)
 

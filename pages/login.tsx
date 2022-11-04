@@ -26,6 +26,10 @@ const LoginPage: NextPage = () => {
   const [isNotAuthorized, setIsNotAuthorized] = useState(false)
   const [isUnknownError, setIsUnknownError] = useState(false)
 
+  if (isLoggedIn === true || isLoggedIn === undefined) {
+    return <></>
+  }
+
   const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = event => {
     setPassword(event.target.value)
     setIsNotAuthorized(false)
