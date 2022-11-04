@@ -167,7 +167,7 @@ const AddRecipePage: NextPage = () => {
       try {
         setRecipeImgLoading(true)
         if (formState.recipeUrl !== recipeImgSrcUrl) {
-          const previewImgUrl = await getPreviewImage(formState.recipeUrl)
+          const previewImgUrl = await PreviewImageApi.scrape(formState.recipeUrl)
           setRecipeImgSrcUrl(previewImgUrl)
           setRecipeImgPreviewError(false)
         }
