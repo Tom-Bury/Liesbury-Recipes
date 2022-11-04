@@ -1,26 +1,39 @@
-.button {
-  @apply bg-primary text-white text-lg p-2 transition duration-200 ease-out transform;
+.buttonCommon {
+  @apply text-white text-lg p-2 transition duration-200 ease-out transform;
 }
 
-.button:disabled {
+.buttonCommon:disabled {
   @apply opacity-25 cursor-not-allowed;
 }
 
+.buttonRegular {
+  @apply bg-primary;
+}
 
+.buttonError {
+  @apply bg-error;
+}
 
 
 /* touch screens */
 @media(hover: none) and (pointer: coarse) {
-  .button:hover:not([disabled]), .button:active {
+  .buttonRegular:hover:not([disabled]), .buttonRegular:active {
     @apply bg-dark;
+  }
+
+  .buttonError:hover:not([disabled]), .buttonError:active {
+    @apply bg-error-dark;
   }
 
 }
 
 /* mouse */
 @media(hover: hover) and (pointer: fine) {
-
-  .button:hover, .button:active, .button:focus {
+  .buttonRegular:hover, .buttonRegular:active, .buttonRegular:focus {
     @apply bg-dark;
+  }
+
+  .buttonError:hover,.buttonError:active,.buttonError:focus {
+    @apply bg-error-dark;
   }
 }
