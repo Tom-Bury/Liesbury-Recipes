@@ -79,7 +79,7 @@ const AddRecipePage: NextPage = () => {
         const formData = {
           title: formState.recipeTitle || '', // TODO: typing doesn't know isFormValid guarantees non empty values
           url: formState.recipeUrl,
-          imgUrl: recipeImgSrcUrl,
+          imgUrl: formState.imgFile ? undefined : recipeImgSrcUrl,
           previewImgFileData: formState.imgFile,
           instructions: formState.instructions,
           ingredients: formState.ingredients,

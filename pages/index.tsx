@@ -5,9 +5,10 @@ import { TRecipe } from 'backend/types/recipes.types'
 import { getLastNRecipes } from 'backend/recipes'
 import useFadeInStyle from 'hooks/useFadeInStyle'
 import { useIndexPageCurrentRecipe } from 'hooks/useIndexPageCurrentRecipe'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { RecipesApi } from 'api/recipes/Recipes.api'
+import { RootApi } from 'api/Root.api'
 import SearchBar from '~/components/SearchBar/SearchBar'
 import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
@@ -23,6 +24,13 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
   const [isLoading, setIsLoading] = React.useState(false)
   const { currentRecipeId, setRecipeIdToNavigateBackTo, resetSavedRecipeToNavigateBackTo } = useIndexPageCurrentRecipe()
   const fadeInStyle = useFadeInStyle()
+
+  useEffect(() => {
+    ;(async () => {
+      const res = await RootApi.version()
+      console.log(`Backend: ${res}`)
+    })()
+  }, [])
 
   const onSubmitSearch = async (query: string) => {
     setIsLoading(true)

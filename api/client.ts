@@ -1,5 +1,5 @@
 import ky from 'ky'
-import { parseJwt } from '~/utils/auth.utils'
+import { parseJwt } from 'utils/auth.utils'
 
 const API_URL = 'https://lb-recipes-backend-u2i4fxh5ga-ew.a.run.app'
 
