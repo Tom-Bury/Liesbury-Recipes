@@ -16,8 +16,9 @@ import ImageIcon from '~/components/icons/Image.icon'
 import Input from '~/components/atoms/Input/Input'
 import Loading from '~/components/Loading'
 import MarkdownInputArea from '~/components/atoms/MarkdownInputArea/MarkdownInputArea.component'
-import ListInput from '~/components/atoms/ListInput/ListInput.component'
 import { getApiErrorCode } from '~/utils/error.utils'
+import { RegularListInput } from '~/components/atoms/ListInput/RegularListInput.component'
+import { PillButtonListInput } from '~/components/atoms/ListInput/PillButtonListInput.component'
 
 const Separator: React.FC<{ label?: string }> = ({ label }) => (
   <span className="flex flex-row w-full items-center mt-4">
@@ -201,19 +202,35 @@ const AddRecipePage: NextPage = () => {
     setRecipeImgPreviewError(true)
   }
 
-  const handleAddListItem = (key: ERecipeKeys.ingredients | ERecipeKeys.categories) => (ingr: string) => {
+  const handleAddListItem = (key: ERecipeKeys.ingredients) => (value: string) => {
     dispatchFormAction({
       type: 'list-add',
       key,
-      value: ingr.trim()
+      value
     })
   }
 
-  const handleRemoveListItem = (key: ERecipeKeys.ingredients | ERecipeKeys.categories) => (index: number) => {
+  const handleRemoveListItem = (key: ERecipeKeys.ingredients) => (index: number) => {
     dispatchFormAction({
       type: 'list-remove',
       key,
       index
+    })
+  }
+
+  const handleAddSetItem = (key: ERecipeKeys.categories) => (value: string) => {
+    dispatchFormAction({
+      type: 'set-add',
+      key,
+      value
+    })
+  }
+
+  const handleRemoveSetItem = (key: ERecipeKeys.categories) => (value: string) => {
+    dispatchFormAction({
+      type: 'set-remove',
+      key,
+      value
     })
   }
 
@@ -270,7 +287,7 @@ const AddRecipePage: NextPage = () => {
             </div>
           </fieldset>
           <fieldset className="mt-4">
-            <ListInput
+            <RegularListInput
               label="Ingrediënten"
               id={ERecipeKeys.ingredients}
               items={formState.ingredients}
@@ -278,12 +295,12 @@ const AddRecipePage: NextPage = () => {
               onRemove={handleRemoveListItem(ERecipeKeys.ingredients)}
             />
             <Separator />
-            <ListInput
+            <PillButtonListInput
               label="Categorieën"
               id={ERecipeKeys.categories}
               items={formState.categories}
-              onAdd={handleAddListItem(ERecipeKeys.categories)}
-              onRemove={handleRemoveListItem(ERecipeKeys.categories)}
+              onAdd={handleAddSetItem(ERecipeKeys.categories)}
+              onRemove={handleRemoveSetItem(ERecipeKeys.categories)}
             />
             <Separator />
             <MarkdownInputArea

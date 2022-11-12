@@ -21,7 +21,7 @@ type TAddRecipeFormState = {
   [ERecipeKeys.tips]?: string
   [ERecipeKeys.imgFile]?: string
   [ERecipeKeys.ingredients]?: string[]
-  [ERecipeKeys.categories]?: string[]
+  [ERecipeKeys.categories]?: Set<string>
 }
 
 type TSimpleFormAction = {
@@ -39,14 +39,26 @@ type TSimpleFormAction = {
 
 type TListAddFormAction = {
   type: 'list-add'
-  key: ERecipeKeys.ingredients | ERecipeKeys.categories
+  key: ERecipeKeys.ingredients
   value: string
 }
 
 type TListRemoveFormAction = {
   type: 'list-remove'
-  key: ERecipeKeys.ingredients | ERecipeKeys.categories
+  key: ERecipeKeys.ingredients
   index: number
+}
+
+type TSetAddFormAction = {
+  type: 'set-add'
+  key: ERecipeKeys.categories
+  value: string
+}
+
+type TSetRemoveFormAction = {
+  type: 'set-remove'
+  key: ERecipeKeys.categories
+  value: string
 }
 
 type TFullRecipeFormAction = {
@@ -54,7 +66,13 @@ type TFullRecipeFormAction = {
   recipe: TRecipe
 }
 
-type TAddRecipeFormAction = TSimpleFormAction | TListAddFormAction | TListRemoveFormAction | TFullRecipeFormAction
+type TAddRecipeFormAction =
+  | TSimpleFormAction
+  | TListAddFormAction
+  | TListRemoveFormAction
+  | TSetAddFormAction
+  | TSetRemoveFormAction
+  | TFullRecipeFormAction
 
 export const addRecipeFormReducer = (state: TAddRecipeFormState, action: TAddRecipeFormAction): TAddRecipeFormState => {
   switch (action.type) {
@@ -66,7 +84,7 @@ export const addRecipeFormReducer = (state: TAddRecipeFormState, action: TAddRec
     case 'list-add':
       return {
         ...state,
-        [action.key]: [...(state[action.key] || []), action.value]
+        [action.key]: [...(state[action.key] || []), action.value.trim()]
       }
     case 'list-remove': {
       const newList = state[action.key] || []
@@ -74,6 +92,20 @@ export const addRecipeFormReducer = (state: TAddRecipeFormState, action: TAddRec
       return {
         ...state,
         [action.key]: newList.length > 0 ? newList : undefined
+      }
+    }
+    case 'set-add': {
+      return {
+        ...state,
+        [action.key]: new Set([...(state[action.key] || []), action.value.trim().toLowerCase()])
+      }
+    }
+    case 'set-remove': {
+      const newSet = new Set(state[action.key])
+      newSet.delete(action.value.trim().toLowerCase())
+      return {
+        ...state,
+        [action.key]: newSet
       }
     }
     case 'full-recipe': {
@@ -86,7 +118,7 @@ export const addRecipeFormReducer = (state: TAddRecipeFormState, action: TAddRec
         [ERecipeKeys.recipeUrl]: url,
         [ERecipeKeys.tips]: tips,
         [ERecipeKeys.ingredients]: ingredients,
-        [ERecipeKeys.categories]: categories
+        [ERecipeKeys.categories]: new Set(categories?.map(c => c.trim().toLowerCase()))
       }
     }
     default:

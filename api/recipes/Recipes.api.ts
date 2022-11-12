@@ -8,20 +8,20 @@ type TAddRecipeBody = {
   previewImgFileData?: string
   instructions?: string
   ingredients?: string[]
-  categories?: string[]
+  categories?: Set<string>
   tips?: string
 }
 
 export const RecipesApi = {
   new: async (newRecipeData: TAddRecipeBody): Promise<{ id: string }> => {
     return ApiClient.post('recipes/new', {
-      json: newRecipeData
+      json: { ...newRecipeData, categories: [...(newRecipeData.categories || [])] }
     }).json()
   },
 
   update: async (id: string, updatedRecipeData: TAddRecipeBody): Promise<{ id: string }> => {
     return ApiClient.put(`recipes/recipe/${id}`, {
-      json: updatedRecipeData
+      json: { ...updatedRecipeData, categories: [...(updatedRecipeData.categories || [])] }
     }).json()
   },
 
