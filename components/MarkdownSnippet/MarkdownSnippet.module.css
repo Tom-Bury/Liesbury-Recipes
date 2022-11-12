@@ -34,7 +34,7 @@
   }
 
   p {
-    @apply mb-2 px-4;
+    @apply mb-2 px-4 break-words;
   }
 
   hr {
