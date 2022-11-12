@@ -8,6 +8,7 @@ type TAddRecipeBody = {
   previewImgFileData?: string
   instructions?: string
   ingredients?: string[]
+  categories?: string[]
   tips?: string
 }
 

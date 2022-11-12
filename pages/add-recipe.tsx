@@ -83,6 +83,7 @@ const AddRecipePage: NextPage = () => {
           previewImgFileData: formState.imgFile,
           instructions: formState.instructions,
           ingredients: formState.ingredients,
+          categories: formState.categories,
           tips: formState.tips
         }
         const result =
@@ -105,6 +106,7 @@ const AddRecipePage: NextPage = () => {
                 imgUrl: recipeImgSrcUrl,
                 instructions: formState.instructions,
                 ingredients: formState.ingredients,
+                categories: formState.categories,
                 tips: formState.tips
               })
             )
@@ -199,18 +201,18 @@ const AddRecipePage: NextPage = () => {
     setRecipeImgPreviewError(true)
   }
 
-  const handleAddIngredient = (ingr: string) => {
+  const handleAddListItem = (key: ERecipeKeys.ingredients | ERecipeKeys.categories) => (ingr: string) => {
     dispatchFormAction({
       type: 'list-add',
-      key: ERecipeKeys.ingredients,
+      key,
       value: ingr.trim()
     })
   }
 
-  const handleRemoveIngredient = (index: number) => {
+  const handleRemoveListItem = (key: ERecipeKeys.ingredients | ERecipeKeys.categories) => (index: number) => {
     dispatchFormAction({
       type: 'list-remove',
-      key: ERecipeKeys.ingredients,
+      key,
       index
     })
   }
@@ -226,7 +228,7 @@ const AddRecipePage: NextPage = () => {
               <div className="flex-1">
                 <div className="grid grid-rows-1 gap-y-3">
                   <Input label="Naam" id={ERecipeKeys.recipeTitle} onChange={handleInputChange} value={formState.recipeTitle || ''} />
-                  <Separator label="Optioneel" />
+                  <Separator label="Afbeelding" />
                   <Input
                     label="Link naar het recept"
                     id={ERecipeKeys.recipeUrl}
@@ -243,7 +245,7 @@ const AddRecipePage: NextPage = () => {
                     onBlur={setImageSource}
                   />
                   <span className="flex flex-row w-full items-center">
-                    <p className="mr-2 whitespace-nowrap italic">Of upload:</p>
+                    <p className="mr-2 whitespace-nowrap font-semibold">Of upload:</p>
                     <input
                       type="file"
                       accept="image/*"
@@ -272,18 +274,24 @@ const AddRecipePage: NextPage = () => {
               label="Ingrediënten"
               id={ERecipeKeys.ingredients}
               items={formState.ingredients}
-              onAdd={handleAddIngredient}
-              onRemove={handleRemoveIngredient}
+              onAdd={handleAddListItem(ERecipeKeys.ingredients)}
+              onRemove={handleRemoveListItem(ERecipeKeys.ingredients)}
             />
             <Separator />
-
+            <ListInput
+              label="Categorieën"
+              id={ERecipeKeys.categories}
+              items={formState.categories}
+              onAdd={handleAddListItem(ERecipeKeys.categories)}
+              onRemove={handleRemoveListItem(ERecipeKeys.categories)}
+            />
+            <Separator />
             <MarkdownInputArea
               label="Instructies"
               id={ERecipeKeys.instructions}
               textAreaValue={formState.instructions || ''}
               onChange={handleTextAreaChange(ERecipeKeys.instructions)}
             />
-
             <Separator />
             <MarkdownInputArea
               label="Lizzy's tips"

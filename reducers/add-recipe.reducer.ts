@@ -8,7 +8,8 @@ export enum ERecipeKeys {
   instructions = 'instructions',
   tips = 'tips',
   imgFile = 'imgFile',
-  ingredients = 'ingredients'
+  ingredients = 'ingredients',
+  categories = 'categories'
 }
 
 type TAddRecipeFormState = {
@@ -20,6 +21,7 @@ type TAddRecipeFormState = {
   [ERecipeKeys.tips]?: string
   [ERecipeKeys.imgFile]?: string
   [ERecipeKeys.ingredients]?: string[]
+  [ERecipeKeys.categories]?: string[]
 }
 
 type TSimpleFormAction = {
@@ -37,13 +39,13 @@ type TSimpleFormAction = {
 
 type TListAddFormAction = {
   type: 'list-add'
-  key: ERecipeKeys.ingredients
+  key: ERecipeKeys.ingredients | ERecipeKeys.categories
   value: string
 }
 
 type TListRemoveFormAction = {
   type: 'list-remove'
-  key: ERecipeKeys.ingredients
+  key: ERecipeKeys.ingredients | ERecipeKeys.categories
   index: number
 }
 
@@ -75,7 +77,7 @@ export const addRecipeFormReducer = (state: TAddRecipeFormState, action: TAddRec
       }
     }
     case 'full-recipe': {
-      const { id, title, imgUrl, url, instructions, tips, ingredients } = action.recipe
+      const { id, title, imgUrl, url, instructions, tips, ingredients, categories } = action.recipe
       return {
         [ERecipeKeys.recipeId]: id,
         [ERecipeKeys.recipeTitle]: title,
@@ -83,7 +85,8 @@ export const addRecipeFormReducer = (state: TAddRecipeFormState, action: TAddRec
         [ERecipeKeys.imgUrl]: imgUrl,
         [ERecipeKeys.recipeUrl]: url,
         [ERecipeKeys.tips]: tips,
-        [ERecipeKeys.ingredients]: ingredients
+        [ERecipeKeys.ingredients]: ingredients,
+        [ERecipeKeys.categories]: categories
       }
     }
     default:
