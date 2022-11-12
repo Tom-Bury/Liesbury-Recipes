@@ -7,7 +7,6 @@ import { useRouter } from 'next/router'
 import { TRecipe } from 'backend/types/recipes.types'
 import { addRecipeFormReducer, ERecipeKeys } from 'reducers/add-recipe.reducer'
 import useFadeInStyle from 'hooks/useFadeInStyle'
-import { EErrorCode } from 'types/enums'
 import { PreviewImageApi } from 'api/preview-image/PreviewImage.api'
 import { RecipesApi } from 'api/recipes/Recipes.api'
 import { useIsLoggedIn } from 'hooks/useIsLoggedIn.hook'
@@ -18,6 +17,7 @@ import Input from '~/components/atoms/Input/Input'
 import Loading from '~/components/Loading'
 import MarkdownInputArea from '~/components/atoms/MarkdownInputArea/MarkdownInputArea.component'
 import ListInput from '~/components/atoms/ListInput/ListInput.component'
+import { getApiErrorCode } from '~/utils/error.utils'
 
 const Separator: React.FC<{ label?: string }> = ({ label }) => (
   <span className="flex flex-row w-full items-center mt-4">
@@ -43,7 +43,7 @@ const AddRecipePage: NextPage = () => {
   const [recipeImgPreviewError, setRecipeImgPreviewError] = useState(false)
   const [recipeImgLoading, setRecipeImgLoading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitOnError, setIsSubmitOnError] = useState(false)
+  const [submitErrorMessage, setSubmitErrorMessage] = useState<string | undefined>()
 
   const [animateAway, setAnimateAway] = useState(false)
   const fadeInStyle = useFadeInStyle()
@@ -94,21 +94,28 @@ const AddRecipePage: NextPage = () => {
         }
       } catch (error) {
         console.error('Error submitting recipe', error)
-        setIsSubmitOnError(true)
-
-        if (error === EErrorCode.HTTP_401) {
-          localStorage.setItem(
-            'recipe',
-            JSON.stringify({
-              title: formState.recipeTitle || '',
-              url: formState.recipeUrl,
-              imgUrl: recipeImgSrcUrl,
-              instructions: formState.instructions,
-              ingredients: formState.ingredients,
-              tips: formState.tips
-            })
-          )
-          router.push('/login?redirectTo=add-recipe?prefilled=true')
+        const errorCode = getApiErrorCode(error)
+        switch (errorCode) {
+          case 401:
+            localStorage.setItem(
+              'recipe',
+              JSON.stringify({
+                title: formState.recipeTitle || '',
+                url: formState.recipeUrl,
+                imgUrl: recipeImgSrcUrl,
+                instructions: formState.instructions,
+                ingredients: formState.ingredients,
+                tips: formState.tips
+              })
+            )
+            router.push('/login?redirectTo=add-recipe?prefilled=true')
+            break
+          case 413:
+            setSubmitErrorMessage('Te groot om op te slaan. Let er op dat de afbeelding kleiner dan 5MB is.')
+            break
+          default:
+            setSubmitErrorMessage(`Kon recept niet opslaan. (${errorCode})`)
+            break
         }
       } finally {
         setIsSubmitting(false)
@@ -126,7 +133,7 @@ const AddRecipePage: NextPage = () => {
       value
     })
 
-    setIsSubmitOnError(false)
+    setSubmitErrorMessage(undefined)
 
     if (event.target.name === ERecipeKeys.recipeUrl || event.target.name === ERecipeKeys.imgUrl) {
       setRecipeImgPreviewError(false)
@@ -139,13 +146,6 @@ const AddRecipePage: NextPage = () => {
       const file = event.target.files?.[0]
       const fileReader = new FileReader()
       fileReader.onload = () => {
-        // const size = new TextEncoder().encode(fileReader.result as string).length
-        // if (size > 1000000) {
-        //   // TODO
-        //   alert('File too big (> 1MB)')
-        //   return
-        // }
-
         const fileLocalUrl = URL.createObjectURL(file)
         setRecipeImgPreviewError(false)
         setRecipeImgSrcUrl(fileLocalUrl)
@@ -301,8 +301,8 @@ const AddRecipePage: NextPage = () => {
             {isSubmitting && <Loading height={40} width={66} />}
           </span>
 
-          {isSubmitOnError && (
-            <h6 className="text-error font-bold text-center mt-2">Kon recept niet opslaan. Is alles correct ingevuld?</h6>
+          {submitErrorMessage && submitErrorMessage.length > 0 && (
+            <h6 className="text-error font-bold text-center mt-2">{submitErrorMessage}</h6>
           )}
         </form>
       </Card>
