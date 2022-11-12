@@ -4,6 +4,7 @@ import Image from 'next/image'
 import LinkCard from '../LinkCard/LinkCard'
 import MarkdownSnippet from '../MarkdownSnippet/MarkdownSnippet'
 import styles from './RecipeData.module.css'
+import { PillButton } from '../atoms/PillButton/PillButton.component'
 
 type TRecipeDataProps = {
   recipe: TRecipe
@@ -115,7 +116,14 @@ const RecipeDataLayout: React.FC<TLayoutProps> = ({ primary, secondary, tertiary
 
 const RecipeData: React.FC<TRecipeDataProps> = ({ recipe }) => {
   return (
-    <div className="pt-8 px-4 lg:px-0">
+    <div className="px-4 lg:px-0">
+      <div className="flex flex-row py-4">
+        {recipe.categories?.map(cat => (
+          <PillButton className="mr-2" onClick={() => undefined}>
+            {cat}
+          </PillButton>
+        ))}
+      </div>
       <RecipeDataLayout
         primary={!!recipe.instructions && <Instructions markdownInstructions={recipe.instructions} />}
         secondary={!!recipe.tips && <Tips markdownTips={recipe.tips} />}

@@ -1,0 +1,41 @@
+.buttonOn {
+  @apply bg-dark border-dark text-lightest;
+}
+
+.buttonOff {
+  @apply text-dark border-primary;
+}
+
+.buttonCommon {
+  @apply rounded-full text-sm px-2 py-1 border-2 transition duration-100 ease-out;
+}
+
+.buttonCommon:focus {
+  outline-width: 0;
+}
+
+.pillOnly {
+  @apply cursor-default;
+}
+
+/* touch screens */
+@media(hover: none) and (pointer: coarse) {
+  .buttonOff:hover, .buttonOff:active {
+    @apply border-dark text-dark;
+  }
+
+  .buttonOn:hover, .buttonOn:active {
+    @apply opacity-50;
+  }
+}
+
+/* mouse */
+@media(hover: hover) and (pointer: fine) {
+  .buttonOff:hover, .buttonOff:active {
+    @apply border-dark text-dark ring-1 ring-dark ring-inset;
+  }
+
+  .buttonOn:hover, .buttonOn:active {
+    @apply bg-primary border-primary;
+  }
+}
