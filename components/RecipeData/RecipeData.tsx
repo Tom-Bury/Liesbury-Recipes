@@ -117,9 +117,9 @@ const RecipeDataLayout: React.FC<TLayoutProps> = ({ primary, secondary, tertiary
 const RecipeData: React.FC<TRecipeDataProps> = ({ recipe }) => {
   return (
     <div className="px-4 lg:px-0">
-      <div className="flex flex-row py-4">
+      <div className="flex flex-row p-4">
         {recipe.categories?.map(cat => (
-          <PillButton className="mr-2" onClick={() => undefined}>
+          <PillButton className="mr-2" toggleValue>
             {cat}
           </PillButton>
         ))}

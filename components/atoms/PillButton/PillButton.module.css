@@ -20,22 +20,22 @@
 
 /* touch screens */
 @media(hover: none) and (pointer: coarse) {
-  .buttonOff:hover, .buttonOff:active {
+  .pillButton.buttonOff:hover, .pillButton.buttonOff:active {
     @apply border-dark text-dark;
   }
 
-  .buttonOn:hover, .buttonOn:active {
+  .pillButton.buttonOn:hover, .pillButton.buttonOn:active {
     @apply opacity-50;
   }
 }
 
 /* mouse */
 @media(hover: hover) and (pointer: fine) {
-  .buttonOff:hover, .buttonOff:active {
+  .pillButton.buttonOff:hover, .pillButton.buttonOff:active {
     @apply border-dark text-dark ring-1 ring-dark ring-inset;
   }
 
-  .buttonOn:hover, .buttonOn:active {
+  .pillButton.buttonOn:hover, .pillButton.buttonOn:active {
     @apply bg-primary border-primary;
   }
 }
