@@ -133,7 +133,6 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
               // eslint-disable-next-line no-alert, no-restricted-globals
               const confirmed = confirm(`Zeker dat je ${recipe.title} wilt verwijderen?`)
               if (confirmed) {
-                localStorage.setItem('recipe', JSON.stringify(recipe))
                 await RecipesApi.delete(recipe.id)
                 router.back()
               }
@@ -143,6 +142,7 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
           </FloatingActionButton>
           <FloatingActionButton
             onPress={() => {
+              localStorage.setItem('recipe', JSON.stringify(recipe))
               router.push({
                 pathname: '/add-recipe',
                 query: {
