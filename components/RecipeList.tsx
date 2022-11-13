@@ -32,23 +32,21 @@ const RecipeList: React.FC<TProps> = ({ recipes, scrollToRecipeWithId, className
   }, [initialRecipeIdToScrollTo])
 
   return (
-    <HorizontalCenterLayout>
-      <GridLayout className={className}>
-        {recipes.map((recipe: TRecipe, i) => (
-          <LinkWrap
-            key={recipe.id}
-            ref={el => {
-              recipeRefs.current[recipe.id] = el
-            }}
-            href={`/recipe/${recipe.id}`}
-            className="rmMobileClickBox w-full"
-            onClick={onRecipeClick ? () => onRecipeClick(recipe.id) : undefined}
-          >
-            <RecipeCard title={recipe.title} imgPath={recipe.imgUrl} blurHash={recipe.blurHash} preloadImage={i <= 9} />
-          </LinkWrap>
-        ))}
-      </GridLayout>
-    </HorizontalCenterLayout>
+    <GridLayout className={className}>
+      {recipes.map((recipe: TRecipe, i) => (
+        <LinkWrap
+          key={recipe.id}
+          ref={el => {
+            recipeRefs.current[recipe.id] = el
+          }}
+          href={`/recipe/${recipe.id}`}
+          className="rmMobileClickBox w-full"
+          onClick={onRecipeClick ? () => onRecipeClick(recipe.id) : undefined}
+        >
+          <RecipeCard title={recipe.title} imgPath={recipe.imgUrl} blurHash={recipe.blurHash} preloadImage={i <= 9} />
+        </LinkWrap>
+      ))}
+    </GridLayout>
   )
 }
 

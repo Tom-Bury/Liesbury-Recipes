@@ -24,6 +24,7 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
   const [isLoading, setIsLoading] = React.useState(false)
   const { currentRecipeId, setRecipeIdToNavigateBackTo, resetSavedRecipeToNavigateBackTo } = useIndexPageCurrentRecipe()
   const fadeInStyle = useFadeInStyle()
+  const widthLimitClasses = 'w-full max-w-screen-md xl:max-w-screen-xl'
 
   useEffect(() => {
     ;(async () => {
@@ -51,22 +52,27 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
         <div className="max-w-xl w-full">
           <SearchBar onSearch={onSubmitSearch} placeholder={`Zoeken in ${recipes.length} recepten...`} />
         </div>
+        <div className={widthLimitClasses}>Test</div>
       </HorizontalCenterLayout>
-      <hr className="mb-8 border-t-4 border-primary lg:mx-8" />
-      {isLoading && (
-        <HorizontalCenterLayout>
-          <Loading className="py-8" />
-        </HorizontalCenterLayout>
-      )}
-      {!isLoading && currRecipes.length > 0 && (
-        <RecipeList recipes={currRecipes} scrollToRecipeWithId={currentRecipeId} onRecipeClick={setRecipeIdToNavigateBackTo} />
-      )}
-      {!isLoading && currRecipes.length === 0 && (
-        <HorizontalCenterLayout className="h-screen">
-          <h2 className="text-darkest mb-8">Geen recepten gevonden 😭</h2>
-          <h3 className="text-primary">Misschien kan je iets anders proberen zoeken?</h3>
-        </HorizontalCenterLayout>
-      )}
+      <hr className="mb-8 border-t-4 border-primary" />
+      <HorizontalCenterLayout className="mx-4">
+        <div className={widthLimitClasses}>
+          {isLoading && (
+            <HorizontalCenterLayout>
+              <Loading className="py-8" />
+            </HorizontalCenterLayout>
+          )}
+          {!isLoading && currRecipes.length > 0 && (
+            <RecipeList recipes={currRecipes} scrollToRecipeWithId={currentRecipeId} onRecipeClick={setRecipeIdToNavigateBackTo} />
+          )}
+          {!isLoading && currRecipes.length === 0 && (
+            <HorizontalCenterLayout>
+              <h2 className="text-darkest my-8">Geen recepten gevonden 😭</h2>
+              <h3 className="text-primary">Misschien kan je iets anders proberen zoeken?</h3>
+            </HorizontalCenterLayout>
+          )}
+        </div>
+      </HorizontalCenterLayout>
     </ColumnLayout>
   )
 }
