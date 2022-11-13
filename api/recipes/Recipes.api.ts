@@ -1,4 +1,5 @@
 import { ApiClient } from 'api/client'
+import { TCategory } from 'backend/types/category.types'
 import { TRecipe } from 'backend/types/recipes.types'
 
 type TAddRecipeBody = {
@@ -35,5 +36,9 @@ export const RecipesApi = {
         query
       }
     }).json()
+  },
+
+  getCategoryCounts: async (): Promise<TCategory[]> => {
+    return ApiClient.get('recipes/categories').json()
   }
 }
