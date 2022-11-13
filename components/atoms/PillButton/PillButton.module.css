@@ -7,7 +7,7 @@
 }
 
 .buttonCommon {
-  @apply rounded-full text-sm px-2 py-1 border-2 transition duration-100 ease-out;
+  @apply rounded-full text-sm whitespace-nowrap px-2 py-1 border-2 transition duration-100 ease-out;
 }
 
 .buttonCommon:focus {

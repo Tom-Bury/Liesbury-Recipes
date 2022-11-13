@@ -5,33 +5,32 @@ import { TRecipe } from 'backend/types/recipes.types'
 import { getLastNRecipes } from 'backend/recipes'
 import useFadeInStyle from 'hooks/useFadeInStyle'
 import { useIndexPageCurrentRecipe } from 'hooks/useIndexPageCurrentRecipe'
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { useRouter } from 'next/router'
 import { RecipesApi } from 'api/recipes/Recipes.api'
-import { RootApi } from 'api/Root.api'
+import { useVersion } from 'hooks/useVersion.hook'
+import { useSelectableItems } from 'hooks/useSelectableItems.hook'
 import SearchBar from '~/components/SearchBar/SearchBar'
 import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
 import Loading from '~/components/Loading'
+import { PillButton } from '~/components/atoms/PillButton/PillButton.component'
 
 type TProps = {
   recipes: TRecipe[]
+  categories: { [category: string]: boolean }
 }
 
-const IndexPage: NextPage<TProps> = ({ recipes }) => {
+const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
+  useVersion()
   const router = useRouter()
   const [currRecipes, setCurrRecipes] = React.useState(recipes)
   const [isLoading, setIsLoading] = React.useState(false)
   const { currentRecipeId, setRecipeIdToNavigateBackTo, resetSavedRecipeToNavigateBackTo } = useIndexPageCurrentRecipe()
+  const { items: categorySelections, toggleItem: toggleCategory } = useSelectableItems(categories)
+
   const fadeInStyle = useFadeInStyle()
   const widthLimitClasses = 'w-full max-w-screen-md xl:max-w-screen-xl'
-
-  useEffect(() => {
-    ;(async () => {
-      const res = await RootApi.version()
-      console.log(`Backend: ${res}`)
-    })()
-  }, [])
 
   const onSubmitSearch = async (query: string) => {
     setIsLoading(true)
@@ -52,7 +51,17 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
         <div className="max-w-xl w-full">
           <SearchBar onSearch={onSubmitSearch} placeholder={`Zoeken in ${recipes.length} recepten...`} />
         </div>
-        <div className={widthLimitClasses}>Test</div>
+        {Object.keys(categorySelections).length > 0 && (
+          <div className={`${widthLimitClasses} flex flex-row flex-wrap mt-4`}>
+            {Object.entries(categorySelections).map(([category, enabled]) => {
+              return (
+                <PillButton className="mr-2 mt-2" toggleValue={enabled} capitalize onClick={() => toggleCategory(category)}>
+                  {category}
+                </PillButton>
+              )
+            })}
+          </div>
+        )}
       </HorizontalCenterLayout>
       <hr className="mb-8 border-t-4 border-primary" />
       <HorizontalCenterLayout className="mx-4">
@@ -79,9 +88,15 @@ const IndexPage: NextPage<TProps> = ({ recipes }) => {
 
 export const getStaticProps: GetStaticProps = async () => {
   const recipes = await getLastNRecipes(100)
+  const categories = new Set((await RecipesApi.getCategoryCounts()).sort((a, b) => b.nbEntries - a.nbEntries))
+  const categorySelections: { [key: string]: boolean } = {}
+  categories.forEach(category => {
+    categorySelections[category.categoryId] = false
+  })
   return {
     props: {
-      recipes
+      recipes,
+      categories: categorySelections
     },
     revalidate: 60
   }
