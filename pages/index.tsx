@@ -15,6 +15,7 @@ import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
 import Loading from '~/components/Loading'
 import { PillButton } from '~/components/atoms/PillButton/PillButton.component'
+import { VersionDisclaimerFooter } from '~/components/VersionDisclaimerFooter'
 
 type TProps = {
   recipes: TRecipe[]
@@ -62,43 +63,46 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
   }, [categorySelections, recipes])
 
   return (
-    <ColumnLayout className={`pb-8 ${fadeInStyle}`}>
-      <Banner onClick={onBannerClick} />
-      <HorizontalCenterLayout className="my-8 mx-4">
-        <div className="max-w-xl w-full">
-          <SearchBar onSearch={onSubmitSearch} placeholder={`Zoeken in ${recipes.length} recepten...`} />
-        </div>
-        {Object.keys(categorySelections).length > 0 && (
-          <div className={`${widthLimitClasses} flex flex-row flex-wrap mt-4`}>
-            {Object.entries(categorySelections).map(([category, enabled]) => {
-              return (
-                <PillButton className="mr-2 mt-2" toggleValue={enabled} capitalize onClick={() => toggleCategory(category)}>
-                  {category}
-                </PillButton>
-              )
-            })}
+    <ColumnLayout>
+      <ColumnLayout className={`pb-8 ${fadeInStyle}`}>
+        <Banner onClick={onBannerClick} />
+        <HorizontalCenterLayout className="my-8 mx-4">
+          <div className="max-w-xl w-full">
+            <SearchBar onSearch={onSubmitSearch} placeholder={`Zoeken in ${recipes.length} recepten...`} />
           </div>
-        )}
-      </HorizontalCenterLayout>
-      <hr className="mb-8 border-t-4 border-primary" />
-      <HorizontalCenterLayout className="mx-4">
-        <div className={widthLimitClasses}>
-          {isLoading && (
-            <HorizontalCenterLayout>
-              <Loading className="py-8" />
-            </HorizontalCenterLayout>
+          {Object.keys(categorySelections).length > 0 && (
+            <div className={`${widthLimitClasses} flex flex-row flex-wrap mt-4`}>
+              {Object.entries(categorySelections).map(([category, enabled]) => {
+                return (
+                  <PillButton className="mr-2 mt-2" toggleValue={enabled} capitalize onClick={() => toggleCategory(category)}>
+                    {category}
+                  </PillButton>
+                )
+              })}
+            </div>
           )}
-          {!isLoading && currRecipes.length > 0 && (
-            <RecipeList recipes={currRecipes} scrollToRecipeWithId={currentRecipeId} onRecipeClick={setRecipeIdToNavigateBackTo} />
-          )}
-          {!isLoading && currRecipes.length === 0 && (
-            <HorizontalCenterLayout>
-              <h2 className="text-darkest my-8">Geen recepten gevonden 😭</h2>
-              <h3 className="text-primary">Misschien kan je iets anders proberen zoeken?</h3>
-            </HorizontalCenterLayout>
-          )}
-        </div>
-      </HorizontalCenterLayout>
+        </HorizontalCenterLayout>
+        <hr className="mb-8 border-t-4 border-primary" />
+        <HorizontalCenterLayout className="mx-4">
+          <div className={widthLimitClasses}>
+            {isLoading && (
+              <HorizontalCenterLayout>
+                <Loading className="py-8" />
+              </HorizontalCenterLayout>
+            )}
+            {!isLoading && currRecipes.length > 0 && (
+              <RecipeList recipes={currRecipes} scrollToRecipeWithId={currentRecipeId} onRecipeClick={setRecipeIdToNavigateBackTo} />
+            )}
+            {!isLoading && currRecipes.length === 0 && (
+              <HorizontalCenterLayout>
+                <h2 className="text-darkest my-8">Geen recepten gevonden 😭</h2>
+                <h3 className="text-primary">Misschien kan je iets anders proberen zoeken?</h3>
+              </HorizontalCenterLayout>
+            )}
+          </div>
+        </HorizontalCenterLayout>
+      </ColumnLayout>
+      <VersionDisclaimerFooter />
     </ColumnLayout>
   )
 }
