@@ -7,7 +7,6 @@ import { useRouter } from 'next/router'
 import { TRecipe } from 'backend/types/recipes.types'
 import { addRecipeFormReducer, ERecipeKeys } from 'reducers/add-recipe.reducer'
 import useFadeInStyle from 'hooks/useFadeInStyle'
-import { EErrorCode } from 'types/enums'
 import { PreviewImageApi } from 'api/preview-image/PreviewImage.api'
 import { RecipesApi } from 'api/recipes/Recipes.api'
 import { useIsLoggedIn } from 'hooks/useIsLoggedIn.hook'
@@ -17,7 +16,9 @@ import ImageIcon from '~/components/icons/Image.icon'
 import Input from '~/components/atoms/Input/Input'
 import Loading from '~/components/Loading'
 import MarkdownInputArea from '~/components/atoms/MarkdownInputArea/MarkdownInputArea.component'
-import ListInput from '~/components/atoms/ListInput/ListInput.component'
+import { getApiErrorCode } from '~/utils/error.utils'
+import { RegularListInput } from '~/components/atoms/ListInput/RegularListInput.component'
+import { PillButtonListInput } from '~/components/atoms/ListInput/PillButtonListInput.component'
 
 const Separator: React.FC<{ label?: string }> = ({ label }) => (
   <span className="flex flex-row w-full items-center mt-4">
@@ -34,7 +35,7 @@ const AddRecipePage: NextPage = () => {
     if (isLoggedIn === false) {
       router.replace('/login?redirectTo=add-recipe?prefilled=true')
     }
-  }, [isLoggedIn])
+  }, [isLoggedIn, router])
 
   const [shouldUpdateRecipe, setShouldUpdateRecipe] = useState(!!router.query.prefilled)
 
@@ -43,7 +44,7 @@ const AddRecipePage: NextPage = () => {
   const [recipeImgPreviewError, setRecipeImgPreviewError] = useState(false)
   const [recipeImgLoading, setRecipeImgLoading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitOnError, setIsSubmitOnError] = useState(false)
+  const [submitErrorMessage, setSubmitErrorMessage] = useState<string | undefined>()
 
   const [animateAway, setAnimateAway] = useState(false)
   const fadeInStyle = useFadeInStyle()
@@ -63,6 +64,15 @@ const AddRecipePage: NextPage = () => {
         setShouldUpdateRecipe(false)
       }
     }
+  }, [shouldUpdateRecipe])
+
+  const [allAvailableCategories, setAllAvailableCategories] = useState<Set<string> | undefined>()
+
+  useEffect(() => {
+    ;(async () => {
+      const categoryCounts = await RecipesApi.getCategoryCounts()
+      setAllAvailableCategories(new Set(categoryCounts.map(category => category.categoryId)))
+    })()
   }, [])
 
   if (!isLoggedIn) {
@@ -83,6 +93,7 @@ const AddRecipePage: NextPage = () => {
           previewImgFileData: formState.imgFile,
           instructions: formState.instructions,
           ingredients: formState.ingredients,
+          categories: formState.categories,
           tips: formState.tips
         }
         const result =
@@ -94,21 +105,29 @@ const AddRecipePage: NextPage = () => {
         }
       } catch (error) {
         console.error('Error submitting recipe', error)
-        setIsSubmitOnError(true)
-
-        if (error === EErrorCode.HTTP_401) {
-          localStorage.setItem(
-            'recipe',
-            JSON.stringify({
-              title: formState.recipeTitle || '',
-              url: formState.recipeUrl,
-              imgUrl: recipeImgSrcUrl,
-              instructions: formState.instructions,
-              ingredients: formState.ingredients,
-              tips: formState.tips
-            })
-          )
-          router.push('/login?redirectTo=add-recipe?prefilled=true')
+        const errorCode = getApiErrorCode(error)
+        switch (errorCode) {
+          case 401:
+            localStorage.setItem(
+              'recipe',
+              JSON.stringify({
+                title: formState.recipeTitle || '',
+                url: formState.recipeUrl,
+                imgUrl: recipeImgSrcUrl,
+                instructions: formState.instructions,
+                ingredients: formState.ingredients,
+                categories: formState.categories,
+                tips: formState.tips
+              })
+            )
+            router.push('/login?redirectTo=add-recipe?prefilled=true')
+            break
+          case 413:
+            setSubmitErrorMessage('Te groot om op te slaan. Let er op dat de afbeelding kleiner dan 5MB is.')
+            break
+          default:
+            setSubmitErrorMessage(`Kon recept niet opslaan. (${errorCode})`)
+            break
         }
       } finally {
         setIsSubmitting(false)
@@ -126,7 +145,7 @@ const AddRecipePage: NextPage = () => {
       value
     })
 
-    setIsSubmitOnError(false)
+    setSubmitErrorMessage(undefined)
 
     if (event.target.name === ERecipeKeys.recipeUrl || event.target.name === ERecipeKeys.imgUrl) {
       setRecipeImgPreviewError(false)
@@ -139,13 +158,6 @@ const AddRecipePage: NextPage = () => {
       const file = event.target.files?.[0]
       const fileReader = new FileReader()
       fileReader.onload = () => {
-        // const size = new TextEncoder().encode(fileReader.result as string).length
-        // if (size > 1000000) {
-        //   // TODO
-        //   alert('File too big (> 1MB)')
-        //   return
-        // }
-
         const fileLocalUrl = URL.createObjectURL(file)
         setRecipeImgPreviewError(false)
         setRecipeImgSrcUrl(fileLocalUrl)
@@ -199,19 +211,35 @@ const AddRecipePage: NextPage = () => {
     setRecipeImgPreviewError(true)
   }
 
-  const handleAddIngredient = (ingr: string) => {
+  const handleAddListItem = (key: ERecipeKeys.ingredients) => (value: string) => {
     dispatchFormAction({
       type: 'list-add',
-      key: ERecipeKeys.ingredients,
-      value: ingr.trim()
+      key,
+      value
     })
   }
 
-  const handleRemoveIngredient = (index: number) => {
+  const handleRemoveListItem = (key: ERecipeKeys.ingredients) => (index: number) => {
     dispatchFormAction({
       type: 'list-remove',
-      key: ERecipeKeys.ingredients,
+      key,
       index
+    })
+  }
+
+  const handleAddSetItem = (key: ERecipeKeys.categories) => (value: string) => {
+    dispatchFormAction({
+      type: 'set-add',
+      key,
+      value
+    })
+  }
+
+  const handleRemoveSetItem = (key: ERecipeKeys.categories) => (value: string) => {
+    dispatchFormAction({
+      type: 'set-remove',
+      key,
+      value
     })
   }
 
@@ -226,7 +254,7 @@ const AddRecipePage: NextPage = () => {
               <div className="flex-1">
                 <div className="grid grid-rows-1 gap-y-3">
                   <Input label="Naam" id={ERecipeKeys.recipeTitle} onChange={handleInputChange} value={formState.recipeTitle || ''} />
-                  <Separator label="Optioneel" />
+                  <Separator label="Afbeelding" />
                   <Input
                     label="Link naar het recept"
                     id={ERecipeKeys.recipeUrl}
@@ -243,7 +271,7 @@ const AddRecipePage: NextPage = () => {
                     onBlur={setImageSource}
                   />
                   <span className="flex flex-row w-full items-center">
-                    <p className="mr-2 whitespace-nowrap italic">Of upload:</p>
+                    <p className="mr-2 whitespace-nowrap font-semibold">Of upload:</p>
                     <input
                       type="file"
                       accept="image/*"
@@ -268,22 +296,29 @@ const AddRecipePage: NextPage = () => {
             </div>
           </fieldset>
           <fieldset className="mt-4">
-            <ListInput
+            <RegularListInput
               label="Ingrediënten"
               id={ERecipeKeys.ingredients}
               items={formState.ingredients}
-              onAdd={handleAddIngredient}
-              onRemove={handleRemoveIngredient}
+              onAdd={handleAddListItem(ERecipeKeys.ingredients)}
+              onRemove={handleRemoveListItem(ERecipeKeys.ingredients)}
             />
             <Separator />
-
+            <PillButtonListInput
+              label="Categorieën"
+              id={ERecipeKeys.categories}
+              enabledItems={formState.categories}
+              extraItems={allAvailableCategories}
+              onAdd={handleAddSetItem(ERecipeKeys.categories)}
+              onRemove={handleRemoveSetItem(ERecipeKeys.categories)}
+            />
+            <Separator />
             <MarkdownInputArea
               label="Instructies"
               id={ERecipeKeys.instructions}
               textAreaValue={formState.instructions || ''}
               onChange={handleTextAreaChange(ERecipeKeys.instructions)}
             />
-
             <Separator />
             <MarkdownInputArea
               label="Lizzy's tips"
@@ -301,8 +336,8 @@ const AddRecipePage: NextPage = () => {
             {isSubmitting && <Loading height={40} width={66} />}
           </span>
 
-          {isSubmitOnError && (
-            <h6 className="text-error font-bold text-center mt-2">Kon recept niet opslaan. Is alles correct ingevuld?</h6>
+          {submitErrorMessage && submitErrorMessage.length > 0 && (
+            <h6 className="text-error font-bold text-center mt-2">{submitErrorMessage}</h6>
           )}
         </form>
       </Card>

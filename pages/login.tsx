@@ -20,7 +20,7 @@ const LoginPage: NextPage = () => {
     if (isLoggedIn === true) {
       router.replace('/')
     }
-  }, [isLoggedIn])
+  }, [isLoggedIn, router])
 
   const [password, setPassword] = useState('')
   const [isNotAuthorized, setIsNotAuthorized] = useState(false)

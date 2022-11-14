@@ -5,7 +5,7 @@ const useFadeInStyle = (): string => {
 
   useEffect(() => {
     setFadedIn(true)
-  })
+  }, [])
 
   return `transition-opacity duration-300 ${fadedIn ? 'opacity-100' : 'opacity-0'}`
 }

@@ -1,40 +1,14 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import * as React from 'react'
 import { useCallback, useState } from 'react'
 import Button from '../Button/Button'
 
-type TListInputProps = {
-  label: string
+export type TListInputProps = {
   id: string
-  items?: string[]
-  onAdd: (items: string) => void
-  onRemove: (index: number) => void
+  label: string
+  onAdd: (item: string) => void
 }
 
-type TListItemProps = {
-  index: number
-  onPress: (index: number) => void
-}
-
-const ListItem: React.FC<TListItemProps> = ({ children, index, onPress }) => {
-  const [isHover, setIsHovered] = useState(false)
-
-  return (
-    <div
-      className="cursor-pointer inline-flex flex-row items-center rounded w-full bg-lightest shadow-inner px-2"
-      onClick={() => onPress(index)}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      key={`${children}`}
-    >
-      <p className={isHover ? 'line-through opacity-50' : ''}>{children}</p>
-      <span className={isHover ? 'font-bold text-error ml-auto' : 'invisible'}>×</span>
-    </div>
-  )
-}
-
-const ListInput: React.FC<TListInputProps> = ({ label, items, onAdd, onRemove }) => {
+const ListInput: React.FC<TListInputProps> = ({ label, onAdd, children }) => {
   const [newElement, setNewElement] = useState('')
 
   const handleNewElementInputChange = useCallback(
@@ -81,16 +55,7 @@ const ListInput: React.FC<TListInputProps> = ({ label, items, onAdd, onRemove })
           +
         </Button>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mt-4 gap-2">
-        {items &&
-          items.map((item, i) => {
-            return (
-              <ListItem index={i} onPress={() => onRemove(i)}>
-                {item}
-              </ListItem>
-            )
-          })}
-      </div>
+      {children}
     </>
   )
 }
