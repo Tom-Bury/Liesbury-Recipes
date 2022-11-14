@@ -1,5 +1,5 @@
 import { TRecipe } from 'backend/types/recipes.types'
-import { HorizontalCenterLayout, GridLayout } from 'layouts'
+import { GridLayout } from 'layouts'
 import * as React from 'react'
 import { useEffect, useRef, useState } from 'react'
 import LinkWrap from './LinkWrap'
