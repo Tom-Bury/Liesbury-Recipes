@@ -1,6 +1,13 @@
 module.exports = {
   root: true,
-  extends: ['blvd/react', 'prettier', 'prettier/@typescript-eslint', 'prettier/react', 'plugin:prettier/recommended'],
+  extends: [
+    'blvd/react',
+    'prettier',
+    'prettier/@typescript-eslint',
+    'prettier/react',
+    'plugin:prettier/recommended',
+    'plugin:react-hooks/recommended'
+  ],
   plugins: ['prettier'],
   rules: {
     'jsx-a11y/anchor-is-valid': 'off',
@@ -41,6 +48,11 @@ module.exports = {
   settings: {
     'import/resolver': {
       typescript: {}
+    },
+    react: {
+      version: 'detect' // React version. "detect" automatically picks the version you have installed.
+      // You can also use `16.0`, `16.3`, etc, if you want to override the detected value.
+      // It will default to "latest" and warn if missing, and to "detect" in the future
     }
   }
 }
