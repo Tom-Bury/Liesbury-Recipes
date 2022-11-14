@@ -38,7 +38,15 @@ export const RecipesApi = {
     }).json()
   },
 
+  getRecipesForCategories: async (categories: string[]): Promise<TRecipe[]> => {
+    return ApiClient.post('recipes/categories', {
+      json: {
+        query: categories
+      }
+    }).json()
+  },
+
   getCategoryCounts: async (): Promise<TCategory[]> => {
-    return ApiClient.get('recipes/categories').json()
+    return ApiClient.get('recipes/categories/counts').json()
   }
 }

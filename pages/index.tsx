@@ -5,7 +5,7 @@ import { TRecipe } from 'backend/types/recipes.types'
 import { getLastNRecipes } from 'backend/recipes'
 import useFadeInStyle from 'hooks/useFadeInStyle'
 import { useIndexPageCurrentRecipe } from 'hooks/useIndexPageCurrentRecipe'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { RecipesApi } from 'api/recipes/Recipes.api'
 import { useVersion } from 'hooks/useVersion.hook'
@@ -24,8 +24,8 @@ type TProps = {
 const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
   useVersion()
   const router = useRouter()
-  const [currRecipes, setCurrRecipes] = React.useState(recipes)
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [currRecipes, setCurrRecipes] = useState(recipes)
+  const [isLoading, setIsLoading] = useState(false)
   const { currentRecipeId, setRecipeIdToNavigateBackTo, resetSavedRecipeToNavigateBackTo } = useIndexPageCurrentRecipe()
   const { items: categorySelections, toggleItem: toggleCategory } = useSelectableItems(categories)
 
@@ -42,7 +42,24 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
   const onBannerClick = useCallback(() => {
     resetSavedRecipeToNavigateBackTo()
     router.push('add-recipe')
-  }, [])
+  }, [resetSavedRecipeToNavigateBackTo, router])
+
+  useEffect(() => {
+    ;(async () => {
+      const selectedCategories: string[] = []
+      Object.entries(categorySelections).forEach(([category, enabled]) => {
+        if (enabled) {
+          selectedCategories.push(category)
+        }
+      })
+      if (selectedCategories.length > 0) {
+        const categoryRecipes = await RecipesApi.getRecipesForCategories(selectedCategories)
+        setCurrRecipes(categoryRecipes)
+      } else {
+        setCurrRecipes(recipes)
+      }
+    })()
+  }, [categorySelections, recipes])
 
   return (
     <ColumnLayout className={`pb-8 ${fadeInStyle}`}>
