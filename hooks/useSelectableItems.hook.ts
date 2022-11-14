@@ -7,6 +7,7 @@ export const useSelectableItems = (
 ): {
   items: TItemState
   toggleItem: (item: string) => void
+  disableAll: () => void
 } => {
   const [itemsState, setItemsState] = useState(items || {})
 
@@ -18,5 +19,16 @@ export const useSelectableItems = (
       return { ...prevItemsState }
     })
   }
-  return { items: itemsState, toggleItem }
+
+  const disableAll = () => {
+    setItemsState(prevItemsState => {
+      const result: TItemState = {}
+      Object.keys(prevItemsState).forEach(item => {
+        result[item] = false
+      })
+      return result
+    })
+  }
+
+  return { items: itemsState, toggleItem, disableAll }
 }
