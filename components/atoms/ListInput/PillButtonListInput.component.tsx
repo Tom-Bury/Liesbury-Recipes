@@ -1,27 +1,29 @@
 import React, { useEffect, useState } from 'react'
+import { setFromLists } from '~/utils/set.utils'
 import { PillButton } from '../PillButton/PillButton.component'
 import ListInput, { TListInputProps } from './ListInput.component'
 
 type TPillButtonListInputProps = {
-  items: Set<string> | undefined
+  enabledItems?: Set<string>
+  extraItems?: Set<string>
   onRemove: (item: string) => void
 } & TListInputProps
 
 export const PillButtonListInput: React.FC<TPillButtonListInputProps> = props => {
-  const { items, onRemove, onAdd } = props
-  const [allItems, setAllItems] = useState(new Set(items))
+  const { enabledItems, extraItems, onRemove, onAdd } = props
+  const [allItems, setAllItems] = useState(setFromLists(enabledItems, extraItems))
 
   useEffect(() => {
-    setAllItems(prevAllItems => new Set([...prevAllItems, ...(items || [])]))
-  }, [items])
+    setAllItems(prevAllItems => setFromLists(prevAllItems, enabledItems, extraItems))
+  }, [enabledItems, extraItems])
 
   return (
     <ListInput {...props}>
       <div className="flex flex-row mt-4">
-        {items &&
+        {enabledItems &&
           allItems &&
           [...allItems].map(item => {
-            const included = items.has(item)
+            const included = enabledItems.has(item)
             return (
               <PillButton
                 key={item}

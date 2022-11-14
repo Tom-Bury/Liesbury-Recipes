@@ -64,6 +64,15 @@ const AddRecipePage: NextPage = () => {
         setShouldUpdateRecipe(false)
       }
     }
+  }, [shouldUpdateRecipe])
+
+  const [allAvailableCategories, setAllAvailableCategories] = useState<Set<string> | undefined>()
+
+  useEffect(() => {
+    ;(async () => {
+      const categoryCounts = await RecipesApi.getCategoryCounts()
+      setAllAvailableCategories(new Set(categoryCounts.map(category => category.categoryId)))
+    })()
   }, [])
 
   if (!isLoggedIn) {
@@ -298,7 +307,8 @@ const AddRecipePage: NextPage = () => {
             <PillButtonListInput
               label="Categorieën"
               id={ERecipeKeys.categories}
-              items={formState.categories}
+              enabledItems={formState.categories}
+              extraItems={allAvailableCategories}
               onAdd={handleAddSetItem(ERecipeKeys.categories)}
               onRemove={handleRemoveSetItem(ERecipeKeys.categories)}
             />
