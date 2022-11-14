@@ -105,7 +105,7 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
 
 export const getStaticProps: GetStaticProps = async () => {
   const recipes = await getLastNRecipes(100)
-  const categories = new Set((await RecipesApi.getCategoryCounts()).sort((a, b) => b.nbEntries - a.nbEntries))
+  const categories = new Set(await RecipesApi.getCategoryCounts())
   const categorySelections: { [key: string]: boolean } = {}
   categories.forEach(category => {
     categorySelections[category.categoryId] = false

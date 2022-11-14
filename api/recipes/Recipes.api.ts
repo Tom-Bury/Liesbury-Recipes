@@ -47,6 +47,7 @@ export const RecipesApi = {
   },
 
   getCategoryCounts: async (): Promise<TCategory[]> => {
-    return ApiClient.get('recipes/categories/counts').json()
+    const categoryCounts: TCategory[] = await ApiClient.get('recipes/categories/counts').json()
+    return categoryCounts.sort((a, b) => b.nbEntries - a.nbEntries)
   }
 }
