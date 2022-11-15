@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { GetStaticProps, NextPage } from 'next'
-import { ColumnLayout, HorizontalCenterLayout } from 'layouts'
+import { HorizontalCenterLayout } from 'layouts'
 import { TRecipe } from 'backend/types/recipes.types'
 import { getLastNRecipes } from 'backend/recipes'
 import useFadeInStyle from 'hooks/useFadeInStyle'
@@ -63,10 +63,10 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
   }, [categorySelections, recipes])
 
   return (
-    <ColumnLayout>
-      <ColumnLayout className={`pb-8 ${fadeInStyle}`}>
+    <div className={`${fadeInStyle} flex flex-col min-h-screen`}>
+      <div className="mx-4 flex-1">
         <Banner onClick={onBannerClick} />
-        <HorizontalCenterLayout className="my-8 mx-4">
+        <HorizontalCenterLayout className="my-8 md:mx-4">
           <div className="max-w-xl w-full">
             <SearchBar onSearch={onSubmitSearch} placeholder={`Zoeken in ${recipes.length} recepten...`} />
           </div>
@@ -83,7 +83,7 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
           )}
         </HorizontalCenterLayout>
         <hr className="mb-8 border-t-4 border-primary" />
-        <HorizontalCenterLayout className="mx-4">
+        <HorizontalCenterLayout className="md:mx-4">
           <div className={widthLimitClasses}>
             {isLoading && (
               <HorizontalCenterLayout>
@@ -101,9 +101,9 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
             )}
           </div>
         </HorizontalCenterLayout>
-      </ColumnLayout>
+      </div>
       <VersionDisclaimerFooter />
-    </ColumnLayout>
+    </div>
   )
 }
 
