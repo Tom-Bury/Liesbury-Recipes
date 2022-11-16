@@ -7,11 +7,17 @@
 }
 
 .buttonCommon {
-  @apply rounded-full text-sm whitespace-nowrap px-2 py-1 border-2 transition duration-100 ease-out;
+  @apply select-none rounded-full text-sm whitespace-nowrap px-2 py-1 border-2 transition duration-100 ease-out;
+  -webkit-tap-highlight-color: transparent;
+  background-image: none;
 }
 
 .buttonCommon:focus {
   outline-width: 0;
+}
+
+.buttonCommon::-moz-focus-inner {
+  border: 0;
 }
 
 .pillOnly {
@@ -19,23 +25,27 @@
 }
 
 /* touch screens */
-@media(hover: none) and (pointer: coarse) {
-  .pillButton.buttonOff:hover, .pillButton.buttonOff:active {
-    @apply border-dark text-dark;
+@media(hover: none) {
+  .pillButton.buttonOff:active {
+    @apply border-dark text-dark ring-1 ring-dark ring-inset;
   }
 
-  .pillButton.buttonOn:hover, .pillButton.buttonOn:active {
-    @apply opacity-50;
+  .pillButton.buttonOn:active {
+    @apply bg-primary border-primary;
   }
 }
 
 /* mouse */
-@media(hover: hover) and (pointer: fine) {
-  .pillButton.buttonOff:hover, .pillButton.buttonOff:active {
+@media(hover: hover) {
+  .pillButton.buttonOff:hover {
     @apply border-dark text-dark ring-1 ring-dark ring-inset;
   }
 
-  .pillButton.buttonOn:hover, .pillButton.buttonOn:active {
+  .pillButton:active {
+    @apply opacity-50;
+  }
+
+  .pillButton.buttonOn:hover {
     @apply bg-primary border-primary;
   }
 }
