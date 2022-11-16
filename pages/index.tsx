@@ -13,7 +13,6 @@ import { useSelectableItems } from 'hooks/useSelectableItems.hook'
 import SearchBar from '~/components/SearchBar/SearchBar'
 import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
-import Loading from '~/components/Loading'
 import { PillButton } from '~/components/atoms/PillButton/PillButton.component'
 import { VersionDisclaimerFooter } from '~/components/VersionDisclaimerFooter'
 
@@ -28,13 +27,14 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
   const [currRecipes, setCurrRecipes] = useState(recipes)
   const [isLoading, setIsLoading] = useState(false)
   const { currentRecipeId, setRecipeIdToNavigateBackTo, resetSavedRecipeToNavigateBackTo } = useIndexPageCurrentRecipe()
-  const { items: categorySelections, toggleItem: toggleCategory } = useSelectableItems(categories)
+  const { items: categorySelections, toggleItem: toggleCategory, disableAll: toggleAllCategoriesOff } = useSelectableItems(categories)
 
   const fadeInStyle = useFadeInStyle()
   const widthLimitClasses = 'w-full max-w-screen-md xl:max-w-screen-xl'
 
   const onSubmitSearch = async (query: string) => {
     setIsLoading(true)
+    toggleAllCategoriesOff()
     const foundRecipes = await RecipesApi.search(query)
     setCurrRecipes(foundRecipes)
     setIsLoading(false)
@@ -54,10 +54,16 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
         }
       })
       if (selectedCategories.length > 0) {
+        setIsLoading(true)
         const categoryRecipes = await RecipesApi.getRecipesForCategories(selectedCategories)
+        setIsLoading(false)
         setCurrRecipes(categoryRecipes)
       } else {
-        setCurrRecipes(recipes)
+        setIsLoading(true)
+        setTimeout(() => {
+          setCurrRecipes(recipes)
+          setIsLoading(false)
+        }, 100)
       }
     })()
   }, [categorySelections, recipes])
@@ -85,13 +91,12 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
         <hr className="mb-8 border-t-4 border-primary" />
         <HorizontalCenterLayout className="md:mx-4">
           <div className={widthLimitClasses}>
-            {isLoading && (
-              <HorizontalCenterLayout>
-                <Loading className="py-8" />
-              </HorizontalCenterLayout>
-            )}
-            {!isLoading && currRecipes.length > 0 && (
-              <RecipeList recipes={currRecipes} scrollToRecipeWithId={currentRecipeId} onRecipeClick={setRecipeIdToNavigateBackTo} />
+            {currRecipes.length > 0 && (
+              <RecipeList
+                recipes={isLoading ? undefined : currRecipes}
+                scrollToRecipeWithId={currentRecipeId}
+                onRecipeClick={setRecipeIdToNavigateBackTo}
+              />
             )}
             {!isLoading && currRecipes.length === 0 && (
               <HorizontalCenterLayout>
@@ -110,6 +115,7 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
 export const getStaticProps: GetStaticProps = async () => {
   const recipes = await getLastNRecipes(100)
   const categories = new Set(await RecipesApi.getCategoryCounts())
+  console.log(categories)
   const categorySelections: { [key: string]: boolean } = {}
   categories.forEach(category => {
     categorySelections[category.categoryId] = false
