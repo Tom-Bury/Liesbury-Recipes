@@ -13,7 +13,6 @@ import { useSelectableItems } from 'hooks/useSelectableItems.hook'
 import SearchBar from '~/components/SearchBar/SearchBar'
 import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
-import Loading from '~/components/Loading'
 import { PillButton } from '~/components/atoms/PillButton/PillButton.component'
 import { VersionDisclaimerFooter } from '~/components/VersionDisclaimerFooter'
 
