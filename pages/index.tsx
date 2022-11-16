@@ -10,7 +10,6 @@ import { useRouter } from 'next/router'
 import { RecipesApi } from 'api/recipes/Recipes.api'
 import { useVersion } from 'hooks/useVersion.hook'
 import { useSelectableItems } from 'hooks/useSelectableItems.hook'
-import { VERSION } from 'version'
 import SearchBar from '~/components/SearchBar/SearchBar'
 import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
@@ -102,13 +101,6 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
             )}
           </div>
         </HorizontalCenterLayout>
-      </div>
-      <div className="bg-primary text-center text-sm text-light p-8 mt-16 grid grid-col gap-y-2">
-        <p>
-          Meeste afbeeldingen zijn niet zelfgemaakt. <br className="hidden sm:inline" />
-          Alle credits aan de gelinkte originele recepten.
-        </p>
-        <p className="font-semibold">Versie {VERSION}</p>
       </div>
       <VersionDisclaimerFooter />
     </div>
