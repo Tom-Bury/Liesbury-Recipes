@@ -27,13 +27,14 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
   const [currRecipes, setCurrRecipes] = useState(recipes)
   const [isLoading, setIsLoading] = useState(false)
   const { currentRecipeId, setRecipeIdToNavigateBackTo, resetSavedRecipeToNavigateBackTo } = useIndexPageCurrentRecipe()
-  const { items: categorySelections, toggleItem: toggleCategory } = useSelectableItems(categories)
+  const { items: categorySelections, toggleItem: toggleCategory, disableAll: toggleAllCategoriesOff } = useSelectableItems(categories)
 
   const fadeInStyle = useFadeInStyle()
   const widthLimitClasses = 'w-full max-w-screen-md xl:max-w-screen-xl'
 
   const onSubmitSearch = async (query: string) => {
     setIsLoading(true)
+    toggleAllCategoriesOff()
     const foundRecipes = await RecipesApi.search(query)
     setCurrRecipes(foundRecipes)
     setIsLoading(false)
