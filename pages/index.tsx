@@ -16,6 +16,7 @@ import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
 import Loading from '~/components/Loading'
 import { PillButton } from '~/components/atoms/PillButton/PillButton.component'
+import { VersionDisclaimerFooter } from '~/components/VersionDisclaimerFooter'
 
 type TProps = {
   recipes: TRecipe[]
@@ -109,7 +110,7 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
         </p>
         <p className="font-semibold">Versie {VERSION}</p>
       </div>
-      {/* <VersionDisclaimerFooter /> */}
+      <VersionDisclaimerFooter />
     </div>
   )
 }
