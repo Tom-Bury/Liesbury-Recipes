@@ -77,7 +77,7 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
             <SearchBar onSearch={onSubmitSearch} placeholder={`Zoeken in ${recipes.length} recepten...`} />
           </div>
           {Object.keys(categorySelections).length > 0 && (
-            <div className={`${widthLimitClasses} flex flex-row flex-wrap mt-4`}>
+            <div className={`${widthLimitClasses} flex flex-row justify-center flex-wrap mt-4`}>
               {Object.entries(categorySelections).map(([category, enabled]) => {
                 return (
                   <PillButton className="mr-2 mt-2" toggleValue={enabled} capitalize onClick={() => toggleCategory(category)}>
