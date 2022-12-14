@@ -5,12 +5,12 @@ import { TRecipe } from 'backend/types/recipes.types'
 import { getLastNRecipes } from 'backend/recipes'
 import useFadeInStyle from 'hooks/useFadeInStyle'
 import { useIndexPageCurrentRecipe } from 'hooks/useIndexPageCurrentRecipe'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { RecipesApi } from 'api/recipes/Recipes.api'
 import { useVersion } from 'hooks/useVersion.hook'
 import { useSelectableItems } from 'hooks/useSelectableItems.hook'
-import SearchBar from '~/components/SearchBar/SearchBar'
+import SearchBar, { ISearchBar } from '~/components/SearchBar/SearchBar'
 import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
 import { PillButton } from '~/components/atoms/PillButton/PillButton.component'
@@ -24,6 +24,7 @@ type TProps = {
 const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
   useVersion()
   const router = useRouter()
+  const searchRef = useRef<ISearchBar>(null)
   const [currRecipes, setCurrRecipes] = useState(recipes)
   const [isLoading, setIsLoading] = useState(false)
   const { currentRecipeId, setRecipeIdToNavigateBackTo, resetSavedRecipeToNavigateBackTo } = useIndexPageCurrentRecipe()
@@ -53,6 +54,7 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
           selectedCategories.push(category)
         }
       })
+      searchRef.current?.clearSearchInput()
       if (selectedCategories.length > 0) {
         setIsLoading(true)
         const categoryRecipes = await RecipesApi.getRecipesForCategories(selectedCategories)
@@ -74,7 +76,7 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
         <Banner onClick={onBannerClick} />
         <HorizontalCenterLayout className="my-8 md:mx-4">
           <div className="max-w-xl w-full">
-            <SearchBar onSearch={onSubmitSearch} placeholder={`Zoeken in ${recipes.length} recepten...`} />
+            <SearchBar ref={searchRef} onSearch={onSubmitSearch} placeholder={`Zoeken in ${recipes.length} recepten...`} />
           </div>
           {Object.keys(categorySelections).length > 0 && (
             <div className={`${widthLimitClasses} flex flex-row justify-center flex-wrap mt-4`}>
