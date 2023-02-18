@@ -4,17 +4,18 @@ import classNames from 'classnames'
 import styles from './SearchBar.module.css'
 
 type TProps = {
+  value: string | undefined
+  onChange: (newValue: string) => void
   placeholder?: string
   onSearch: (query: string) => void
 }
 
-const SearchBar: React.FC<TProps> = ({ placeholder, onSearch }) => {
+export const SearchBar: React.FC<TProps> = ({ value, onChange, placeholder, onSearch }) => {
   const search = async (event: any) => {
     event.preventDefault()
     document.getElementById('search')?.blur()
-    const query = event.target.search.value
-    if (query) {
-      onSearch(query)
+    if (value && value.length > 0) {
+      onSearch(value)
     }
   }
 
@@ -25,6 +26,8 @@ const SearchBar: React.FC<TProps> = ({ placeholder, onSearch }) => {
         name="search"
         id="search"
         placeholder={placeholder || 'Zoeken'}
+        value={value ?? ''}
+        onChange={event => onChange(event.target.value)}
         autoComplete="off"
         className={classNames(
           'bg-primary h-12 w-full text-white px-5 pr-10 rounded-full text-md focus:outline-none focus:ring-4 focus:ring-dark focus:ring-opacity-50 transition duration-150',
@@ -39,5 +42,3 @@ const SearchBar: React.FC<TProps> = ({ placeholder, onSearch }) => {
     </form>
   )
 }
-
-export default SearchBar

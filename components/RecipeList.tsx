@@ -28,7 +28,7 @@ const RecipeList: React.FC<TProps> = ({ recipes, scrollToRecipeWithId, className
   }, [recipes])
 
   useEffect(() => {
-    if (initialRecipeIdToScrollTo) {
+    if (initialRecipeIdToScrollTo && recipes) {
       const recipeRef = recipeRefs.current[initialRecipeIdToScrollTo]
       if (recipeRef) {
         recipeRef.scrollIntoView({
@@ -36,7 +36,7 @@ const RecipeList: React.FC<TProps> = ({ recipes, scrollToRecipeWithId, className
         })
       }
     }
-  }, [initialRecipeIdToScrollTo])
+  }, [initialRecipeIdToScrollTo, recipes])
 
   return (
     <GridLayout className={className}>
