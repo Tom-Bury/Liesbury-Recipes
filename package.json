@@ -18,7 +18,8 @@
     "lint": "eslint \"**/*.{ts,tsx}\" \"*.config.js\"",
     "now-build": "cross-env BUILD_TARGET=serverless next build",
     "test": "npm run type-check && npm run lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "bump": "./scripts/versionBump.sh"
   },
   "dependencies": {
     "@n8tb1t/use-scroll-position": "^2.0.3",
