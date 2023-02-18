@@ -19,7 +19,6 @@ type TRecipeRefs = {
 
 const RecipeList: React.FC<TProps> = ({ recipes, scrollToRecipeWithId, className, onRecipeClick }) => {
   const recipeRefs = useRef<TRecipeRefs>({})
-  const [initialRecipeIdToScrollTo] = useState(scrollToRecipeWithId)
 
   const [nbRecipes, setNbRecipes] = useState(recipes ? recipes.length : 0)
 
@@ -28,15 +27,15 @@ const RecipeList: React.FC<TProps> = ({ recipes, scrollToRecipeWithId, className
   }, [recipes])
 
   useEffect(() => {
-    if (initialRecipeIdToScrollTo && recipes) {
-      const recipeRef = recipeRefs.current[initialRecipeIdToScrollTo]
+    if (scrollToRecipeWithId && recipes) {
+      const recipeRef = recipeRefs.current[scrollToRecipeWithId]
       if (recipeRef) {
         recipeRef.scrollIntoView({
           block: 'center'
         })
       }
     }
-  }, [initialRecipeIdToScrollTo, recipes])
+  }, [scrollToRecipeWithId, recipes])
 
   return (
     <GridLayout className={className}>
