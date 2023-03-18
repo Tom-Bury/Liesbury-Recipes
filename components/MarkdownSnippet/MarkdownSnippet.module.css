@@ -40,4 +40,8 @@
   hr {
     @apply my-6 text-primary
   }
+
+  a {
+    @apply underline
+  }
 }
