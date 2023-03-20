@@ -8,5 +8,6 @@ export default {
   primary: '#83C5BE',
   'error-dark': '#D35D31',
   error: '#E29578',
-  'error-light': '#E8C6B9'
+  'error-light': '#E8C6B9',
+  link: '#0b69b2'
 }

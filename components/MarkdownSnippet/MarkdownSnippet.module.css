@@ -42,6 +42,10 @@
   }
 
   a {
-    @apply underline
+    @apply underline text-link transition duration-100 ease-out;
+  }
+
+  a:hover {
+    @apply opacity-50;
   }
 }
