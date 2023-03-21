@@ -40,4 +40,12 @@
   hr {
     @apply my-6 text-primary
   }
+
+  a {
+    @apply underline text-link transition duration-100 ease-out;
+  }
+
+  a:hover {
+    @apply opacity-50;
+  }
 }
