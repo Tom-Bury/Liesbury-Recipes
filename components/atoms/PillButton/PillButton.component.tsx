@@ -5,22 +5,28 @@ import styles from './PillButton.module.css'
 type TPillProps = {
   className?: string
   toggleValue?: boolean
-  capitalize?: boolean
   onClick?: () => void
   children: string
 }
 
-export const PillButton: React.FC<TPillProps> = ({ className, toggleValue, onClick, children }) => {
-  const classes = classNames(
-    styles.buttonCommon,
-    toggleValue ? styles.buttonOn : styles.buttonOff,
-    onClick ? styles.pillButton : styles.pillOnly,
-    className
-  )
+const PillButtonCommon: React.FC<TPillProps> = ({ className, onClick, children }) => {
+  const classes = classNames(styles.buttonCommon, onClick ? styles.pillButton : styles.pillOnly, className)
 
   return (
     <button className={classes} type="button" onClick={onClick}>
-      {children.length > 0 ? `${children[0].toUpperCase()}${children.slice(1).toLowerCase()}` : children}
+      {children}
     </button>
   )
+}
+
+export const PillButton: React.FC<TPillProps> = ({ className, toggleValue, ...props }) => {
+  const classes = classNames(toggleValue ? styles.buttonOn : styles.buttonOff, className)
+
+  return <PillButtonCommon className={classes} {...props} />
+}
+
+export const ErrorPillButton: React.FC<TPillProps> = ({ className, toggleValue, ...props }) => {
+  const classes = classNames(toggleValue ? styles.buttonOnError : styles.buttonOffError, className)
+
+  return <PillButtonCommon className={classes} {...props} />
 }

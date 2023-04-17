@@ -9,12 +9,13 @@ import { NextRouter, useRouter } from 'next/router'
 import { RecipesApi } from 'api/recipes/Recipes.api'
 import { useVersion } from 'hooks/useVersion.hook'
 import { TQueryParam } from 'types/util.types'
+import { useIsLoggedIn } from 'hooks/useIsLoggedIn.hook'
 import { SearchBar } from '~/components/SearchBar/SearchBar'
 import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
-import { PillButton } from '~/components/atoms/PillButton/PillButton.component'
+import { ErrorPillButton, PillButton } from '~/components/atoms/PillButton/PillButton.component'
 import { VersionDisclaimerFooter } from '~/components/VersionDisclaimerFooter'
-import { enableKeys } from '~/utils/general.utils'
+import { capitalize, enableKeys } from '~/utils/general.utils'
 import { nonNullable } from '~/utils/type.utils'
 
 type TProps = {
@@ -117,6 +118,7 @@ const useRecipeToScrollTo = (): [string | undefined, (recipeId: string) => void]
 
 const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
   useVersion()
+  const isLoggedIn = useIsLoggedIn()
   const fadeInStyle = useFadeInStyle()
   const widthLimitClasses = 'w-full max-w-screen-md xl:max-w-screen-xl'
   const router = useRouter()
@@ -157,11 +159,12 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
             <div className={`${widthLimitClasses} flex flex-row justify-center flex-wrap mt-4`}>
               {Object.entries(categorySelections).map(([category, enabled]) => {
                 return (
-                  <PillButton className="mr-2 mt-2" toggleValue={enabled} capitalize onClick={() => onCategoryToggle(category)}>
-                    {category}
+                  <PillButton className="mr-2 mt-2" toggleValue={enabled} onClick={() => onCategoryToggle(category)}>
+                    {capitalize(category)}
                   </PillButton>
                 )
               })}
+              {isLoggedIn && <ErrorPillButton className="mx-2 mt-2">🫣 Preview</ErrorPillButton>}
             </div>
           )}
         </HorizontalCenterLayout>
