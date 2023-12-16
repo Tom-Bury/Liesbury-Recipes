@@ -19,19 +19,12 @@ export const PillButtonListInput: React.FC<TPillButtonListInputProps> = props =>
 
   return (
     <ListInput {...props}>
-      <div className="flex flex-row mt-4">
-        {enabledItems &&
-          allItems &&
+      <div className="flex flex-row flex-wrap mt-4 gap-y-1">
+        {allItems &&
           [...allItems].map(item => {
-            const included = enabledItems.has(item)
+            const included = enabledItems?.has(item)
             return (
-              <PillButton
-                key={item}
-                toggleValue={included}
-                capitalize
-                onClick={() => (included ? onRemove(item) : onAdd(item))}
-                className="mr-2"
-              >
+              <PillButton key={item} toggleValue={included} onClick={() => (included ? onRemove(item) : onAdd(item))} className="mr-2">
                 {item}
               </PillButton>
             )
