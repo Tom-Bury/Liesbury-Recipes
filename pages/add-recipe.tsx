@@ -101,7 +101,7 @@ const AddRecipePage: NextPage = () => {
 
         if (result.id) {
           setAnimateAway(true)
-          router.push(`/recipe/${result.id}`)
+          router.replace(`/recipe/${result.id}`)
         }
       } catch (error) {
         console.error('Error submitting recipe', error)
