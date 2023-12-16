@@ -4,143 +4,51 @@ import { HorizontalCenterLayout } from 'layouts'
 import { TRecipe } from 'backend/types/recipes.types'
 import { getLastNRecipes } from 'backend/recipes'
 import useFadeInStyle from 'hooks/useFadeInStyle'
-import { useCallback, useEffect, useState } from 'react'
-import { NextRouter, useRouter } from 'next/router'
+import { useState } from 'react'
+import { useRouter } from 'next/router'
 import { RecipesApi } from 'api/recipes/Recipes.api'
 import { useVersion } from 'hooks/useVersion.hook'
-import { TQueryParam } from 'types/util.types'
 import { useIsLoggedIn } from 'hooks/useIsLoggedIn.hook'
+import { useIndexPageState } from 'pages-state/index.state'
 import { SearchBar } from '~/components/SearchBar/SearchBar'
 import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
 import { ErrorPillButton, PillButton } from '~/components/atoms/PillButton/PillButton.component'
 import { VersionDisclaimerFooter } from '~/components/VersionDisclaimerFooter'
-import { capitalize, enableKeys } from '~/utils/general.utils'
-import { nonNullable } from '~/utils/type.utils'
+import { capitalize } from '~/utils/general.utils'
 
 type TProps = {
   recipes: TRecipe[]
-  categories: { [category: string]: boolean }
+  categories: string[]
 }
 
-const replaceHome = (router: NextRouter, searchQuery: TQueryParam, selectedCategories: TQueryParam, recipeId?: string) => {
-  router.replace(
-    {
-      query: {
-        ...(searchQuery ? { q: searchQuery } : {}),
-        ...(!searchQuery && selectedCategories ? { sq: selectedCategories } : {})
-      },
-      ...(recipeId ? { hash: recipeId } : {})
-    },
-    undefined,
-    { scroll: false, shallow: true }
-  )
-}
-
-const useSearchQuery = (
-  loadRecipes: (recipePromise: Promise<TRecipe[]>) => Promise<void>
-): [string | undefined, (newQuery: string) => void] => {
-  const router = useRouter()
-  const { q } = router.query
-  const [searchQuery, setSearchQuery] = useState(typeof q === 'string' ? q : undefined)
-
-  useEffect(() => {
-    if (q && typeof q === 'string') {
-      setSearchQuery(q)
-      loadRecipes(RecipesApi.search(q))
-    } else {
-      setSearchQuery(undefined)
-    }
-  }, [loadRecipes, q])
-
-  return [searchQuery, setSearchQuery]
-}
-
-const useCategories = (
-  categories: { [category: string]: boolean },
-  loadRecipes: (recipePromise: Promise<TRecipe[]>) => Promise<void>
-): [{ [catgory: string]: boolean }, (category: string) => void] => {
-  const router = useRouter()
-  const { sq } = router.query
-  const selectedCategories = Array.isArray(sq) ? sq : [sq].filter(nonNullable)
-  const categorySelections = enableKeys(categories, selectedCategories)
-
-  useEffect(() => {
-    const selectedCategoriesUseEffect = Array.isArray(sq) ? sq : [sq].filter(nonNullable)
-    if (selectedCategoriesUseEffect.length > 0) {
-      loadRecipes(RecipesApi.getRecipesForCategories(selectedCategoriesUseEffect))
-    }
-  }, [loadRecipes, sq])
-
-  const toggleCategory = (category: string) => {
-    if (selectedCategories.includes(category)) {
-      replaceHome(
-        router,
-        undefined,
-        selectedCategories.filter(c => c !== category)
-      )
-    } else {
-      replaceHome(router, undefined, [...selectedCategories, category])
-    }
-  }
-
-  return [categorySelections, toggleCategory]
-}
-
-const useResetToDefaultRecipesOnEmptyQueries = (
-  defaultRecipes: TRecipe[],
-  loadRecipes: (recipePromise: Promise<TRecipe[]>) => Promise<void>
-) => {
-  const router = useRouter()
-  const { q, sq } = router.query
-
-  useEffect(() => {
-    if (q === undefined && sq === undefined) {
-      loadRecipes(new Promise(resolve => setTimeout(() => resolve(defaultRecipes), 150)))
-    }
-  }, [loadRecipes, q, defaultRecipes, sq])
-}
-
-const useRecipeToScrollTo = (): [string | undefined, (recipeId: string) => void] => {
-  const router = useRouter()
-  const { q, sq } = router.query
-  const urlParams = router.asPath.split('#')
-
-  const setRecipeToScrollTo = (recipeId: string) => {
-    replaceHome(router, q, sq, recipeId)
-  }
-
-  if (urlParams.length === 2) {
-    return [urlParams[1], setRecipeToScrollTo]
-  }
-  return [undefined, setRecipeToScrollTo]
-}
+const widthLimitClasses = 'w-full max-w-screen-md xl:max-w-screen-xl'
 
 const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
   useVersion()
-  const isLoggedIn = useIsLoggedIn()
   const fadeInStyle = useFadeInStyle()
-  const widthLimitClasses = 'w-full max-w-screen-md xl:max-w-screen-xl'
+  const isLoggedIn = useIsLoggedIn()
   const router = useRouter()
 
-  const [currRecipes, setCurrRecipes] = useState(recipes)
-  const [isLoading, setIsLoading] = useState(false)
+  const [state, setState] = useIndexPageState(recipes, categories)
+  const { categorySelections, recipes: currRecipes, searchQuery, showPreview, focusedRecipeId } = state
+  const [searchBarValue, setSearchBarValue] = useState(searchQuery)
+  const [ignoreFocusedRecipeId, setIgnoreFocusedRecipeId] = useState(false)
 
-  const loadRecipes = useCallback(async (recipePromise: Promise<TRecipe[]>) => {
-    setIsLoading(true)
-    setCurrRecipes(await recipePromise)
-    setIsLoading(false)
-  }, [])
-
-  const [searchQuery, setSearchQuery] = useSearchQuery(loadRecipes)
-  const [categorySelections, onCategoryToggle] = useCategories(categories, loadRecipes)
-  useResetToDefaultRecipesOnEmptyQueries(recipes, loadRecipes)
-
-  const onSubmitSearch = (query: string) => {
-    replaceHome(router, query, [])
+  const onSearch = (newQuery: string) => {
+    setState({ searchQuery: newQuery, selectedCategories: [], showPreview: false })
   }
 
-  const [recipeIdToScrollTo, setRecipeToScrollTo] = useRecipeToScrollTo()
+  const onCategoryToggle = (category: string) => {
+    let selectedCategories = Object.keys(categorySelections).filter(cat => categorySelections[cat])
+    if (selectedCategories.includes(category)) {
+      selectedCategories = selectedCategories.filter(c => c !== category)
+    } else {
+      selectedCategories = [...selectedCategories, category]
+    }
+    setState({ searchQuery: undefined, selectedCategories, showPreview: false })
+    setSearchBarValue(undefined)
+  }
 
   return (
     <div className={`${fadeInStyle} flex flex-col min-h-screen`}>
@@ -149,36 +57,43 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
         <HorizontalCenterLayout className="my-8 md:mx-4">
           <div className="max-w-xl w-full">
             <SearchBar
-              value={searchQuery}
-              onChange={setSearchQuery}
-              onSearch={onSubmitSearch}
+              onSearch={onSearch}
               placeholder={`Zoeken in ${recipes.length} recepten...`}
+              value={searchBarValue}
+              onChange={setSearchBarValue}
             />
           </div>
-          {Object.keys(categorySelections).length > 0 && (
-            <div className={`${widthLimitClasses} flex flex-row justify-center flex-wrap mt-4`}>
-              {Object.entries(categorySelections).map(([category, enabled]) => {
-                return (
-                  <PillButton className="mr-2 mt-2" toggleValue={enabled} onClick={() => onCategoryToggle(category)}>
-                    {capitalize(category)}
-                  </PillButton>
-                )
-              })}
-              {isLoggedIn && <ErrorPillButton className="mx-2 mt-2">🫣 Preview</ErrorPillButton>}
-            </div>
-          )}
+          <div className={`${widthLimitClasses} flex flex-row justify-center flex-wrap mt-4`}>
+            {Object.entries(categorySelections).map(([category, enabled]) => {
+              return (
+                <PillButton className="mr-2 mt-2" toggleValue={enabled} onClick={() => onCategoryToggle(category)}>
+                  {capitalize(category)}
+                </PillButton>
+              )
+            })}
+            {isLoggedIn && (
+              <ErrorPillButton
+                toggleValue={showPreview}
+                onClick={() => setState({ searchQuery: undefined, selectedCategories: [], showPreview: !showPreview })}
+                className="mx-2 mt-2"
+              >
+                🫣 Preview
+              </ErrorPillButton>
+            )}
+          </div>
         </HorizontalCenterLayout>
         <hr className="mb-8 border-t-4 border-primary" />
         <HorizontalCenterLayout className="md:mx-4">
           <div className={widthLimitClasses}>
-            {currRecipes.length > 0 && (
-              <RecipeList
-                recipes={isLoading ? undefined : currRecipes}
-                scrollToRecipeWithId={recipeIdToScrollTo}
-                onRecipeClick={setRecipeToScrollTo}
-              />
-            )}
-            {!isLoading && currRecipes.length === 0 && (
+            <RecipeList
+              recipes={currRecipes}
+              scrollToRecipeWithId={ignoreFocusedRecipeId ? undefined : focusedRecipeId}
+              onRecipeClick={recipeId => {
+                setIgnoreFocusedRecipeId(true)
+                setState({ ...state, focusedRecipeId: recipeId })
+              }}
+            />
+            {currRecipes && currRecipes.length === 0 && (
               <HorizontalCenterLayout>
                 <h2 className="text-darkest my-8">Geen recepten gevonden 😭</h2>
                 <h3 className="text-primary">Misschien kan je iets anders proberen zoeken?</h3>
@@ -194,16 +109,13 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
 
 export const getStaticProps: GetStaticProps = async () => {
   const recipes = await getLastNRecipes(100)
-  const categories = new Set(await RecipesApi.getCategoryCounts())
-  const categorySelections: { [key: string]: boolean } = {}
-  categories.forEach(category => {
-    categorySelections[category.categoryId] = false
-  })
+  const categories = new Set((await RecipesApi.getCategoryCounts()).map(c => c.categoryId))
+  const props: TProps = {
+    recipes,
+    categories: Array.from(categories)
+  }
   return {
-    props: {
-      recipes,
-      categories: categorySelections
-    },
+    props,
     revalidate: 60
   }
 }
