@@ -81,7 +81,7 @@ const AddRecipePage: NextPage = () => {
 
   const isFormValid = !!formState.recipeTitle && !!recipeImgSrcUrl
 
-  const handleSubmit = async (event: { preventDefault: () => void }) => {
+  const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
     event.preventDefault()
     if (isFormValid) {
       setIsSubmitting(true)
@@ -94,7 +94,8 @@ const AddRecipePage: NextPage = () => {
           instructions: formState.instructions,
           ingredients: formState.ingredients,
           categories: formState.categories,
-          tips: formState.tips
+          tips: formState.tips,
+          isPreview: event.nativeEvent.submitter?.id === 'save-preview'
         }
         const result =
           shouldUpdateRecipe && formState.recipeId ? await RecipesApi.update(formState.recipeId, formData) : await RecipesApi.new(formData)
@@ -262,7 +263,6 @@ const AddRecipePage: NextPage = () => {
                     value={formState.recipeUrl || ''}
                     onBlur={setImageSource}
                   />
-
                   <Input
                     label="Link naar een afbeelding"
                     id={ERecipeKeys.imgUrl}
@@ -327,14 +327,17 @@ const AddRecipePage: NextPage = () => {
               onChange={handleTextAreaChange(ERecipeKeys.tips)}
             />
           </fieldset>
-          <span className="flex flex-1 justify-center">
-            {!isSubmitting && (
-              <Button disabled={!isFormValid} className="w-full max-w-md" type="submit">
-                Opslaan!
+          {!isSubmitting && (
+            <div className="flex flex-col md:flex-row gap-2 justify-center w-full">
+              <Button disabled={!isFormValid} className="w-full md:w-1/2" type="submit" id="save">
+                Opslaan
               </Button>
-            )}
-            {isSubmitting && <Loading height={40} width={66} />}
-          </span>
+              <Button disabled={!isFormValid} className="w-full md:w-1/2" type="submit" id="save-preview">
+                Als preview opslaan
+              </Button>
+            </div>
+          )}
+          {isSubmitting && <Loading className="justify-self-center" height={40} width={66} />}
 
           {submitErrorMessage && submitErrorMessage.length > 0 && (
             <h6 className="text-error font-bold text-center mt-2">{submitErrorMessage}</h6>

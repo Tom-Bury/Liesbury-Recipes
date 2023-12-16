@@ -11,6 +11,7 @@ type TAddRecipeBody = {
   ingredients?: string[]
   categories?: Set<string>
   tips?: string
+  isPreview?: boolean
 }
 
 export const RecipesApi = {
