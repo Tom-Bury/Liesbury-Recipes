@@ -11,6 +11,7 @@ type TAddRecipeBody = {
   ingredients?: string[]
   categories?: Set<string>
   tips?: string
+  isPreview?: boolean
 }
 
 export const RecipesApi = {
@@ -49,5 +50,9 @@ export const RecipesApi = {
   getCategoryCounts: async (): Promise<TCategory[]> => {
     const categoryCounts: TCategory[] = await ApiClient.get('recipes/categories/counts').json()
     return categoryCounts.sort((a, b) => b.nbEntries - a.nbEntries)
+  },
+
+  getPreviewRecipes: async (): Promise<TRecipe[]> => {
+    return ApiClient.get('recipes/preview').json()
   }
 }

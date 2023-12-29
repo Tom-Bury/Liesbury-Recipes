@@ -4,7 +4,7 @@ import { TRecipe } from './types/recipes.types'
 
 if (admin.apps.length === 0) {
   // initialize Firebase admin
-  if (!process.env.FIRESTORE_PROJECT_ID || !process.env.FIRESTORE_PROJECT_ID) {
+  if (!process.env.FIRESTORE_PROJECT_ID) {
     throw new Error('No firestore service account / project ID setup')
   }
   const serviceAccount = JSON.parse(process.env.FIRESTORE_SA || '')

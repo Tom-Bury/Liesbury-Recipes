@@ -2,8 +2,17 @@
   @apply bg-dark border-dark text-lightest;
 }
 
+.buttonOnError {
+  @apply bg-error-dark border-error-dark text-error-light;
+}
+
+
 .buttonOff {
   @apply text-dark border-primary;
+}
+
+.buttonOffError {
+  @apply text-error-dark border-error;
 }
 
 .buttonCommon {
@@ -30,8 +39,16 @@
     @apply border-dark text-dark ring-1 ring-dark ring-inset;
   }
 
+  .pillButton.buttonOffError:active {
+    @apply border-error-dark text-error-dark ring-1 ring-error-dark ring-inset;
+  }
+
   .pillButton.buttonOn:active {
     @apply bg-primary border-primary;
+  }
+
+  .pillButton.buttonOnError:active {
+    @apply bg-error border-error;
   }
 }
 
@@ -41,11 +58,19 @@
     @apply border-dark text-dark ring-1 ring-dark ring-inset;
   }
 
+  .pillButton.buttonOffError:hover {
+    @apply border-error-dark text-error-dark ring-1 ring-error-dark ring-inset;
+  }
+
   .pillButton:active {
     @apply opacity-50;
   }
 
   .pillButton.buttonOn:hover {
     @apply bg-primary border-primary;
+  }
+
+  .pillButton.buttonOnError:hover {
+    @apply bg-error border-error;
   }
 }

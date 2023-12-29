@@ -129,7 +129,6 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
             size="s"
             className="mr-4"
             onPress={async () => {
-              // TODO: custom UI
               // eslint-disable-next-line no-alert, no-restricted-globals
               const confirmed = confirm(`Zeker dat je ${recipe.title} wilt verwijderen?`)
               if (confirmed) {

@@ -3,7 +3,7 @@
 }
 
 .card-gradient {
-  @apply bg-gradient-to-b	from-primary to-light;
+  @apply bg-gradient-to-b from-primary to-light;
 }
 
 .card-plain {
@@ -25,7 +25,7 @@
 }
 
 .card-hoverable.card-gradient:hover {
-  @apply bg-gradient-to-b	from-primary to-dark
+  @apply bg-gradient-to-b from-primary to-dark
 }
 
 .card-hoverable.card-plain:hover {
@@ -53,7 +53,7 @@
 
   .card-hoverable:hover,
   .card-hoverable:active {
-    @apply  bg-gradient-to-b	from-primary to-dark  -translate-y-1 scale-105;
+    @apply bg-gradient-to-b from-primary to-dark -translate-y-1 scale-105;
 
     p,
     h1,

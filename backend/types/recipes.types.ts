@@ -8,4 +8,5 @@ export type TRecipe = {
   ingredients?: string[]
   categories?: string[]
   blurHash?: string
+  isPreview?: boolean
 }
