@@ -46,7 +46,7 @@ const SlidingRecipeImage: React.FC<{ url?: string; blurHash?: string }> = ({ url
   )
 
   const blurHashedRecipeImgBaseStyle = {
-    background: `linear-gradient(to top, #000000 0%, #00000000 50%), url(${blurHash})`,
+    background: `url(${blurHash})`,
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
@@ -57,7 +57,7 @@ const SlidingRecipeImage: React.FC<{ url?: string; blurHash?: string }> = ({ url
   const otherOpacity = blurHashOpacity === 0 ? 1 : 1 - blurHashOpacity
 
   const recipeImgBaseStyle = {
-    background: `linear-gradient(to top, #000000 0%, #00000000 50%), url(${url})`,
+    background: `url(${url})`,
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
@@ -74,7 +74,7 @@ const SlidingRecipeImage: React.FC<{ url?: string; blurHash?: string }> = ({ url
   }
 
   const blurredStyle = {
-    background: `linear-gradient(to top, #000000 0%, #00000000 50%), url(${blurHash || url})`,
+    background: `url(${blurHash || url})`,
     opacity: otherOpacity,
     filter: 'blur(10px) brightness(0.75)'
   }
@@ -96,6 +96,12 @@ const SlidingRecipeImage: React.FC<{ url?: string; blurHash?: string }> = ({ url
   )
 }
 
+const Triangle = () => (
+  <svg id="recipe-triangle" viewBox="0 0 100 25" height="32">
+    <polygon points="50,0 100,25 0,25" fill="#EDF6F9" />
+  </svg>
+)
+
 const RecipePage: NextPage<TProps> = ({ recipe }) => {
   const router = useRouter()
   const { isFallback } = router
@@ -113,8 +119,9 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
   return (
     <div className={`flex flex-1 justify-center ${fadeInStyle}`}>
       <SlidingRecipeImage url={recipe.imgUrl} blurHash={recipe.blurHash} />
-      <div className="rooftop flex flex-1 z-10 mt-72 mb-24 pt-8 bg-lightest items-center">
-        <div className="flex flex-col flex-1 max-w-5xl pt-0 mx-auto">
+      <div className="flex flex-1 z-20 mt-72 mb-24 bg-lightest justify-center items-center relative">
+        <Triangle />
+        <div className="topShadow w-full flex flex-col flex-1 max-w-5xl pt-0 mx-auto">
           <div className="sticky top-0 pt-8 bg-lightest flex flex-col flex-1 items-center z-10">
             <h2 className="text-darkest text-center px-2">{isFallback ? '...' : recipe.title}</h2>
             <hr className="border-t-4 border-primary w-full" />
