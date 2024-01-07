@@ -3,6 +3,7 @@
 trap "git stash pop -q" EXIT
 
 VERSION_FILE_PATH="version.ts"
+PACKAGE_JSON_PATH="package.json"
 
 ### Increments the part of the string
 ## $1: version itself
@@ -62,5 +63,7 @@ done
 printf "\n\n🆕 New version: $NEW_VERSION\n"
 
 perl -pi -e "s/$CURR_VERSION/$NEW_VERSION/" $VERSION_FILE_PATH
+perl -pi -e "s/\"version\": \"$CURR_VERSION\"/\"version\": \"$NEW_VERSION\"/" $PACKAGE_JSON_PATH
+
 git commit -am "ci: version bump v$NEW_VERSION"
 git tag "v$NEW_VERSION"
