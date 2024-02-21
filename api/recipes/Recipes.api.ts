@@ -15,6 +15,14 @@ type TAddRecipeBody = {
 }
 
 export const RecipesApi = {
+  all: async (): Promise<TRecipe[]> => {
+    return ApiClient.get('recipes/all').json()
+  },
+
+  lastN: async (n: number): Promise<TRecipe[]> => {
+    return ApiClient.get(`recipes/all/${n}`).json()
+  },
+
   new: async (newRecipeData: TAddRecipeBody): Promise<{ id: string }> => {
     return ApiClient.post('recipes/new', {
       json: { ...newRecipeData, categories: [...(newRecipeData.categories || [])] }

@@ -2,7 +2,6 @@ import * as React from 'react'
 import { GetStaticProps, NextPage } from 'next'
 import { HorizontalCenterLayout } from 'layouts'
 import { TRecipe } from 'backend/types/recipes.types'
-import { getLastNRecipes } from 'backend/recipes'
 import useFadeInStyle from 'hooks/useFadeInStyle'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
@@ -108,7 +107,7 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const recipes = await getLastNRecipes(100)
+  const recipes = await RecipesApi.lastN(10)
   const categories = new Set((await RecipesApi.getCategoryCounts()).map(c => c.categoryId))
   const props: TProps = {
     recipes,
