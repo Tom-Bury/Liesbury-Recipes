@@ -17,10 +17,7 @@ type TIndexPageState = TIndexPageFilterState & {
   categorySelections: { [key: string]: boolean }
 }
 
-const fetchRecipes = async (
-  { searchQuery, selectedCategories, showPreview }: TIndexPageFilterState,
-  initialRecipes: TRecipe[]
-): Promise<TRecipe[]> => {
+const fetchRecipes = async ({ searchQuery, selectedCategories, showPreview }: TIndexPageFilterState): Promise<TRecipe[]> => {
   if (showPreview) {
     return RecipesApi.getPreviewRecipes()
   }
@@ -30,8 +27,7 @@ const fetchRecipes = async (
   if (selectedCategories.length > 0) {
     return RecipesApi.getRecipesForCategories(selectedCategories)
   }
-  await sleep(150)
-  return initialRecipes
+  return RecipesApi.all()
 }
 
 const indexPageStateSetter = (router: NextRouter) => (newState: TIndexPageFilterState) => {
@@ -75,13 +71,17 @@ export const useIndexPageState = (
   const focusedRecipeId = urlParams.length === 2 ? urlParams[1] : undefined
 
   const [recipes, setRecipes] = useState<TRecipe[] | undefined>(initialRecipes)
+  const [fetchedAllRecipes, setFetchedAllRecipes] = useState(false)
 
   useEffect(() => {
-    ;(async () => {
-      setRecipes(undefined)
-      setRecipes(await fetchRecipes({ searchQuery, selectedCategories, showPreview }, initialRecipes))
+    ; (async () => {
+      if (fetchedAllRecipes) {
+        setRecipes(undefined)
+        return
+      }
+      setRecipes(await fetchRecipes({ searchQuery, selectedCategories, showPreview }))
     })()
-  }, [initialRecipes, searchQuery, selectedCategories, showPreview])
+  }, [searchQuery, selectedCategories, showPreview])
 
   const state = { searchQuery, selectedCategories, showPreview, focusedRecipeId, recipes, categorySelections }
   return [state, indexPageStateSetter(router)] as const
