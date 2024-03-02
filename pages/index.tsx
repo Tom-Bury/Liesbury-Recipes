@@ -65,7 +65,7 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
           <div className={`${widthLimitClasses} flex flex-row justify-center flex-wrap mt-4`}>
             {Object.entries(categorySelections).map(([category, enabled]) => {
               return (
-                <PillButton className="mr-2 mt-2" toggleValue={enabled} onClick={() => onCategoryToggle(category)}>
+                <PillButton key={category} className="mr-2 mt-2" toggleValue={enabled} onClick={() => onCategoryToggle(category)}>
                   {capitalize(category)}
                 </PillButton>
               )
