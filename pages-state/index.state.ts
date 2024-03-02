@@ -2,7 +2,7 @@ import { TRecipe } from 'backend/types/recipes.types'
 import { useEffect, useState } from 'react'
 import { NextRouter, useRouter } from 'next/router'
 import { RecipesApi } from 'api/recipes/Recipes.api'
-import { arraysHaveSameContents, enableKeys, listToMap, sleep } from '~/utils/general.utils'
+import { enableKeys, listToMap } from '~/utils/general.utils'
 import { nonNullable } from '~/utils/type.utils'
 
 type TIndexPageFilterState = {
@@ -17,10 +17,7 @@ type TIndexPageState = TIndexPageFilterState & {
   categorySelections: { [key: string]: boolean }
 }
 
-const fetchRecipes = async (
-  { searchQuery, selectedCategories, showPreview }: TIndexPageFilterState,
-  initialRecipes: TRecipe[]
-): Promise<TRecipe[]> => {
+const fetchRecipes = async ({ searchQuery, selectedCategories, showPreview }: TIndexPageFilterState): Promise<TRecipe[]> => {
   if (showPreview) {
     return RecipesApi.getPreviewRecipes()
   }
@@ -30,8 +27,7 @@ const fetchRecipes = async (
   if (selectedCategories.length > 0) {
     return RecipesApi.getRecipesForCategories(selectedCategories)
   }
-  await sleep(150)
-  return initialRecipes
+  return RecipesApi.all()
 }
 
 const indexPageStateSetter = (router: NextRouter) => (newState: TIndexPageFilterState) => {
@@ -60,16 +56,8 @@ export const useIndexPageState = (
 
   const searchQuery = query && typeof query === 'string' ? query : undefined
 
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const selectedCategories = Array.isArray(categories) ? categories : [categories].filter(nonNullable)
   const categorySelections = enableKeys(listToMap(allCategories, false), selectedCategories)
-
-  useEffect(() => {
-    const newSelectedCategories = Array.isArray(categories) ? categories : [categories].filter(nonNullable)
-    if (arraysHaveSameContents(selectedCategories, newSelectedCategories)) {
-      return
-    }
-    setSelectedCategories(newSelectedCategories)
-  }, [categories, selectedCategories])
 
   const showPreview = preview === 'true'
   const focusedRecipeId = urlParams.length === 2 ? urlParams[1] : undefined
@@ -77,11 +65,13 @@ export const useIndexPageState = (
   const [recipes, setRecipes] = useState<TRecipe[] | undefined>(initialRecipes)
 
   useEffect(() => {
-    ;(async () => {
-      setRecipes(undefined)
-      setRecipes(await fetchRecipes({ searchQuery, selectedCategories, showPreview }, initialRecipes))
-    })()
-  }, [initialRecipes, searchQuery, selectedCategories, showPreview])
+    const updateRecipes = async () => {
+      const useEffectSelectedCategories = Array.isArray(categories) ? categories : [categories].filter(nonNullable)
+      setRecipes(await fetchRecipes({ searchQuery, selectedCategories: useEffectSelectedCategories, showPreview }))
+    }
+
+    updateRecipes()
+  }, [searchQuery, categories, showPreview])
 
   const state = { searchQuery, selectedCategories, showPreview, focusedRecipeId, recipes, categorySelections }
   return [state, indexPageStateSetter(router)] as const

@@ -2,7 +2,6 @@ import * as React from 'react'
 import { GetStaticProps, NextPage } from 'next'
 import { HorizontalCenterLayout } from 'layouts'
 import { TRecipe } from 'backend/types/recipes.types'
-import { getLastNRecipes } from 'backend/recipes'
 import useFadeInStyle from 'hooks/useFadeInStyle'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
@@ -20,11 +19,12 @@ import { capitalize } from '~/utils/general.utils'
 type TProps = {
   recipes: TRecipe[]
   categories: string[]
+  totalNbOfRecipes: number
 }
 
 const widthLimitClasses = 'w-full max-w-screen-md xl:max-w-screen-xl'
 
-const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
+const IndexPage: NextPage<TProps> = ({ recipes, categories, totalNbOfRecipes }) => {
   useVersion()
   const fadeInStyle = useFadeInStyle()
   const isLoggedIn = useIsLoggedIn()
@@ -58,7 +58,7 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
           <div className="max-w-xl w-full">
             <SearchBar
               onSearch={onSearch}
-              placeholder={`Zoeken in ${recipes.length} recepten...`}
+              placeholder={`Zoeken in ${totalNbOfRecipes} recepten...`}
               value={searchBarValue}
               onChange={setSearchBarValue}
             />
@@ -66,7 +66,7 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
           <div className={`${widthLimitClasses} flex flex-row justify-center flex-wrap mt-4`}>
             {Object.entries(categorySelections).map(([category, enabled]) => {
               return (
-                <PillButton className="mr-2 mt-2" toggleValue={enabled} onClick={() => onCategoryToggle(category)}>
+                <PillButton key={category} className="mr-2 mt-2" toggleValue={enabled} onClick={() => onCategoryToggle(category)}>
                   {capitalize(category)}
                 </PillButton>
               )
@@ -108,11 +108,13 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const recipes = await getLastNRecipes(100)
+  const recipes = await RecipesApi.lastN(10)
+  const totalNbOfRecipes = await RecipesApi.totalNumberOfRecipes()
   const categories = new Set((await RecipesApi.getCategoryCounts()).map(c => c.categoryId))
   const props: TProps = {
     recipes,
-    categories: Array.from(categories)
+    categories: Array.from(categories),
+    totalNbOfRecipes
   }
   return {
     props,
