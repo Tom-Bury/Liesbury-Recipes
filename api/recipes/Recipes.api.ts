@@ -15,12 +15,20 @@ type TAddRecipeBody = {
 }
 
 export const RecipesApi = {
+  getById: async (id: string): Promise<TRecipe> => {
+    return ApiClient.get(`recipes/recipe/${id}`).json()
+  },
+
   totalNumberOfRecipes: async (): Promise<number> => {
     return ApiClient.get('recipes/count').json()
   },
 
   all: async (): Promise<TRecipe[]> => {
     return ApiClient.get('recipes/all').json()
+  },
+
+  getAllIds: async (): Promise<string[]> => {
+    return ApiClient.get('recipes/all/ids').json()
   },
 
   lastN: async (n: number): Promise<TRecipe[]> => {

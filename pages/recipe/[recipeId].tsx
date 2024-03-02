@@ -1,4 +1,3 @@
-import { getAllRecipeIds, getRecipeById } from 'backend/recipes'
 import { TRecipe } from 'backend/types/recipes.types'
 import { HorizontalCenterLayout } from 'layouts'
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
@@ -9,8 +8,8 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import useFadeInStyle from 'hooks/useFadeInStyle'
-import { RecipesApi } from 'api/recipes/Recipes.api'
 import { useIsLoggedIn } from 'hooks/useIsLoggedIn.hook'
+import { RecipesApi } from 'api/recipes/Recipes.api'
 import RecipeData from '~/components/RecipeData/RecipeData'
 import RecipePlaceholder from '~/components/RecipePlaceholder'
 import FloatingActionButton from '~/components/atoms/FloatingActionButton/FloatingActionButton.component'
@@ -170,7 +169,7 @@ interface IParams extends ParsedUrlQuery {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const allRecipes = await getAllRecipeIds()
+  const allRecipes = await RecipesApi.getAllIds()
   const paths = allRecipes.map(recipeId => ({ params: { recipeId } }))
   return {
     paths,
@@ -180,7 +179,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps<TProps, IParams> = async ({ params }) => {
   if (params?.recipeId) {
-    const recipe = await getRecipeById(params.recipeId)
+    const recipe = await RecipesApi.getById(params.recipeId)
 
     return {
       props: {
