@@ -19,11 +19,12 @@ import { capitalize } from '~/utils/general.utils'
 type TProps = {
   recipes: TRecipe[]
   categories: string[]
+  totalNbOfRecipes: number
 }
 
 const widthLimitClasses = 'w-full max-w-screen-md xl:max-w-screen-xl'
 
-const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
+const IndexPage: NextPage<TProps> = ({ recipes, categories, totalNbOfRecipes }) => {
   useVersion()
   const fadeInStyle = useFadeInStyle()
   const isLoggedIn = useIsLoggedIn()
@@ -57,7 +58,7 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
           <div className="max-w-xl w-full">
             <SearchBar
               onSearch={onSearch}
-              placeholder={`Zoeken in ${recipes.length} recepten...`}
+              placeholder={`Zoeken in ${totalNbOfRecipes} recepten...`}
               value={searchBarValue}
               onChange={setSearchBarValue}
             />
@@ -108,10 +109,12 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories }) => {
 
 export const getStaticProps: GetStaticProps = async () => {
   const recipes = await RecipesApi.lastN(10)
+  const totalNbOfRecipes = await RecipesApi.totalNumberOfRecipes()
   const categories = new Set((await RecipesApi.getCategoryCounts()).map(c => c.categoryId))
   const props: TProps = {
     recipes,
-    categories: Array.from(categories)
+    categories: Array.from(categories),
+    totalNbOfRecipes
   }
   return {
     props,
