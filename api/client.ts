@@ -1,7 +1,7 @@
 import ky from 'ky'
 import { parseJwt } from 'utils/auth.utils'
 
-const API_URL = process.env.API_URL || 'https://lb-recipes-backend-u2i4fxh5ga-ew.a.run.app'
+const API_URL = 'https://lb-recipes-backend-hti5gqljbq-ew.a.run.app'
 
 export class ApiClient {
   private static apiAccessTokenLocalStorageKey = 'apiAccessToken'
