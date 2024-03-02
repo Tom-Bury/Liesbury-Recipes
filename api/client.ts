@@ -30,6 +30,8 @@ export class ApiClient {
     }
   })
 
+  public static root = API_URL
+
   public static get = ApiClient.client.get
 
   public static post = ApiClient.client.post
