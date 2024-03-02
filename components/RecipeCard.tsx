@@ -24,6 +24,7 @@ export const RecipeCard: React.FC<TProps> = ({ title, imgPath, preloadImage, blu
               priority={preloadImage}
               blurDataURL={blurHash}
               placeholder={blurHash ? 'blur' : 'empty'}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           )}
           {!imgPath && <div className="rounded-xl bg-light shadow-inner w-full h-full" />}

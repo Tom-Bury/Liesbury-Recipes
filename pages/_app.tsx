@@ -2,6 +2,7 @@ import * as React from 'react'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import '../styles/globals.css'
+import { ApiClient } from 'api/client'
 import BackButton from '~/components/atoms/BackButton/BackButton'
 
 export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
@@ -37,6 +38,9 @@ export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         <meta name="twitter:title" content="Liesbury Recipes" />
         <meta name="twitter:description" content="A collection of recipes found across the internet that we like to cook." />
         <meta name="twitter:image" content="/images/liesbury-og-image.png" />
+
+        <link rel="preconnect" href={ApiClient.root} />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
       </Head>
       <Component {...pageProps} />
       <BackButton />
