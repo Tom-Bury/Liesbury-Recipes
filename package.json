@@ -1,6 +1,6 @@
 {
   "name": "liesbury-recipes",
-  "version": "3.0.1",
+  "version": "3.0.3",
   "description": "Personal PWA for managing and sharing recipes with friends and family.",
   "main": "N/A",
   "repository": "https://github.com/Tom-Bury/Recipes",
@@ -37,6 +37,7 @@
     "react-dom": "^18.2.0",
     "remark": "^13.0.0",
     "remark-html": "^13.0.1",
+    "sharp": "^0.33.2",
     "zustand": "^4.1.2"
   },
   "devDependencies": {
