@@ -1,11 +1,11 @@
-// const withPWA = require('next-pwa')({
-//   dest: 'public',
-//   disable: process.env.NODE_ENV === 'development'
-// })
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development'
+})
 
 const childProcess = require('child_process')
 
-module.exports = {
+module.exports = withPWA({
   productionBrowserSourceMaps: true,
   images: {
     domains: ['storage.googleapis.com']
@@ -14,4 +14,4 @@ module.exports = {
     const commitHash = childProcess.execSync('git log --pretty=format:"%h" -n1').toString().trim()
     return commitHash
   }
-}
+})
