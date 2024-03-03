@@ -3,12 +3,15 @@
 //   disable: process.env.NODE_ENV === 'development'
 // })
 
+const childProcess = require('child_process')
+
 module.exports = {
   productionBrowserSourceMaps: true,
   images: {
     domains: ['storage.googleapis.com']
   },
   generateBuildId: async () => {
-    return process.env.GIT_HASH
+    const commitHash = childProcess.execSync('git log --pretty=format:"%h" -n1').toString().trim()
+    return commitHash
   }
 }

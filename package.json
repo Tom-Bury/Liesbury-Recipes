@@ -12,7 +12,7 @@
   },
   "scripts": {
     "dev": "next",
-    "build": "export GIT_HASH=$(git rev-parse HEAD) && next build",
+    "build": "next build",
     "start": "next start",
     "format": "prettier --write \"./**/*.{ts,tsx}\"",
     "lint": "eslint \"**/*.{ts,tsx}\" \"*.config.js\"",
