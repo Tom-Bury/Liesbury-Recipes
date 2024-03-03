@@ -119,7 +119,7 @@ const RecipeData: React.FC<TRecipeDataProps> = ({ recipe }) => {
     <div className="px-4 lg:px-0">
       <div className="flex flex-row p-4">
         {recipe.categories?.map(cat => (
-          <PillButton className="mr-2" toggleValue>
+          <PillButton key={cat} className="mr-2" toggleValue>
             {cat}
           </PillButton>
         ))}
