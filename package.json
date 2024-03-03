@@ -37,6 +37,7 @@
     "react-dom": "^18.2.0",
     "remark": "^13.0.0",
     "remark-html": "^13.0.1",
+    "sharp": "^0.33.2",
     "zustand": "^4.1.2"
   },
   "devDependencies": {
