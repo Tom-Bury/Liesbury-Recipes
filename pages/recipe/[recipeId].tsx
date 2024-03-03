@@ -1,7 +1,8 @@
 import { TRecipe } from 'backend/types/recipes.types'
 import { HorizontalCenterLayout } from 'layouts'
-import { GetServerSideProps, NextPage } from 'next'
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import { useRouter } from 'next/dist/client/router'
+import { ParsedUrlQuery } from 'querystring'
 import * as React from 'react'
 import Image from 'next/image'
 import { useState } from 'react'
@@ -163,18 +164,33 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<TProps, { recipeId: string }> = async context => {
-  const { params } = context
+interface IParams extends ParsedUrlQuery {
+  recipeId: string
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const allRecipes = await RecipesApi.getAllIds()
+  const paths = allRecipes.map(recipeId => ({ params: { recipeId } }))
+  return {
+    paths,
+    fallback: true
+  }
+}
+
+export const getStaticProps: GetStaticProps<TProps, IParams> = async ({ params }) => {
   if (params?.recipeId) {
     const recipe = await RecipesApi.getById(params.recipeId)
+
     return {
       props: {
         recipe
-      }
+      },
+      revalidate: 60 // Regenerate the page when a new request comes in, at most each 5 minutes
     }
   }
   return {
-    notFound: true
+    props: {},
+    revalidate: 60 // Regenerate the page when a new request comes in, at most each 5 minutes
   }
 }
 
