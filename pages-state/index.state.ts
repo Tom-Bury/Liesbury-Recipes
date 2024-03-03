@@ -32,18 +32,22 @@ const fetchRecipes = async ({ searchQuery, selectedCategories, showPreview }: TI
 
 const indexPageStateSetter = (router: NextRouter) => (newState: TIndexPageFilterState) => {
   const { searchQuery, selectedCategories, showPreview, focusedRecipeId } = newState
-  router.replace(
-    {
-      query: {
-        ...(searchQuery ? { q: searchQuery } : {}),
-        ...(!searchQuery && selectedCategories ? { c: selectedCategories } : {}),
-        ...(showPreview ? { p: 'true' } : {})
+  try {
+    router.replace(
+      {
+        query: {
+          ...(searchQuery ? { q: searchQuery } : {}),
+          ...(!searchQuery && selectedCategories ? { c: selectedCategories } : {}),
+          ...(showPreview ? { p: 'true' } : {})
+        },
+        ...(focusedRecipeId ? { hash: focusedRecipeId } : {})
       },
-      ...(focusedRecipeId ? { hash: focusedRecipeId } : {})
-    },
-    undefined,
-    { scroll: false, shallow: true }
-  )
+      undefined,
+      { scroll: false, shallow: true }
+    )
+  } catch (error) {
+    console.error('Error updating index page state', error)
+  }
 }
 
 export const useIndexPageState = (
