@@ -3,14 +3,13 @@ import create from 'zustand'
 import { IndexPageFilters } from './types'
 
 interface IndexPageRecipesState {
-  recipes: TRecipe[]
+  recipes?: TRecipe[]
   key?: string
   setRecipes: (key: string, newRecipes: TRecipe[]) => void
   resetRecipes: () => void
 }
 
 export const useIndexRecipesStore = create<IndexPageRecipesState>(set => ({
-  recipes: [],
   setRecipes: (key, newRecipes) => set({ key, recipes: newRecipes }),
   resetRecipes: () => set({ recipes: [] })
 }))
