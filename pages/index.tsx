@@ -1,52 +1,45 @@
 import * as React from 'react'
 import { GetStaticProps, NextPage } from 'next'
 import { HorizontalCenterLayout } from 'layouts'
-import { TRecipe } from 'backend/types/recipes.types'
 import useFadeInStyle from 'hooks/useFadeInStyle'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { RecipesApi } from 'api/recipes/Recipes.api'
 import { useVersion } from 'hooks/useVersion.hook'
 import { useIsLoggedIn } from 'hooks/useIsLoggedIn.hook'
-import { useIndexPageState } from 'pages-state/index.state'
+import { useIndexPageState } from 'pages-state/index/state'
 import { SearchBar } from '~/components/SearchBar/SearchBar'
 import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
 import { ErrorPillButton, PillButton } from '~/components/atoms/PillButton/PillButton.component'
 import { VersionDisclaimerFooter } from '~/components/VersionDisclaimerFooter'
-import { capitalize } from '~/utils/general.utils'
+import { capitalize, disableKeys } from '~/utils/general.utils'
 
 type TProps = {
-  recipes: TRecipe[]
   categories: string[]
   totalNbOfRecipes: number
 }
 
 const widthLimitClasses = 'w-full max-w-screen-md xl:max-w-screen-xl'
 
-const IndexPage: NextPage<TProps> = ({ recipes, categories, totalNbOfRecipes }) => {
+const IndexPage: NextPage<TProps> = ({ categories, totalNbOfRecipes }) => {
   useVersion()
   const fadeInStyle = useFadeInStyle()
   const isLoggedIn = useIsLoggedIn()
   const router = useRouter()
 
-  const [state, setState] = useIndexPageState(recipes, categories)
+  const [state, setState] = useIndexPageState(categories)
   const { categorySelections, recipes: currRecipes, searchQuery, showPreview, focusedRecipeId } = state
   const [searchBarValue, setSearchBarValue] = useState(searchQuery)
   const [ignoreFocusedRecipeId, setIgnoreFocusedRecipeId] = useState(false)
 
   const onSearch = (newQuery: string) => {
-    setState({ searchQuery: newQuery, selectedCategories: [], showPreview: false })
+    setState({ searchQuery: newQuery, categorySelections: disableKeys(categorySelections), showPreview: false })
   }
 
   const onCategoryToggle = (category: string) => {
-    let selectedCategories = Object.keys(categorySelections).filter(cat => categorySelections[cat])
-    if (selectedCategories.includes(category)) {
-      selectedCategories = selectedCategories.filter(c => c !== category)
-    } else {
-      selectedCategories = [...selectedCategories, category]
-    }
-    setState({ searchQuery: undefined, selectedCategories, showPreview: false })
+    const newCategorySelections = { ...categorySelections, [category]: !categorySelections[category] }
+    setState({ categorySelections: newCategorySelections, searchQuery: undefined, showPreview: false })
     setSearchBarValue(undefined)
   }
 
@@ -74,7 +67,9 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories, totalNbOfRecipes }) 
             {isLoggedIn && (
               <ErrorPillButton
                 toggleValue={showPreview}
-                onClick={() => setState({ searchQuery: undefined, selectedCategories: [], showPreview: !showPreview })}
+                onClick={() =>
+                  setState({ searchQuery: undefined, categorySelections: disableKeys(categorySelections), showPreview: !showPreview })
+                }
                 className="mx-2 mt-2"
               >
                 🫣 Preview
@@ -108,11 +103,9 @@ const IndexPage: NextPage<TProps> = ({ recipes, categories, totalNbOfRecipes }) 
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const recipes = await RecipesApi.lastN(10)
   const totalNbOfRecipes = await RecipesApi.totalNumberOfRecipes()
   const categories = new Set((await RecipesApi.getCategoryCounts()).map(c => c.categoryId))
   const props: TProps = {
-    recipes,
     categories: Array.from(categories),
     totalNbOfRecipes
   }

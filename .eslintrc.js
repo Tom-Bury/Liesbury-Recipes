@@ -28,6 +28,7 @@ module.exports = {
         warnOnUnsupportedTypeScriptVersion: true
       },
       rules: {
+        'no-console': ['error', { allow: ['warn', 'error'] }],
         'no-undef': 'off',
         'no-unused-vars': 'off',
         'spaced-comment': ['error', 'always', { markers: ['/'] }],
