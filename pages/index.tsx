@@ -85,7 +85,7 @@ const IndexPage: NextPage<TProps> = ({ categories, totalNbOfRecipes }) => {
               scrollToRecipeWithId={ignoreFocusedRecipeId ? undefined : focusedRecipeId}
               onRecipeClick={recipeId => {
                 setIgnoreFocusedRecipeId(true)
-                setState({ ...state, focusedRecipeId: recipeId, })
+                setState({ ...state, focusedRecipeId: recipeId })
               }}
             />
             {currRecipes && currRecipes.length === 0 && (
