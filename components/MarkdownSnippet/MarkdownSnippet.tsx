@@ -14,12 +14,15 @@ const MarkdownSnippet: React.FC<TProps> = ({ markdownContent, className }) => {
   const [htmlContent, setHtmlContent] = useState('')
 
   useEffect(() => {
-    ;(async () => {
+    async function processMarkdown() {
       const processed = await remark().use(html).process(markdownContent)
       setHtmlContent(processed ? processed.toString() : 'Syntax error')
-    })()
+    }
+
+    processMarkdown()
   }, [markdownContent])
 
+  // eslint-disable-next-line react/no-danger
   return <div className={classNames(styles.markdownWrap, className)} dangerouslySetInnerHTML={{ __html: htmlContent }} />
 }
 
