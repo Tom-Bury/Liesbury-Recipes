@@ -84,9 +84,14 @@ export const useIndexPageState = (allCategories: string[]): readonly [IndexPageS
 
   useEffect(() => {
     if (currKey !== filtersKey && router.isReady) {
-      fetchRecipes({ searchQuery, selectedCategories, showPreview }).then(newRecipes => {
-        setRecipes(filtersKey, newRecipes)
-      })
+      fetchRecipes({ searchQuery, selectedCategories, showPreview })
+        .then(newRecipes => {
+          setRecipes(filtersKey, newRecipes)
+        })
+        .catch(error => {
+          console.error('Error fetching recipes', error)
+          setRecipes(filtersKey, [])
+        })
     }
   }, [currKey, filtersKey, router.isReady, searchQuery, selectedCategories, setRecipes, showPreview])
 
