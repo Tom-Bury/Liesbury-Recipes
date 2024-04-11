@@ -8,6 +8,14 @@ export const enableKeys = (boolMap: Record<string, boolean>, keys: string[]): Re
   return result
 }
 
+export const disableKeys = (boolMap: Record<string, boolean>): Record<string, boolean> => {
+  const result: Record<string, boolean> = {}
+  Object.keys(boolMap).forEach(key => {
+    result[key] = false
+  })
+  return result
+}
+
 export const capitalize = (str: string): string => {
   if (str.length === 0) return str
 

@@ -13,7 +13,7 @@ import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
 import { ErrorPillButton, PillButton } from '~/components/atoms/PillButton/PillButton.component'
 import { VersionDisclaimerFooter } from '~/components/VersionDisclaimerFooter'
-import { capitalize } from '~/utils/general.utils'
+import { capitalize, disableKeys } from '~/utils/general.utils'
 
 type TProps = {
   categories: string[]
@@ -34,11 +34,7 @@ const IndexPage: NextPage<TProps> = ({ categories, totalNbOfRecipes }) => {
   const [ignoreFocusedRecipeId, setIgnoreFocusedRecipeId] = useState(false)
 
   const onSearch = (newQuery: string) => {
-    const newCategorySelections = { ...categorySelections }
-    Object.keys(newCategorySelections).forEach(category => {
-      newCategorySelections[category] = false
-    })
-    setState({ searchQuery: newQuery, categorySelections: newCategorySelections, showPreview: false })
+    setState({ searchQuery: newQuery, categorySelections: disableKeys(categorySelections), showPreview: false })
   }
 
   const onCategoryToggle = (category: string) => {
@@ -71,7 +67,9 @@ const IndexPage: NextPage<TProps> = ({ categories, totalNbOfRecipes }) => {
             {isLoggedIn && (
               <ErrorPillButton
                 toggleValue={showPreview}
-                onClick={() => setState({ searchQuery: undefined, selectedCategories: [], showPreview: !showPreview })}
+                onClick={() =>
+                  setState({ searchQuery: undefined, categorySelections: disableKeys(categorySelections), showPreview: !showPreview })
+                }
                 className="mx-2 mt-2"
               >
                 🫣 Preview
