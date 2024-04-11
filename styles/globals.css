@@ -97,5 +97,5 @@ h3 {}
 }
 
 .animate-fade-out {
-  animation: fade-out 0.075s ease-in forwards;
+  animation: fade-out 0.05s ease-in forwards;
 }
