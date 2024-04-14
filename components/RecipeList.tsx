@@ -48,6 +48,12 @@ const useAnimatedRecipes = (
     }
   }, [fadeOutDone, recipes])
 
+  useEffect(() => {
+    if (currRecipes === undefined && recipes !== undefined) {
+      setSkipFadeIn(true)
+    }
+  }, [currRecipes, recipes])
+
   if (skipFadeIn) {
     return { animationClass: '', currRecipes, animationDelay: 0 }
   }
@@ -57,7 +63,6 @@ const useAnimatedRecipes = (
 
 const RecipeList: React.FC<TProps> = ({ recipes, scrollToRecipeWithId, className, onRecipeClick }) => {
   const { animationClass, animationDelay, currRecipes } = useAnimatedRecipes(recipes)
-  const nbRecipes = currRecipes ? currRecipes.length : 0
   const recipeRefs = useRef<TRecipeRefs>({})
 
   useEffect(() => {
@@ -89,7 +94,14 @@ const RecipeList: React.FC<TProps> = ({ recipes, scrollToRecipeWithId, className
             </div>
           </LinkWrap>
         ))}
-      {!currRecipes && Array.from(Array(nbRecipes)).map((_, i) => <PlaceholderRecipeCard key={`placeholder_${i}`} />)}
+      {currRecipes === undefined &&
+        Array.from(Array(10)).map((_, i) => {
+          return (
+            <div className={animationClass} style={{ animationDelay: `${i * animationDelay}s` }}>
+              <PlaceholderRecipeCard key={`placeholder_${i}`} />
+            </div>
+          )
+        })}
     </GridLayout>
   )
 }
