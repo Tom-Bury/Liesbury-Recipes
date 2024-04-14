@@ -1,7 +1,7 @@
 import { TRecipe } from 'backend/types/recipes.types'
 import { NextRouter, useRouter } from 'next/router'
 import { RecipesApi } from 'api/recipes/Recipes.api'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { enableKeys, listToMap } from '~/utils/general.utils'
 import { nonNullable } from '~/utils/type.utils'
 import { getRecipesKey, useIndexRecipesStore } from './recipesStore'
@@ -81,9 +81,11 @@ export const useIndexPageState = (allCategories: string[]): readonly [IndexPageS
   const recipes = useIndexRecipesStore(state => state.recipes)
   const currKey = useIndexRecipesStore(state => state.key)
   const setRecipes = useIndexRecipesStore(state => state.setRecipes)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    if (currKey !== filtersKey && router.isReady) {
+    if (currKey !== filtersKey && router.isReady && !isLoading) {
+      setIsLoading(true)
       fetchRecipes({ searchQuery, selectedCategories, showPreview })
         .then(newRecipes => {
           setRecipes(filtersKey, newRecipes)
@@ -92,8 +94,11 @@ export const useIndexPageState = (allCategories: string[]): readonly [IndexPageS
           console.error('Error fetching recipes', error)
           setRecipes(filtersKey, [])
         })
+        .finally(() => {
+          setIsLoading(false)
+        })
     }
-  }, [currKey, filtersKey, router.isReady, searchQuery, selectedCategories, setRecipes, showPreview])
+  }, [currKey, filtersKey, isLoading, router.isReady, searchQuery, selectedCategories, setRecipes, showPreview])
 
   const state = { searchQuery, selectedCategories, showPreview, focusedRecipeId, recipes, categorySelections }
   return [state, indexPageStateSetter(router)] as const
