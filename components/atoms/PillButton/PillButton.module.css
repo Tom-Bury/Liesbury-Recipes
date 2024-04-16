@@ -33,24 +33,6 @@
   @apply cursor-default;
 }
 
-/* touch screens */
-@media(hover: none) {
-  .pillButton.buttonOff:active {
-    @apply border-dark text-dark ring-1 ring-dark ring-inset;
-  }
-
-  .pillButton.buttonOffError:active {
-    @apply border-error-dark text-error-dark ring-1 ring-error-dark ring-inset;
-  }
-
-  .pillButton.buttonOn:active {
-    @apply bg-primary border-primary;
-  }
-
-  .pillButton.buttonOnError:active {
-    @apply bg-error border-error;
-  }
-}
 
 /* mouse */
 @media(hover: hover) {

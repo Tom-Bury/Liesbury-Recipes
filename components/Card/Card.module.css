@@ -53,7 +53,7 @@
 
   .card-hoverable:hover,
   .card-hoverable:active {
-    @apply bg-gradient-to-b from-primary to-dark -translate-y-1 scale-105;
+    @apply bg-gradient-to-b from-primary to-dark duration-200;
 
     p,
     h1,
