@@ -16,6 +16,7 @@ export interface IndexPageFilters {
 
 export interface IndexPageState {
   recipes?: TRecipe[]
+  filtersKey: string
   searchQuery?: string
   showPreview: boolean
   categorySelections: { [key: string]: boolean }
