@@ -8,6 +8,7 @@ import { RecipesApi } from 'api/recipes/Recipes.api'
 import { useVersion } from 'hooks/useVersion.hook'
 import { useIsLoggedIn } from 'hooks/useIsLoggedIn.hook'
 import { useIndexPageState } from 'pages-state/index/state'
+import { TRecipe } from 'backend/types/recipes.types'
 import { SearchBar } from '~/components/SearchBar/SearchBar'
 import RecipeList from '~/components/RecipeList'
 import Banner from '~/components/Banner'
@@ -18,11 +19,12 @@ import { capitalize, disableKeys } from '~/utils/general.utils'
 type TProps = {
   categories: string[]
   totalNbOfRecipes: number
+  initialRecipes?: TRecipe[]
 }
 
 const widthLimitClasses = 'w-full max-w-screen-md xl:max-w-screen-xl'
 
-const IndexPage: NextPage<TProps> = ({ categories, totalNbOfRecipes }) => {
+const IndexPage: NextPage<TProps> = ({ categories, totalNbOfRecipes, initialRecipes }) => {
   useVersion()
   const fadeInStyle = useFadeInStyle()
   const isLoggedIn = useIsLoggedIn()
@@ -81,8 +83,10 @@ const IndexPage: NextPage<TProps> = ({ categories, totalNbOfRecipes }) => {
         <HorizontalCenterLayout className="md:mx-4">
           <div className={widthLimitClasses}>
             <RecipeList
-              recipes={currRecipes}
+              recipes={currRecipes || initialRecipes}
               scrollToRecipeWithId={ignoreFocusedRecipeId ? undefined : focusedRecipeId}
+              skipAnimation={Boolean(focusedRecipeId)}
+              refreshKey={state.filtersKey}
               onRecipeClick={recipeId => {
                 setIgnoreFocusedRecipeId(true)
                 setState({ ...state, focusedRecipeId: recipeId })
@@ -105,9 +109,16 @@ const IndexPage: NextPage<TProps> = ({ categories, totalNbOfRecipes }) => {
 export const getStaticProps: GetStaticProps = async () => {
   const totalNbOfRecipes = await RecipesApi.totalNumberOfRecipes()
   const categories = new Set((await RecipesApi.getCategoryCounts()).map(c => c.categoryId))
+  const initialRecipes = (await RecipesApi.all()).map(({ id, title, blurHash, imgUrl }, index) => {
+    if (index < 20) {
+      return { id, title, blurHash, imgUrl }
+    }
+    return { id, title }
+  })
   const props: TProps = {
     categories: Array.from(categories),
-    totalNbOfRecipes
+    totalNbOfRecipes,
+    initialRecipes
   }
   return {
     props,
