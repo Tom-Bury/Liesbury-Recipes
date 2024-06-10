@@ -8,8 +8,6 @@ import { RecipeCard } from './RecipeCard'
 
 type TProps = {
   recipes?: TRecipe[]
-  refreshKey: string
-  skipAnimation?: boolean
   onRecipeClick?: (recipeId: string) => void
   scrollToRecipeWithId?: string
   className?: string
@@ -20,53 +18,47 @@ type TRecipeRefs = {
 }
 
 const useAnimatedRecipes = (
-  recipes: TRecipe[] | undefined,
-  refreshKey: string,
-  skipAnimation?: boolean
+  recipes: TRecipe[] | undefined
 ): {
   animationClass: string
   animationDelay: number
   currRecipes?: TRecipe[]
 } => {
-  const [fadeOut, setFadeOut] = useState(false)
-  const [fadeOutDone, setFadeOutDone] = useState(false)
   const [currRecipes, setCurrRecipes] = useState(recipes)
-  const [currRefreshKey, setCurrRefreshKey] = useState(refreshKey)
+  const [fadeOut, setFadeOut] = useState(false)
+  const [fadeIn, setFadeIn] = useState(false)
 
   useEffect(() => {
-    if (recipes !== currRecipes) {
-      if (refreshKey === currRefreshKey) {
-        setCurrRecipes(recipes)
-        setCurrRefreshKey(refreshKey)
-        return
-      }
-
+    if (recipes === undefined) {
       setFadeOut(true)
-
-      setTimeout(() => {
-        setFadeOut(false)
-        setFadeOutDone(true)
-      }, 300)
+      setFadeIn(false)
     }
-  }, [recipes, currRecipes, refreshKey, currRefreshKey])
+  }, [recipes, currRecipes])
 
   useEffect(() => {
-    if (fadeOutDone) {
+    if (recipes !== undefined && recipes !== currRecipes) {
       setCurrRecipes(recipes)
-      setCurrRefreshKey(refreshKey)
-      setFadeOutDone(false)
-    }
-  }, [fadeOutDone, recipes, refreshKey])
 
-  if (skipAnimation || typeof window === 'undefined') {
-    return { animationClass: '', currRecipes, animationDelay: 0 }
+      if (fadeOut) {
+        setFadeOut(false)
+        setFadeIn(true)
+      }
+    }
+  }, [recipes, currRecipes, fadeOut])
+
+  if (fadeOut) {
+    return { animationClass: 'animate-fade-out', currRecipes, animationDelay: 0 }
   }
 
-  return { animationClass: fadeOut ? 'animate-fade-out' : 'animate-fade-in-left', currRecipes, animationDelay: fadeOut ? 0 : 0.13 }
+  if (fadeIn) {
+    return { animationClass: 'animate-fade-in-left', currRecipes, animationDelay: 0.13 }
+  }
+
+  return { animationClass: '', currRecipes, animationDelay: 0 }
 }
 
-const RecipeList: React.FC<TProps> = ({ refreshKey, recipes, skipAnimation, scrollToRecipeWithId, className, onRecipeClick }) => {
-  const { animationClass, animationDelay, currRecipes } = useAnimatedRecipes(recipes, refreshKey, skipAnimation)
+const RecipeList: React.FC<TProps> = ({ recipes, scrollToRecipeWithId, className, onRecipeClick }) => {
+  const { animationClass, animationDelay, currRecipes } = useAnimatedRecipes(recipes)
   const recipeRefs = useRef<TRecipeRefs>({})
 
   useEffect(() => {

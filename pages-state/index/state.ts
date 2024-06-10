@@ -100,6 +100,14 @@ export const useIndexPageState = (allCategories: string[]): readonly [IndexPageS
     }
   }, [currKey, filtersKey, isLoading, router.isReady, searchQuery, selectedCategories, setRecipes, showPreview])
 
-  const state = { searchQuery, selectedCategories, showPreview, focusedRecipeId, recipes, categorySelections, filtersKey }
+  const state = {
+    searchQuery,
+    selectedCategories,
+    showPreview,
+    focusedRecipeId,
+    recipes: isLoading ? undefined : recipes,
+    categorySelections,
+    filtersKey
+  }
   return [state, indexPageStateSetter(router)] as const
 }

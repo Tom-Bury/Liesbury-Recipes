@@ -2,7 +2,7 @@ import * as React from 'react'
 import { GetStaticProps, NextPage } from 'next'
 import { HorizontalCenterLayout } from 'layouts'
 import useFadeInStyle from 'hooks/useFadeInStyle'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { RecipesApi } from 'api/recipes/Recipes.api'
 import { useVersion } from 'hooks/useVersion.hook'
@@ -24,6 +24,18 @@ type TProps = {
 
 const widthLimitClasses = 'w-full max-w-screen-md xl:max-w-screen-xl'
 
+const useHydratedRecipes = (loadedRecipes: TRecipe[] | undefined) => {
+  const [hydrated, setHydrated] = useState(false)
+
+  useEffect(() => {
+    if (!hydrated && loadedRecipes) {
+      setHydrated(true)
+    }
+  }, [hydrated, loadedRecipes])
+
+  return hydrated
+}
+
 const IndexPage: NextPage<TProps> = ({ categories, totalNbOfRecipes, initialRecipes }) => {
   useVersion()
   const fadeInStyle = useFadeInStyle()
@@ -34,6 +46,7 @@ const IndexPage: NextPage<TProps> = ({ categories, totalNbOfRecipes, initialReci
   const { categorySelections, recipes: currRecipes, searchQuery, showPreview, focusedRecipeId } = state
   const [searchBarValue, setSearchBarValue] = useState(searchQuery)
   const [ignoreFocusedRecipeId, setIgnoreFocusedRecipeId] = useState(false)
+  const hydrated = useHydratedRecipes(currRecipes)
 
   const onSearch = (newQuery: string) => {
     setState({ searchQuery: newQuery, categorySelections: disableKeys(categorySelections), showPreview: false })
@@ -83,10 +96,8 @@ const IndexPage: NextPage<TProps> = ({ categories, totalNbOfRecipes, initialReci
         <HorizontalCenterLayout className="md:mx-4">
           <div className={widthLimitClasses}>
             <RecipeList
-              recipes={currRecipes || initialRecipes}
+              recipes={hydrated ? currRecipes : initialRecipes}
               scrollToRecipeWithId={ignoreFocusedRecipeId ? undefined : focusedRecipeId}
-              skipAnimation={Boolean(focusedRecipeId)}
-              refreshKey={state.filtersKey}
               onRecipeClick={recipeId => {
                 setIgnoreFocusedRecipeId(true)
                 setState({ ...state, focusedRecipeId: recipeId })
@@ -110,7 +121,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const totalNbOfRecipes = await RecipesApi.totalNumberOfRecipes()
   const categories = new Set((await RecipesApi.getCategoryCounts()).map(c => c.categoryId))
   const initialRecipes = (await RecipesApi.all()).map(({ id, title, blurHash, imgUrl }, index) => {
-    if (index < 20) {
+    if (index < 12) {
       return { id, title, blurHash, imgUrl }
     }
     return { id, title }
