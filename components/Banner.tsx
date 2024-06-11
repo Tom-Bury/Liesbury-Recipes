@@ -15,7 +15,7 @@ type TBannerProps = {
 
 const Banner: React.FC<TBannerProps> = ({ onClick }) => {
   return (
-    <HorizontalCenterLayout className="mt-3">
+    <HorizontalCenterLayout className="mt-4">
       <Image
         src="/images/liesbury-recipes-banner.webp"
         alt="Liesbury's receptenlijst"

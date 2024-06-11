@@ -15,6 +15,7 @@ import Banner from '~/components/Banner'
 import { ErrorPillButton, PillButton } from '~/components/atoms/PillButton/PillButton.component'
 import { VersionDisclaimerFooter } from '~/components/VersionDisclaimerFooter'
 import { capitalize, disableKeys } from '~/utils/general.utils'
+import { RecipeFilterHeader } from '~/components/molecules/RecipeFilterHeader/RecipeFilterHeader'
 
 type TProps = {
   categories: string[]
@@ -58,40 +59,25 @@ const IndexPage: NextPage<TProps> = ({ categories, totalNbOfRecipes, initialReci
     setSearchBarValue(undefined)
   }
 
+  const onTogglePreview = () => {
+    setState({ searchQuery: undefined, categorySelections: disableKeys(categorySelections), showPreview: !showPreview })
+  }
+
   return (
     <div className={`${fadeInStyle} flex flex-col min-h-screen`}>
       <div className="mx-4 flex-1">
-        <Banner onClick={() => router.push('add-recipe')} />
-        <HorizontalCenterLayout className="my-8 md:mx-4">
-          <div className="max-w-xl w-full">
-            <SearchBar
-              onSearch={onSearch}
-              placeholder={`Zoeken in ${totalNbOfRecipes} recepten...`}
-              value={searchBarValue}
-              onChange={setSearchBarValue}
-            />
-          </div>
-          <div className={`${widthLimitClasses} flex flex-row justify-center flex-wrap mt-4`}>
-            {Object.entries(categorySelections).map(([category, enabled]) => {
-              return (
-                <PillButton key={category} className="mr-2 mt-2" toggleValue={enabled} onClick={() => onCategoryToggle(category)}>
-                  {capitalize(category)}
-                </PillButton>
-              )
-            })}
-            {isLoggedIn && (
-              <ErrorPillButton
-                toggleValue={showPreview}
-                onClick={() =>
-                  setState({ searchQuery: undefined, categorySelections: disableKeys(categorySelections), showPreview: !showPreview })
-                }
-                className="mx-2 mt-2"
-              >
-                🫣 Preview
-              </ErrorPillButton>
-            )}
-          </div>
-        </HorizontalCenterLayout>
+        <RecipeFilterHeader
+          onBannerClick={() => router.push('add-recipe')}
+          totalNbOfRecipes={totalNbOfRecipes}
+          searchBarValue={searchBarValue}
+          setSearchBarValue={setSearchBarValue}
+          onSearch={onSearch}
+          categorySelections={categorySelections}
+          onCategoryToggle={onCategoryToggle}
+          isLoggedIn={Boolean(isLoggedIn)}
+          showPreview={showPreview}
+          onTogglePreview={onTogglePreview}
+        />
         <hr className="mb-8 border-t-4 border-primary" />
         <HorizontalCenterLayout className="md:mx-4">
           <div className={widthLimitClasses}>
