@@ -65,8 +65,9 @@ export const RecipeFilterHeader = forwardRef<RecipeFilterHeaderRef, PropsWithChi
     const imgBannerRef = useRef<HTMLDivElement>(null)
     const { scrollY } = useScrollPosition()
 
-    const imgHeight = Math.max(FRONT_IMAGE_DIMENSIONS.height - scrollY, SCROLL_BANNER_IMAGE_RESIZE_THRESHOLD)
-    const dummyHeight = Math.min(scrollY, SCROLL_BANNER_IMAGE_RESIZE_THRESHOLD)
+    const diff = Math.floor(scrollY / 3)
+    const imgHeight = Math.max(FRONT_IMAGE_DIMENSIONS.height - diff, SCROLL_BANNER_IMAGE_RESIZE_THRESHOLD)
+    const dummyHeight = Math.min(diff, SCROLL_BANNER_IMAGE_RESIZE_THRESHOLD)
 
     useImperativeHandle(
       ref,
