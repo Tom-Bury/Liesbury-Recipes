@@ -1,7 +1,6 @@
 import { HorizontalCenterLayout } from 'layouts'
 import * as React from 'react'
 import { PropsWithChildren, forwardRef, useImperativeHandle, useRef } from 'react'
-import { useScrollPosition } from 'hooks/useScrollPosition'
 import { SearchBar } from '~/components/SearchBar/SearchBar'
 import { PillButton, ErrorPillButton } from '~/components/atoms/PillButton/PillButton.component'
 import { capitalize } from '~/utils/general.utils'
@@ -41,8 +40,6 @@ const FRONT_IMAGE_DIMENSIONS = {
   height: 240
 }
 
-const SCROLL_BANNER_IMAGE_RESIZE_THRESHOLD = 100
-
 const PAGE_TITLE = `Liesbury's receptenlijst`
 
 export const RecipeFilterHeader = forwardRef<RecipeFilterHeaderRef, PropsWithChildren<RecipeFilterHeaderProps>>(
@@ -63,11 +60,6 @@ export const RecipeFilterHeader = forwardRef<RecipeFilterHeaderRef, PropsWithChi
     ref
   ) => {
     const imgBannerRef = useRef<HTMLDivElement>(null)
-    const { scrollY } = useScrollPosition()
-
-    const diff = Math.floor(scrollY / 3)
-    const imgHeight = Math.max(FRONT_IMAGE_DIMENSIONS.height - diff, SCROLL_BANNER_IMAGE_RESIZE_THRESHOLD)
-    const dummyHeight = Math.min(diff, SCROLL_BANNER_IMAGE_RESIZE_THRESHOLD)
 
     useImperativeHandle(
       ref,
@@ -90,19 +82,13 @@ export const RecipeFilterHeader = forwardRef<RecipeFilterHeaderRef, PropsWithChi
     return (
       <div>
         <HorizontalCenterLayout ref={imgBannerRef} className="bg-lightest px-4">
-          <div
-            className="w-full"
-            style={{
-              marginTop: dummyHeight
-            }}
-          />
           <div onClick={onBannerClick} onKeyPress={onBannerClick} tabIndex={0} role="button">
             <img
               src="/images/liesbury-recipes-banner.webp"
               alt={PAGE_TITLE}
               className="cursor-pointer w-auto object-contain"
               style={{
-                height: imgHeight
+                height: FRONT_IMAGE_DIMENSIONS.height
               }}
             />
           </div>
