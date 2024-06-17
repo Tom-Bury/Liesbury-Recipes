@@ -23,7 +23,11 @@ module.exports = {
     fontFamily: {
       title: ['Pacifico']
     },
-    extend: {}
+    extend: {
+      boxShadow: {
+        bottom: '0 2px 2px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);'
+      }
+    }
   },
   plugins: []
 }
