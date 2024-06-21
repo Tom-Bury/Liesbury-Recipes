@@ -1,6 +1,6 @@
 import { ApiClient } from 'api/client'
 import { TCategory } from 'backend/types/category.types'
-import { TRecipe } from 'backend/types/recipes.types'
+import { TRecipe, TRecipeWithoutData } from 'backend/types/recipes.types'
 
 type TAddRecipeBody = {
   title: string
@@ -23,7 +23,7 @@ export const RecipesApi = {
     return ApiClient.get('recipes/count').json()
   },
 
-  all: async (): Promise<TRecipe[]> => {
+  all: async (): Promise<TRecipeWithoutData[]> => {
     return ApiClient.get('recipes/all').json()
   },
 
@@ -31,7 +31,7 @@ export const RecipesApi = {
     return ApiClient.get('recipes/all/ids').json()
   },
 
-  lastN: async (n: number): Promise<TRecipe[]> => {
+  lastN: async (n: number): Promise<TRecipeWithoutData[]> => {
     return ApiClient.get(`recipes/all/${n}`).json()
   },
 
@@ -51,7 +51,7 @@ export const RecipesApi = {
     await ApiClient.delete(`recipes/recipe/${id}`).text()
   },
 
-  search: async (query: string): Promise<TRecipe[]> => {
+  search: async (query: string): Promise<TRecipeWithoutData[]> => {
     return ApiClient.get('recipes/search', {
       searchParams: {
         query
@@ -59,7 +59,7 @@ export const RecipesApi = {
     }).json()
   },
 
-  getRecipesForCategories: async (categories: string[]): Promise<TRecipe[]> => {
+  getRecipesForCategories: async (categories: string[]): Promise<TRecipeWithoutData[]> => {
     return ApiClient.post('recipes/categories', {
       json: {
         query: categories
@@ -72,7 +72,7 @@ export const RecipesApi = {
     return categoryCounts.sort((a, b) => b.nbEntries - a.nbEntries)
   },
 
-  getPreviewRecipes: async (): Promise<TRecipe[]> => {
+  getPreviewRecipes: async (): Promise<TRecipeWithoutData[]> => {
     return ApiClient.get('recipes/preview').json()
   }
 }

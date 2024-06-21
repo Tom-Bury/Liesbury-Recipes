@@ -1,11 +1,11 @@
-import { TRecipe } from 'backend/types/recipes.types'
+import { TRecipeWithoutData } from 'backend/types/recipes.types'
 import create from 'zustand'
 import { IndexPageFilters } from './types'
 
 interface IndexPageRecipesState {
-  recipes?: TRecipe[]
+  recipes?: TRecipeWithoutData[]
   key?: string
-  setRecipes: (key: string, newRecipes: TRecipe[]) => void
+  setRecipes: (key: string, newRecipes: TRecipeWithoutData[]) => void
   resetRecipes: () => void
 }
 

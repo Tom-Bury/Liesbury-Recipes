@@ -10,3 +10,5 @@ export type TRecipe = {
   blurHash?: string
   isPreview?: boolean
 }
+
+export type TRecipeWithoutData = Pick<TRecipe, 'id' | 'title' | 'imgUrl' | 'blurHash'>

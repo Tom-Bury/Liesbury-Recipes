@@ -1,4 +1,4 @@
-import { TRecipe } from 'backend/types/recipes.types'
+import { TRecipeWithoutData } from 'backend/types/recipes.types'
 import { NextRouter, useRouter } from 'next/router'
 import { RecipesApi } from 'api/recipes/Recipes.api'
 import { useEffect, useState } from 'react'
@@ -15,7 +15,7 @@ const fetchRecipes = async ({
   searchQuery?: string
   selectedCategories: string[]
   showPreview: boolean
-}): Promise<TRecipe[]> => {
+}): Promise<TRecipeWithoutData[]> => {
   if (showPreview) {
     return RecipesApi.getPreviewRecipes()
   }
