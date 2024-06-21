@@ -8,7 +8,7 @@ import { RecipesApi } from 'api/recipes/Recipes.api'
 import { useVersion } from 'hooks/useVersion.hook'
 import { useIsLoggedIn } from 'hooks/useIsLoggedIn.hook'
 import { useIndexPageState } from 'pages-state/index/state'
-import { TRecipe } from 'backend/types/recipes.types'
+import { TRecipeWithoutData } from 'backend/types/recipes.types'
 import RecipeList from '~/components/RecipeList'
 import { VersionDisclaimerFooter } from '~/components/VersionDisclaimerFooter'
 import { disableKeys } from '~/utils/general.utils'
@@ -17,12 +17,12 @@ import { RecipeFilterHeader, RecipeFilterHeaderRef } from '~/components/molecule
 type TProps = {
   categories: string[]
   totalNbOfRecipes: number
-  initialRecipes?: TRecipe[]
+  initialRecipes?: TRecipeWithoutData[]
 }
 
 const widthLimitClasses = 'w-full max-w-screen-md xl:max-w-screen-xl'
 
-const useHydratedRecipes = (loadedRecipes: TRecipe[] | undefined) => {
+const useHydratedRecipes = (loadedRecipes: TRecipeWithoutData[] | undefined) => {
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {

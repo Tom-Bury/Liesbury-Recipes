@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import { TRecipe } from 'backend/types/recipes.types'
+import { TRecipeWithoutData } from 'backend/types/recipes.types'
 import { GridLayout } from 'layouts'
 import * as React from 'react'
 import { useEffect, useRef, useState } from 'react'
@@ -7,7 +7,7 @@ import LinkWrap from './LinkWrap'
 import { RecipeCard } from './RecipeCard'
 
 type TProps = {
-  recipes?: TRecipe[]
+  recipes?: TRecipeWithoutData[]
   onRecipeClick?: (recipeId: string) => void
   scrollToRecipeWithId?: string
   className?: string
@@ -18,11 +18,11 @@ type TRecipeRefs = {
 }
 
 const useAnimatedRecipes = (
-  recipes: TRecipe[] | undefined
+  recipes: TRecipeWithoutData[] | undefined
 ): {
   animationClass: string
   animationDelay: number
-  currRecipes?: TRecipe[]
+  currRecipes?: TRecipeWithoutData[]
 } => {
   const [currRecipes, setCurrRecipes] = useState(recipes)
   const [fadeOut, setFadeOut] = useState(false)
@@ -75,7 +75,7 @@ const RecipeList: React.FC<TProps> = ({ recipes, scrollToRecipeWithId, className
   return (
     <GridLayout className={className}>
       {currRecipes &&
-        currRecipes.map((recipe: TRecipe, i) => (
+        currRecipes.map((recipe: TRecipeWithoutData, i) => (
           <LinkWrap
             key={recipe.id}
             ref={el => {
