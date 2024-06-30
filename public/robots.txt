@@ -1,0 +1,4 @@
+User-Agent: *
+Disallow: /login/
+Disallow: /add-recipe/
+Disallow: /offline/
