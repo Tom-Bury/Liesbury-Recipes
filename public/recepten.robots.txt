@@ -1,0 +1,5 @@
+User-Agent: *
+Disallow: /login/
+Disallow: /add-recipe/
+Disallow: /offline/
+Sitemap: https://recepten.lies.bury.dev/recepten.sitemap.xml
