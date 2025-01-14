@@ -10,6 +10,8 @@ import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import useFadeInStyle from 'hooks/useFadeInStyle'
 import { useIsLoggedIn } from 'hooks/useIsLoggedIn.hook'
 import { RecipesApi } from 'api/recipes/Recipes.api'
+import { useSharing } from 'hooks/useSharing.hook'
+import Head from 'next/head'
 import RecipeData from '~/components/RecipeData/RecipeData'
 import RecipePlaceholder from '~/components/RecipePlaceholder'
 import FloatingActionButton from '~/components/atoms/FloatingActionButton/FloatingActionButton.component'
@@ -18,6 +20,32 @@ import FloatingWrap from '~/components/atoms/FloatingActionButton/FloatingWrap.c
 type TProps = {
   recipe?: TRecipe
 }
+
+type TPageMetadata = {
+  title?: string
+  description?: string
+  url?: string
+  imgUrl?: string
+}
+
+const RecipePageHead = ({ title, description, url, imgUrl }: TPageMetadata) => (
+  <Head>
+    {title && <title key="title">{title}</title>}
+    <meta name="description" content={`Recept voor ${title}`} key="description" />
+
+    {title && <meta property="og:title" content={title} key="og-title" />}
+    {url && <meta property="og:url" content={url} key="og-url" />}
+    {title && <meta property="og:title" content={title} key="og-title" />}
+    {url && <meta property="og:site_name" content={url} key="og-site_name" />}
+    {description && <meta property="og:description" content={description} key="og-description" />}
+    {imgUrl && <meta property="og:image" content={imgUrl} key="og-image" />}
+
+    {url && <meta property="twitter:url" content={url} key="tw-url" />}
+    {title && <meta name="twitter:title" content={title} key="tw-title" />}
+    {url && <meta name="twitter:description" content={description} key="tw-description" />}
+    {imgUrl && <meta name="twitter:image" content={imgUrl} key="tw-image" />}
+  </Head>
+)
 
 const SlidingRecipeImage: React.FC<{ url?: string; blurHash?: string }> = ({ url, blurHash }) => {
   const [offset, setOffset] = useState(0)
@@ -106,6 +134,7 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
   const { isFallback } = router
   const isLoggedIn = useIsLoggedIn()
   const fadeInStyle = useFadeInStyle()
+  const share = useSharing()
 
   if (!recipe) {
     return (
@@ -115,8 +144,22 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
     )
   }
 
+  const pageMetadata = {
+    title: `${recipe.title} - Liesbury's Receptenlijst`,
+    url: `https://recipes.lies.bury.dev/recipe/${recipe.id}`,
+    description: `Smakelijk!`,
+    imgUrl: recipe.imgUrl
+  }
+
   return (
     <div className={`flex flex-1 justify-center ${fadeInStyle}`}>
+      <RecipePageHead
+        title={pageMetadata.title}
+        description={pageMetadata.description}
+        url={pageMetadata.url}
+        imgUrl={pageMetadata.imgUrl}
+      />
+
       <SlidingRecipeImage url={recipe.imgUrl} blurHash={recipe.blurHash} />
       <div className="flex flex-1 z-20 mt-72 mb-24 bg-lightest justify-center items-center relative">
         <Triangle />
@@ -128,8 +171,9 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
           {isFallback ? <RecipePlaceholder /> : <RecipeData recipe={recipe} />}
         </div>
       </div>
-      {isLoggedIn && (
-        <FloatingWrap className="flex flex-row items-center" placement="right">
+
+      <FloatingWrap className="flex flex-row items-center" placement="right">
+        {isLoggedIn && (
           <FloatingActionButton
             error
             size="s"
@@ -145,6 +189,9 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
           >
             <Image src="/icons/delete.svg" alt="Delete icon" width={24} height={24} />
           </FloatingActionButton>
+        )}
+
+        {isLoggedIn && (
           <FloatingActionButton
             onPress={() => {
               localStorage.setItem('recipe', JSON.stringify(recipe))
@@ -158,8 +205,27 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
           >
             <Image src="/icons/edit.svg" alt="Edit icon" width={24} height={24} />
           </FloatingActionButton>
-        </FloatingWrap>
-      )}
+        )}
+
+        {share && (
+          <FloatingActionButton
+            className="ml-4"
+            onPress={async () => {
+              const shareData = {
+                title: recipe.title,
+                url: window.location.href
+              }
+              try {
+                await share(shareData)
+              } catch (error) {
+                console.error('Error sharing', { error, shareData })
+              }
+            }}
+          >
+            <Image src="/icons/share.svg" alt="Share icon" width={24} height={24} />
+          </FloatingActionButton>
+        )}
+      </FloatingWrap>
     </div>
   )
 }
