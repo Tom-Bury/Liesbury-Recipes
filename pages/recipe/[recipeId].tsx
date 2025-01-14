@@ -11,6 +11,7 @@ import useFadeInStyle from 'hooks/useFadeInStyle'
 import { useIsLoggedIn } from 'hooks/useIsLoggedIn.hook'
 import { RecipesApi } from 'api/recipes/Recipes.api'
 import { useSharing } from 'hooks/useSharing.hook'
+import Head from 'next/head'
 import RecipeData from '~/components/RecipeData/RecipeData'
 import RecipePlaceholder from '~/components/RecipePlaceholder'
 import FloatingActionButton from '~/components/atoms/FloatingActionButton/FloatingActionButton.component'
@@ -19,6 +20,32 @@ import FloatingWrap from '~/components/atoms/FloatingActionButton/FloatingWrap.c
 type TProps = {
   recipe?: TRecipe
 }
+
+type TPageMetadata = {
+  title?: string
+  description?: string
+  url?: string
+  imgUrl?: string
+}
+
+const RecipePageHead = ({ title, description, url, imgUrl }: TPageMetadata) => (
+  <Head>
+    {title && <title key="title">{title}</title>}
+    <meta name="description" content={`Recept voor ${title}`} key="description" />
+
+    {title && <meta property="og:title" content={title} key="og-title" />}
+    {url && <meta property="og:url" content={url} key="og-url" />}
+    {title && <meta property="og:title" content={title} key="og-title" />}
+    {url && <meta property="og:site_name" content={url} key="og-site_name" />}
+    {description && <meta property="og:description" content={description} key="og-description" />}
+    {imgUrl && <meta property="og:image" content={imgUrl} key="og-image" />}
+
+    {url && <meta property="twitter:url" content={url} key="tw-url" />}
+    {title && <meta name="twitter:title" content={title} key="tw-title" />}
+    {url && <meta name="twitter:description" content={description} key="tw-description" />}
+    {imgUrl && <meta name="twitter:image" content={imgUrl} key="tw-image" />}
+  </Head>
+)
 
 const SlidingRecipeImage: React.FC<{ url?: string; blurHash?: string }> = ({ url, blurHash }) => {
   const [offset, setOffset] = useState(0)
@@ -117,8 +144,22 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
     )
   }
 
+  const pageMetadata = {
+    title: `${recipe.title} - Liesbury's Receptenlijst`,
+    url: `https://recipes.lies.bury.dev/recipe/${recipe.id}`,
+    description: `Smakelijk!`,
+    imgUrl: recipe.imgUrl
+  }
+
   return (
     <div className={`flex flex-1 justify-center ${fadeInStyle}`}>
+      <RecipePageHead
+        title={pageMetadata.title}
+        description={pageMetadata.description}
+        url={pageMetadata.url}
+        imgUrl={pageMetadata.imgUrl}
+      />
+
       <SlidingRecipeImage url={recipe.imgUrl} blurHash={recipe.blurHash} />
       <div className="flex flex-1 z-20 mt-72 mb-24 bg-lightest justify-center items-center relative">
         <Triangle />
