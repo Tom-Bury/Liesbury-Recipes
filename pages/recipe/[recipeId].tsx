@@ -10,6 +10,7 @@ import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import useFadeInStyle from 'hooks/useFadeInStyle'
 import { useIsLoggedIn } from 'hooks/useIsLoggedIn.hook'
 import { RecipesApi } from 'api/recipes/Recipes.api'
+import { useSharing } from 'hooks/useSharing.hook'
 import RecipeData from '~/components/RecipeData/RecipeData'
 import RecipePlaceholder from '~/components/RecipePlaceholder'
 import FloatingActionButton from '~/components/atoms/FloatingActionButton/FloatingActionButton.component'
@@ -106,6 +107,7 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
   const { isFallback } = router
   const isLoggedIn = useIsLoggedIn()
   const fadeInStyle = useFadeInStyle()
+  const share = useSharing()
 
   if (!recipe) {
     return (
@@ -128,8 +130,9 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
           {isFallback ? <RecipePlaceholder /> : <RecipeData recipe={recipe} />}
         </div>
       </div>
-      {isLoggedIn && (
-        <FloatingWrap className="flex flex-row items-center" placement="right">
+
+      <FloatingWrap className="flex flex-row items-center" placement="right">
+        {isLoggedIn && (
           <FloatingActionButton
             error
             size="s"
@@ -145,6 +148,9 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
           >
             <Image src="/icons/delete.svg" alt="Delete icon" width={24} height={24} />
           </FloatingActionButton>
+        )}
+
+        {isLoggedIn && (
           <FloatingActionButton
             onPress={() => {
               localStorage.setItem('recipe', JSON.stringify(recipe))
@@ -158,8 +164,27 @@ const RecipePage: NextPage<TProps> = ({ recipe }) => {
           >
             <Image src="/icons/edit.svg" alt="Edit icon" width={24} height={24} />
           </FloatingActionButton>
-        </FloatingWrap>
-      )}
+        )}
+
+        {share && (
+          <FloatingActionButton
+            className="ml-4"
+            onPress={async () => {
+              const shareData = {
+                title: recipe.title,
+                url: window.location.href
+              }
+              try {
+                await share(shareData)
+              } catch (error) {
+                console.error('Error sharing', { error, shareData })
+              }
+            }}
+          >
+            <Image src="/icons/share.svg" alt="Share icon" width={24} height={24} />
+          </FloatingActionButton>
+        )}
+      </FloatingWrap>
     </div>
   )
 }
