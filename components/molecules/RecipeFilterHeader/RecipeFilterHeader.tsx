@@ -1,11 +1,11 @@
 import { HorizontalCenterLayout } from 'layouts'
 import * as React from 'react'
 import { PropsWithChildren, forwardRef, useImperativeHandle, useRef } from 'react'
+import classNames from 'classnames'
 import { SearchBar } from '~/components/SearchBar/SearchBar'
 import { PillButton, ErrorPillButton } from '~/components/atoms/PillButton/PillButton.component'
 import { capitalize } from '~/utils/general.utils'
 import RecipeFilterHeaderStyles from './RecipeFilterHeader.module.css'
-import classNames from 'classnames'
 
 type RecipeFilterHeaderProps = BannerProps & SearchBarProps & CategoryTogglesProps & PreviewProps & UserProps
 
