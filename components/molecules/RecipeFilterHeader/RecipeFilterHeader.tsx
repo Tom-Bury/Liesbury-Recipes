@@ -4,6 +4,8 @@ import { PropsWithChildren, forwardRef, useImperativeHandle, useRef } from 'reac
 import { SearchBar } from '~/components/SearchBar/SearchBar'
 import { PillButton, ErrorPillButton } from '~/components/atoms/PillButton/PillButton.component'
 import { capitalize } from '~/utils/general.utils'
+import RecipeFilterHeaderStyles from './RecipeFilterHeader.module.css'
+import classNames from 'classnames'
 
 type RecipeFilterHeaderProps = BannerProps & SearchBarProps & CategoryTogglesProps & PreviewProps & UserProps
 
@@ -81,7 +83,7 @@ export const RecipeFilterHeader = forwardRef<RecipeFilterHeaderRef, PropsWithChi
 
     return (
       <div>
-        <HorizontalCenterLayout ref={imgBannerRef} className="bg-lightest px-4">
+        <HorizontalCenterLayout ref={imgBannerRef} className={classNames('px-4', RecipeFilterHeaderStyles.header)}>
           <div onClick={onBannerClick} onKeyPress={onBannerClick} tabIndex={0} role="button">
             <img
               src="/images/liesbury-recipes-banner.webp"
@@ -94,7 +96,9 @@ export const RecipeFilterHeader = forwardRef<RecipeFilterHeaderRef, PropsWithChi
           </div>
           <h1 className="my-4 text-darkest text-center z-20">{PAGE_TITLE}</h1>
         </HorizontalCenterLayout>
-        <HorizontalCenterLayout className="pt-4 sticky top-0 bg-lightest z-10 border-b-4 border-primary shadow-bottom">
+        <HorizontalCenterLayout
+          className={classNames('pt-4 sticky top-0 my-bg z-10 border-b-4 border-primary shadow-bottom', RecipeFilterHeaderStyles.header)}
+        >
           <div className="px-4 max-w-xl w-full">
             <SearchBar
               onSearch={onSearch}
