@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import * as React from 'react'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import FloatingActionButton from '../FloatingActionButton/FloatingActionButton.component'
 import FloatingWrap from '../FloatingActionButton/FloatingWrap.component'
 

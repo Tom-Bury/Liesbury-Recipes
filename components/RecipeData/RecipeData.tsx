@@ -1,6 +1,6 @@
 import { TRecipe } from 'backend/types/recipes.types'
 import * as React from 'react'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import LinkCard from '../LinkCard/LinkCard'
 import MarkdownSnippet from '../MarkdownSnippet/MarkdownSnippet'
 import styles from './RecipeData.module.css'

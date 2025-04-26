@@ -4,7 +4,7 @@ import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import { useRouter } from 'next/dist/client/router'
 import { ParsedUrlQuery } from 'querystring'
 import * as React from 'react'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import { useState } from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import useFadeInStyle from 'hooks/useFadeInStyle'

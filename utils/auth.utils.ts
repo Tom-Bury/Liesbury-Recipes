@@ -1,5 +1,5 @@
 export const isAuthTokenCookiePresent = (): boolean => {
-  return !!document.cookie.match(/^(.*;)?\s*authToken\s*=\s*[^;]+(.*)?$/)
+  return !!document.cookie.match(/^(.*;)?\s*authToken\s*=\s*[^;]+(.*)?$/);
 }
 
 export const parseJwt = (token: string): Record<string, string | number> => {

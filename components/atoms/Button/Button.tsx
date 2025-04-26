@@ -23,7 +23,7 @@ const Button: React.FC<TProps> = ({ type, children, className, disabled, circula
     <button type={type || 'button'} className={classes} disabled={disabled} onClick={onPress} {...props}>
       {children}
     </button>
-  )
+  );
 }
 
 export default Button
