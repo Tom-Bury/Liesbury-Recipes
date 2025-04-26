@@ -10,10 +10,8 @@ type TProps = React.PropsWithChildren<{
 
 const LinkWrap = React.forwardRef<HTMLAnchorElement, TProps>(({ id, href, className, onClick, children }, ref: any) => {
   return (
-    <Link key={id} href={href} passHref>
-      <a className={className} href={href.toString()} ref={ref} onClick={onClick}>
-        {children}
-      </a>
+    <Link key={id} href={href} passHref ref={ref} onClick={onClick} className={className}>
+      {children}
     </Link>
   )
 })
